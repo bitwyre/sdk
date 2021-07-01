@@ -1,0 +1,6 @@
+coverage
+mypy
+pre-commit
+pycodestyle
+pytest
+pytest-mock

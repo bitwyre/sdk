@@ -1,0 +1,4 @@
+requests
+hmac
+hashlib
+logging
