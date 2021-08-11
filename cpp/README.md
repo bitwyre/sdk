@@ -2,8 +2,35 @@
 
 # Getting Started
 
+# Requirements
+
+- Clang 12.0.1 or any Compiler with support of C++17
+- Conan version 1.37 or greater for package management
+- CMake version 3.20.3
+
 The API URL is retrieve from the environment variable `URL_API_BITWYRE`, but if you do not set it, a default one
-pointing our production cluster will be used.
+pointing to our production cluster will be used.
+
+# Downloading from Conan
+
+You need to add our remote Artifactory server as your remote to be able to download the recipe:
+
+```shell
+ conan remove add bitwyre  https://conan.bitwyre.id/artifactory/api/conan/bitwyre
+```
+
+After doing so, you can now add the dependencies inside your `conanfile.txt` or `conanfile.py`
+by running:
+
+```shell
+mkdir build && cd $_ && conan install ..
+```
+
+You will need to link against `${CONAN_LIBS}` variable inside your CMakelists.txt file 
+
+```shell 
+target_link_libraries (mybot PRIVATE ${CONAN_LIBS})
+```
 
 # Example of usage Public API
 
@@ -49,7 +76,7 @@ export BITWYRE_API_KEY=mypublic
 
 At this point we are all set to run the examples.
 
-- Opening an new order https://docs.bitwyre.id/#ticker
+- Opening a new order https://docs.bitwyre.id/#ticker
 
 ```c++
 #include "rest/public/NewOrder.hpp"
