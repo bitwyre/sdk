@@ -2,42 +2,47 @@
 
 # Getting Started
 
-# Requirements
+The API URL is retrieve from the environment variable `URL_API_BITWYRE`, but if you do not set it, a default one
+pointing to our production cluster will be used.
+
+# Building from source 
+
+## Requirements
 
 - Clang 12.0.1 or any Compiler with support of C++17
 - Conan version 1.37 or greater for package management
 - CMake version 3.20.3
 
-The API URL is retrieve from the environment variable `URL_API_BITWYRE`, but if you do not set it, a default one
-pointing to our production cluster will be used.
-
-# Downloading from Conan
-
-You need to add our remote Artifactory server as your remote to be able to download the recipe:
+## Build commands
 
 ```shell
- conan remove add bitwyre  https://conan.bitwyre.id/artifactory/api/conan/bitwyre
+mkdir build && cd $_ && cmake .. -DCMAKE_BUILD_TYPE=Debug
 ```
 
-After doing so, you can now add the dependencies inside your `conanfile.txt` or `conanfile.py`
-by running:
+In order to build the test suite add `-DBUILD_TESTING` definition.
 
-```shell
-mkdir build && cd $_ && conan install ..
+# Package Managers 
+
+## Conan 
+
+Add our remote https://conan.bitwyre.id/artifactory/api/conan/bitwyre to your list of remotes
+
+```
+conan remote add bitwyre  https://conan.bitwyre.id/artifactory/api/conan/bitwyre
 ```
 
-You will need to link against `${CONAN_LIBS}` variable inside your CMakelists.txt file 
+Then inside your `conanfile.py` or `conanfile.txt` add `bitwyresdk/[>=1.0]`
 
-```shell 
-target_link_libraries (mybot PRIVATE ${CONAN_LIBS})
-```
+## Vckpg 
+
+Coming Soon 
 
 # Example of usage Public API
 
 - Getting the Server time https://docs.bitwyre.id/#server-time
 
 ```c++
-#include "rest/public/time.hpp"
+#include "rest/public/Time.hpp"
 
 auto main() -> int {
     // TimeResponse here can be replaced with auto
@@ -82,10 +87,17 @@ At this point we are all set to run the examples.
 #include "rest/public/NewOrder.hpp"
 
 auto main() -> int {
-    TickerRequest tickReq{InstrumentT{"btc_usd_spot"}};
-    TickerResponse tr = Ticker::get(tickReq);
+    NewOrderRequest request{
+      InstrumentT{"btc_usd_spot"},
+      SideT{1},
+      OrdType{1},
+      PriceT{100},
+      QtyT{100},
+  };
     
-    std::cout << tr.tickers.size() << "\n";
+    auto result = NewOrder::post(request);
+    
+    std::cout << result.instrument << "\n";
 }
 ```
 
