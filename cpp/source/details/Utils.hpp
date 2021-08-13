@@ -33,6 +33,7 @@ namespace Bitwyre {
     }
 
     inline static std::string HMAC(const std::string& data) {
+      assert(std::getenv("BITWYRE_API_SECRET") != nullptr && "BITWYRE_API_SECRET NOT SET");
       std::string encoded;
       std::string key = std::getenv("BITWYRE_API_SECRET");
       std::string mac;
