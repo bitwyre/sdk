@@ -7,9 +7,7 @@ namespace Version {
     /// Creates empty Version object
     Version();
 
-    int major{0};
-    int minor{0};
-    int patch{0};
+    Version(long long int version);
 
     int major{0};
     int minor{0};
@@ -39,13 +37,7 @@ namespace Version {
      */
     std::string asLongStr() const;
 
-    /**
-     * Returns Version + Date + Build machine
-     *
-     * Will produce result similar to:
-     *  1.2.6 beta / Feb 20 2016 14:42:41 / buildMachine
-     */
-    std::string asLongStr() const;
+    long long asNumber() const;
 
     // Operators
     bool operator<(const Version& other);

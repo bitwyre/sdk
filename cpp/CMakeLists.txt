@@ -56,19 +56,18 @@ endif()
 
 #----Running conan install directly from CMakeLists
 
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-    file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/v0.14/conan.cmake"
-            "${CMAKE_BINARY_DIR}/conan.cmake")
-endif()
+include(cmake/conan.cmake)
+conan_add_remote(NAME bitwyre
+        INDEX 1
+        URL https://conan.bitwyre.id/artifactory/api/conan/bitwyre
+        VERIFY_SSL True)
 
-include(${CMAKE_BINARY_DIR}/conan.cmake)
-message(${CMAKE_BINARY_DIR})
 conan_cmake_run(CONANFILE conanfile.py
         BASIC_SETUP CMAKE_TARGETS
         BUILD missing
         )
 
+message(INFO ${CMAKE_BINARY_DIR})
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
@@ -76,10 +75,10 @@ conan_basic_setup()
 # Included CMakeLists.txt
 
 # Documentation build
+if(BITWYRE_INSTALL_DOCS)
 add_subdirectory(doc)
-
-# Images, databases and other data which needs to be installed for project
 add_subdirectory(data)
+endif()
 
 # Testing
 option(UNIT_TESTS "When enabled will compile with the unittests" OFF)
