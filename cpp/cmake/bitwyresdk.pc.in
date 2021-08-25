@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+includedir=${prefix}/include
+libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
+
+Name: lib@PROJECT_NAME@
+Description: Official C++ SDK for accessing Bitwyre APIs.
+URL: https://github.com/bitwyre/sdk
+CFlags: -I${includedir} @PKG_CONFIG_DEFINES@
+Libs: -L${libdir} -lbitwyresdk -pthread
+Requires: @PKG_CONFIG_REQUIRES@

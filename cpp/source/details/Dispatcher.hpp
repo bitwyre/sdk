@@ -232,10 +232,8 @@ namespace Bitwyre {
                "BITWYRE_API_KEY NOT SET");
 
         auto nonce = Utils::getTimestamp();
-        auto checksum = request.checksum();
-        checksum = Utils::lowercase(checksum);
+        auto checksum = Utils::lowercase(request.checksum());
         auto signature = Utils::sign(uri, nonce, checksum);
-        auto config = Config::getConfig();
         auto endpoint =
             cpr::Url(std::string{config["URL_API_BITWYRE"]} + uri.data());
 
@@ -270,7 +268,6 @@ namespace Bitwyre {
         }
 
         auto signature = Utils::sign(modifiedURI, nonce, checksum);
-        auto config = Config::getConfig();
 
         auto parameters = cpr::Parameters{
             {"nonce", std::to_string(nonce)},
@@ -313,8 +310,7 @@ namespace Bitwyre {
       auto operator()(std::string_view uri,
                       const TransactionHistoryRequest& request) {
         auto nonce = Utils::getTimestamp();
-        auto checksum = request.checksum();
-        checksum = Utils::lowercase(checksum);
+        auto checksum = Utils::lowercase(request.checksum());
         auto signature = Utils::sign(uri, nonce, checksum);
 
         auto parameters = cpr::Parameters{
