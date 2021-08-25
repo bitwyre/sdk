@@ -1,9 +1,9 @@
-from conans import ConanFile, CMake
-
+from conans import ConanFile, CMake, tools
+import os
 
 class bitwyresdkCpp(ConanFile):
     name = "bitwyresdk"
-    version = "1.0"
+    version = "1.0.0"
     url = "https://github.com/bitwyre/bitwyre_sdk_cpp"
     description = "The official C++ SDK to connect with Bitwyre's REST, WS and FIX API"
     settings = "os", "compiler", "build_type", "arch"
@@ -21,6 +21,10 @@ class bitwyresdkCpp(ConanFile):
         "cryptopp/8.5.0@bitwyre/stable",
         "namedtype/20190324@bitwyre/stable",
     ]
+
+    @property
+    def _source_subfolder(self):
+        return "source_subfolder"
 
     def requirements(self):
         if self.options.build_test:
@@ -43,17 +47,10 @@ class bitwyresdkCpp(ConanFile):
         cmake = self._configure_cmake()
         cmake.build()
 
-        # Explicit way:
-        # self.run('cmake "%s/src" %s' % (self.source_folder, cmake.command_line))
-        # self.run("cmake --build . %s" % cmake.build_config)
-
     def package(self):
-        self.copy("*.hpp", dst="include", src="src")
-        self.copy("*.lib", dst="lib", keep_path=False)
-        self.copy("*.dll", dst="bin", keep_path=False)
-        self.copy("*.dylib*", dst="lib", keep_path=False)
-        self.copy("*.so", dst="lib", keep_path=False)
-        self.copy("*.a", dst="lib", keep_path=False)
+        self.copy("LICENSE.md", dst="licenses", src=self._source_subfolder)
+        cmake = self._configure_cmake()
+        cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ["bitwyre"]
+        self.cpp_info.libs = ["bitwyresdk"]

@@ -1,16 +1,16 @@
 #include "catch2/catch.hpp"
 
 TEST_CASE("Sha256 of a payload", "[rest][private][sign]") {
-  nlohmann::ordered_json payload;
+  json payload;
   payload["instrument"] = "btc_usdt_spot";
   payload["side"] = 1;
   payload["price"] = 10000;
   payload["ordtype"] = 2;
   payload["orderqty"] = 1;
 
-  std::cout << nlohmann::ordered_json(payload.dump()).dump() << "\n";
+  std::cout << nlohmann::json(payload.dump()).dump() << "\n";
   std::cout << Bitwyre::Utils::SHA256(
-      nlohmann::ordered_json(payload.dump()).dump());
+      nlohmann::json(payload.dump()).dump());
 }
 
 TEST_CASE("HMAC", "[rest][private][hmac]") {
