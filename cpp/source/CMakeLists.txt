@@ -6,9 +6,9 @@ include(sanitizers)
 
 # Enable helpfull warnings and C++20 for all files
 if(MSVC)
-    add_compile_options(/std:c++20 /W3 /WX )
+    add_compile_options(/std:c++17 /W3 /WX )
 else()
-    add_compile_options(-std=c++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wunused -pedantic)
+    add_compile_options(-std=c++17 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wunused -pedantic)
 endif()
 
 # configure version.cpp.in with selected version
@@ -59,12 +59,27 @@ add_library(bitwyresdk
         ${CMAKE_CURRENT_SOURCE_DIR}/details/Dispatcher.hpp)
 
 add_dependencies(bitwyresdk versionFileTouchForRebuild) # We want precise time of build in version
-target_include_directories(bitwyresdk PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries (bitwyresdk PRIVATE Threads::Threads ${CONAN_LIBS})
 
-install(TARGETS bitwyresdk
-    BUNDLE DESTINATION "."
-    RUNTIME DESTINATION bin)
+target_include_directories(
+        ${PROJECT_NAME}
+        ${BITWYRE_SYSTEM_INCLUDE} INTERFACE
+        $<BUILD_INTERFACE:"${PROJECT_SOURCE_DIR}/source/"}>
+        $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries (bitwyresdk PRIVATE Threads::Threads ${CONAN_LIBS})
+add_library(bitwyresdk::bitwyresdk ALIAS bitwyresdk)
+
+install(
+        TARGETS bitwyresdk
+        EXPORT bitwyresdk
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(
+        DIRECTORY "${PROJECT_SOURCE_DIR}/source/"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+)
 
 # Using macro from cmake/cleanCpppExtensions.cpp included on the top
 # Provides bitwyresdk-run a nd bitwyresdk-dbg
@@ -76,7 +91,7 @@ add_custom_target(run DEPENDS bitwyresdk-run)
 #------------------------------------------------------------------------------
 # Unit tests
 if(BUILD_TESTING)
-add_subdirectory(unittest)
+    add_subdirectory(unittest)
 endif()
 #-------------------------------------------------------------------------------
 # Copy MINGW needed libraries for building on windows
