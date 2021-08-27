@@ -78,7 +78,7 @@ install(
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(
         DIRECTORY "${PROJECT_SOURCE_DIR}/source/"
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/bitwyresdk"
 )
 
 # Using macro from cmake/cleanCpppExtensions.cpp included on the top

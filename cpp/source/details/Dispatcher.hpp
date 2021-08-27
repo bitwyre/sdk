@@ -25,7 +25,7 @@ namespace Bitwyre {
 
       auto operator()(std::string_view uri, CommonPublicRequest) noexcept {
         auto endpoint =
-            cpr::Url(std::string{config["URL_API_BITWYRE"]} + uri.data());
+            cpr::Url(std::string{config.at("URL_API_BITWYRE")} + uri.data());
         auto res = cpr::Get(endpoint);
 
         auto jsonRes = json::parse(res.text.begin(), res.text.end());
@@ -36,7 +36,7 @@ namespace Bitwyre {
       auto operator()(std::string_view uri,
                       const InstrumentRequest& request) noexcept {
         auto endpoint =
-            cpr::Url(std::string{config["URL_API_BITWYRE"]} + uri.data());
+            cpr::Url(std::string{config.at("URL_API_BITWYRE")} + uri.data());
 
         auto queryString = cpr::Parameters{{"market", request.market_.get()},
                                            {"product", request.product_.get()},
@@ -52,7 +52,7 @@ namespace Bitwyre {
       auto operator()(std::string_view uri,
                       const TickerRequest& request) noexcept {
         auto endpoint =
-            cpr::Url(std::string{config["URL_API_BITWYRE"]} + uri.data());
+            cpr::Url(std::string{config.at("URL_API_BITWYRE")} + uri.data());
 
         cpr::Response res;
         if (request.instrument_.get().empty()) {
@@ -70,7 +70,7 @@ namespace Bitwyre {
       auto operator()(std::string_view uri,
                       const ContractRequest& request) noexcept {
         auto endpoint =
-            cpr::Url(std::string{config["URL_API_BITWYRE"]} + uri.data());
+            cpr::Url(std::string{config.at("URL_API_BITWYRE")} + uri.data());
 
         auto queryString =
             cpr::Parameters{{"instrument", request.instrument_.get()}};
@@ -84,7 +84,7 @@ namespace Bitwyre {
       auto operator()(std::string_view uri,
                       const TradesRequest& request) noexcept {
         auto endpoint =
-            cpr::Url(std::string{config["URL_API_BITWYRE"]} + uri.data());
+            cpr::Url(std::string{config.at("URL_API_BITWYRE")} + uri.data());
 
         auto queryString = cpr::Parameters{
             {"instrument", request.instrument_.get()},
@@ -99,7 +99,7 @@ namespace Bitwyre {
       auto operator()(std::string_view uri,
                       const DepthRequest& request) noexcept {
         auto endpoint =
-            cpr::Url(std::string{config["URL_API_BITWYRE"]} + uri.data());
+            cpr::Url(std::string{config.at("URL_API_BITWYRE")} + uri.data());
 
         auto queryString = cpr::Parameters{
             {"instrument", request.instrument_.get()},
@@ -126,7 +126,7 @@ namespace Bitwyre {
             {"payload", ""},
         };
         auto endpoint =
-            cpr::Url(std::string{config["URL_API_BITWYRE"]} + uri.data());
+            cpr::Url(std::string{config.at("URL_API_BITWYRE")} + uri.data());
 
         auto header = cpr::Header{{"Api-Key", std::getenv("BITWYRE_API_KEY")},
                                   {"API-Sign", signature}};
@@ -157,7 +157,7 @@ namespace Bitwyre {
             {"payload", payloadParam},
         };
         auto endpoint =
-            cpr::Url(std::string{config["URL_API_BITWYRE"]} + uri.data());
+            cpr::Url(std::string{config.at("URL_API_BITWYRE")} + uri.data());
 
         auto header = cpr::Header{{"Api-Key", std::getenv("BITWYRE_API_KEY")},
                                   {"API-Sign", signature}};
@@ -183,7 +183,7 @@ namespace Bitwyre {
             {"payload", request.toString()},
         };
         auto endpoint =
-            cpr::Url(std::string{config["URL_API_BITWYRE"]} + uri.data());
+            cpr::Url(std::string{config.at("URL_API_BITWYRE")} + uri.data());
 
         auto header = cpr::Header{{"Api-Key", std::getenv("BITWYRE_API_KEY")},
                                   {"API-Sign", signature}};
@@ -216,7 +216,7 @@ namespace Bitwyre {
             {"checksum", std::move(checksum)},
             {"payload", payload},
         };
-        auto endpoint = cpr::Url(std::string{config["URL_API_BITWYRE"]} +
+        auto endpoint = cpr::Url(std::string{config.at("URL_API_BITWYRE")} +
                                  std::move(modifiedURI));
 
         auto header = cpr::Header{{"Api-Key", std::getenv("BITWYRE_API_KEY")},
@@ -232,12 +232,10 @@ namespace Bitwyre {
                "BITWYRE_API_KEY NOT SET");
 
         auto nonce = Utils::getTimestamp();
-        auto checksum = request.checksum();
-        checksum = Utils::lowercase(checksum);
+        auto checksum = Utils::lowercase(request.checksum());
         auto signature = Utils::sign(uri, nonce, checksum);
-        auto config = Config::getConfig();
         auto endpoint =
-            cpr::Url(std::string{config["URL_API_BITWYRE"]} + uri.data());
+            cpr::Url(std::string{config.at("URL_API_BITWYRE")} + uri.data());
 
         json payload = {{"nonce", nonce},
                         {"checksum", checksum},
@@ -270,7 +268,6 @@ namespace Bitwyre {
         }
 
         auto signature = Utils::sign(modifiedURI, nonce, checksum);
-        auto config = Config::getConfig();
 
         auto parameters = cpr::Parameters{
             {"nonce", std::to_string(nonce)},
@@ -278,7 +275,7 @@ namespace Bitwyre {
             {"payload", ""},
         };
         auto endpoint =
-            cpr::Url(std::string{config["URL_API_BITWYRE"]} + modifiedURI);
+            cpr::Url(std::string{config.at("URL_API_BITWYRE")} + modifiedURI);
 
         auto header = cpr::Header{{"Api-Key", std::getenv("BITWYRE_API_KEY")},
                                   {"API-Sign", Utils::lowercase(signature)}};
@@ -302,7 +299,7 @@ namespace Bitwyre {
             {"payload", ""},
         };
         auto endpoint =
-            cpr::Url(std::string{config["URL_API_BITWYRE"]} + uri.data());
+            cpr::Url(std::string{config.at("URL_API_BITWYRE")} + uri.data());
 
         auto header = cpr::Header{{"Api-Key", std::getenv("BITWYRE_API_KEY")},
                                   {"API-Sign", Utils::lowercase(signature)}};
@@ -313,8 +310,7 @@ namespace Bitwyre {
       auto operator()(std::string_view uri,
                       const TransactionHistoryRequest& request) {
         auto nonce = Utils::getTimestamp();
-        auto checksum = request.checksum();
-        checksum = Utils::lowercase(checksum);
+        auto checksum = Utils::lowercase(request.checksum());
         auto signature = Utils::sign(uri, nonce, checksum);
 
         auto parameters = cpr::Parameters{
@@ -323,7 +319,7 @@ namespace Bitwyre {
             {"payload", ""},
         };
         auto endpoint =
-            cpr::Url(std::string{config["URL_API_BITWYRE"]} + uri.data());
+            cpr::Url(std::string{config.at("URL_API_BITWYRE")} + uri.data());
 
         auto header = cpr::Header{{"Api-Key", std::getenv("BITWYRE_API_KEY")},
                                   {"API-Sign", Utils::lowercase(signature)}};
