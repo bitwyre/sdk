@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ConstexprMap.hpp"
+#include <map>
 
 namespace Bitwyre::Details {
 
@@ -20,13 +21,13 @@ namespace Bitwyre::Details {
   private:
     const inline static auto API_URL =
         getEnvOr("URL_API_BITWYRE", "https://api.bitwyre.id");
-    const inline static ConfMapT confMap_ = {
-        std::make_pair("URL_API_BITWYRE"sv, API_URL.data()),
+    const inline static std::map<std::string, std::string> confMap_ = {
+        {"URL_API_BITWYRE", API_URL},
         {"TIMEOUT", "5"},
     };
 
   public:
-    constexpr static auto getConfig() -> ConfMapT {
+    static auto getConfig() {
       return confMap_;
     }
   };

@@ -1,5 +1,5 @@
 #pragma once
-#include "details/Dispatcher.hpp"
+#include "../../details/Dispatcher.hpp"
 
 using namespace Bitwyre::Details;
 using namespace Bitwyre::Types::Public;

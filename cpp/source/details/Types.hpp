@@ -1,6 +1,6 @@
 #pragma once
-#include "details/Response.hpp"
-#include "details/Utils.hpp"
+#include "Response.hpp"
+#include "Utils.hpp"
 #include "named_type.hpp"
 #include "nlohmann/json.hpp"
 #include <sstream>
@@ -312,7 +312,7 @@ namespace Bitwyre::Types {
       std::string instrument;
       std::string origcliId;
 
-      [[warn("Not yet supported")]] std::string execInst;
+      [[using Bitwyre: warn("Not yet supported")]] std::string execInst;
 
       std::uint8_t execType;
       std::uint8_t ordStatus;
