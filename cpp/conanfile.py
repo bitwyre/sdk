@@ -8,7 +8,7 @@ class bitwyresdkCpp(ConanFile):
     description = "The official C++ SDK to connect with Bitwyre's REST, WS and FIX API"
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "build_test": [True, False], "build_doc": [True, False]}
-    default_options = {"shared": False, "build_test": False, "build_doc": False}
+    default_options = {"shared": False, "build_test": True, "build_doc": False}
     generators = "cmake"
     exports_sources = ("source/details/*", "source/rest/*", "source/CMakeLists.txt",
                        "source/version.h", "source/version.cpp.in", "CMakeLists.txt", "cmake/*")
