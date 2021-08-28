@@ -16,7 +16,9 @@ pointing to our production cluster will be used.
 ## Build commands
 
 ```shell
-mkdir build && cd $_ && cmake .. -DCMAKE_BUILD_TYPE=Debug
+rm -r /home/leanne/.conan/data/bitwyresdk
+conan create . bitwyresdk/1.0.0@ --build=missing
+mkdir build && cd $_ && cmake .. -DUNIT_TESTS=1 -DBUILD_TESTING=1 -DCMAKE_BUILD_TYPE=Debug
 ```
 
 In order to build the test suite add `-DBUILD_TESTING` definition.

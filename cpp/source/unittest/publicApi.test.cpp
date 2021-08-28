@@ -18,9 +18,9 @@
 
 using namespace Bitwyre::Rest::Public;
 using namespace Bitwyre::Types;
-using ::testing::Return;
-using ::testing::_;
-using ::testing::An;
+using testing::Return;
+using testing::_;
+using testing::An;
 
 TEST_CASE("Time request", "[rest][public][time]") {
   MockDispatcher mockDispatcher;
