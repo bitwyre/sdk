@@ -50,7 +50,7 @@ auto main() -> int {
     // TimeResponse here can be replaced with auto
     TimeResponse tr = Bitwyre::Rest::Public::Time::get();
     
-    std::cout << tr.unixtime << "\n";
+    std::cout << tr.unixtime.count() << "\n";
 }
 ```
 
