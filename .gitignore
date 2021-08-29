@@ -16,9 +16,9 @@
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-*.smod
+# clion
+.idea
+cmake-build-debug
 
 # Compiled Static libraries
 *.lai

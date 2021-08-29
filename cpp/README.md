@@ -44,11 +44,11 @@ Coming Soon
 - Getting the Server time https://docs.bitwyre.id/#server-time
 
 ```c++
-#include "rest/public/Time.hpp"
+#include "bitwyresdk/rest/public/Time.hpp"
 
 auto main() -> int {
     // TimeResponse here can be replaced with auto
-    TimeResponse tr = Time::get();
+    TimeResponse tr = Bitwyre::Rest::Public::Time::get();
     
     std::cout << tr.unixtime << "\n";
 }
