@@ -15,7 +15,6 @@ class bitwyresdkCpp(ConanFile):
 
     requires = [
         "fmt/6.2.0@bitwyre/stable",
-        "spdlog/1.6.0rc@bitwyre/stable",
         "nlohmann_json/3.9.1@bitwyre/stable",
         "cpr/1.6.2@bitwyre/stable",
         "cryptopp/8.5.0@bitwyre/stable",

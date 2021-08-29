@@ -2,7 +2,7 @@
 #include "../../details/Dispatcher.hpp"
 #include <future>
 using namespace Bitwyre::Details;
-using asyncTimeResponse = std::future<TimeResponse>;
+using AsyncTimeResponse = std::future<TimeResponse>;
 
 namespace Bitwyre::Rest::Public {
   using TimeT = std::chrono::nanoseconds;
@@ -13,10 +13,10 @@ namespace Bitwyre::Rest::Public {
       return "/public/time";
     }
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto getasync() noexcept -> asyncTimeResponse {
-      return std::async(std::launch::async, [](){return get();});
+    [[nodiscard]] auto getAsync() noexcept -> AsyncTimeResponse {
+      return std::async(std::launch::async, [](){return get<Dispatcher>();});
     }
-
+//
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto get() noexcept -> TimeResponse { //from Types.hpp
       auto response = Dispatcher()(uri(), CommonPublicRequest{});
