@@ -43,7 +43,7 @@ TEST_CASE("AsyncTime request", "[rest][public][futuretime]") {
     Time time1;
     auto response = time1.getAsync();
     auto result1 = response.get();
-    std::cout << result1.unixtime << "\n";
+  //  std::cout << result1.unixtime.count() << "\n";
 }
 
 
