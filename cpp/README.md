@@ -16,7 +16,7 @@ pointing to our production cluster will be used.
 ## Build commands
 
 ```shell
-rm -r /home/leanne/.conan/data/bitwyresdk
+rm -r ~/.conan/data/bitwyresdk
 conan create . bitwyresdk/1.0.0@ --build=missing
 mkdir build && cd $_ && cmake .. -DUNIT_TESTS=1 -DBUILD_TESTING=1 -DCMAKE_BUILD_TYPE=Debug
 ```
