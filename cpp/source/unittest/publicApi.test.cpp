@@ -54,7 +54,7 @@ TEST_CASE("AsyncTime request", "[rest][public][futuretime]") {
     auto future = time1.getAsync();
     auto response = future.get();
     std::cout << response.unixtime.count() << "\n";
-    REQUIRE(timeResponse.unixtime == response.unixtime);
+    REQUIRE(timeResponse.unixtime == response.unixtime); // ? == ?
     REQUIRE(timeResponse.statusCode_ == 200);
 
 }
