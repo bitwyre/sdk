@@ -39,22 +39,13 @@ TEST_CASE("Time request", "[rest][public][time]") {
   REQUIRE(timeResponse.statusCode_ == 200);
 }
 
-//TEST_CASE("AsyncTime request", "[rest][public][futuretime]") {
-//  MockDispatcher mockDispatcher;
-//  json apiRes =
-//      R"({"statusCode": 200, "error": [], "result": {"unixtime": 1571744594571020435} })"_json;
-//
-//  EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>()))
-//      .WillOnce(Return(apiRes));
-//
-//  auto rawResponse =
-//      mockDispatcher.dispatch(Time::uri(), CommonPublicRequest{});
-//  auto timeResponse = Time::processResponse(std::move(rawResponse));
-//  AsyncTimeResponse future = std::async(std::launch::async, static_cast<TimeT>(apiRes["result"]["unixtime"].get<unsigned>()))
-//  REQUIRE(future.unixtime ==
-//          static_cast<TimeT>(apiRes["result"]["unixtime"].getAsync<unsigned>()));
-//  REQUIRE(future.statusCode_ == 200);
-//}
+TEST_CASE("AsyncTime request", "[rest][public][futuretime]") {
+    Time time1;
+    auto response = time1.getAsync();
+    auto result1 = response.get();
+    std::cout << result1.unixtime << "\n";
+}
+
 
 TEST_CASE("Market request", "[rest][public][market]") {
   MockDispatcher mockDispatcher;
