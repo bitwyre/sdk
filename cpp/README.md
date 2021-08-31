@@ -21,8 +21,14 @@ pointing to our production cluster will be used.
 
 ```shell
 rm -r ~/.conan/data/bitwyresdk
-conan create . bitwyresdk/1.0.0@ --build=missing
-mkdir build && cd $_ && cmake .. -DUNIT_TESTS=1 -DBUILD_TESTING=1 -DCMAKE_BUILD_TYPE=Debug
+conan create . bitwyresdk/1.0.0@ 
+mkdir build
+cd build
+#conan install .. --build=missing
+conan install .. -e CONAN_RUN_TESTS=0
+cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=1
+make
+#&& cd $_ && cmake .. -DUNIT_TESTS=1 -DBUILD_TESTING=1 -DCMAKE_BUILD_TYPE=Debug
 ```
 
 Note: everytime we run `conan create` we don't need to wait for our changes to be merged in develop branch.
