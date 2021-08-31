@@ -2,6 +2,10 @@
 
 # Getting Started
 
+Roughly speaking, a REST API is about getting request and processing response.
+
+The Dispatcher class is responsible to send request. Each end point has to process response, write it to JSON format output.
+
 The API URL is retrieve from the environment variable `URL_API_BITWYRE`, but if you do not set it, a default one
 pointing to our production cluster will be used.
 
@@ -20,6 +24,9 @@ rm -r ~/.conan/data/bitwyresdk
 conan create . bitwyresdk/1.0.0@ --build=missing
 mkdir build && cd $_ && cmake .. -DUNIT_TESTS=1 -DBUILD_TESTING=1 -DCMAKE_BUILD_TYPE=Debug
 ```
+
+Note: everytime we run `conan create` we don't need to wait for our changes to be merged in develop branch.
+The `create` command will update our local cache and we can run the examples with the updates.
 
 In order to build the test suite add `-DBUILD_TESTING` definition.
 
