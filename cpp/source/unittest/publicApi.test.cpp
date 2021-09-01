@@ -34,6 +34,7 @@ TEST_CASE("Time request", "[rest][public][time]") {
   auto rawResponse =
       mockDispatcher.dispatch(Time::uri(), CommonPublicRequest{});
   auto timeResponse = Time::processResponse(std::move(rawResponse));
+  std::cout << timeResponse.unixtime.count() << "\n";
   REQUIRE(timeResponse.unixtime ==
           static_cast<TimeT>(apiRes["result"]["unixtime"].get<unsigned>()));
   REQUIRE(timeResponse.statusCode_ == 200);
