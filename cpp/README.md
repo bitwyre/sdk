@@ -19,13 +19,22 @@ pointing to our production cluster will be used.
 
 ## Build commands
 
+### Tensorbook Ubuntu
 ```shell
-rm -r ~/.conan/data/bitwyresdk
-conan create . bitwyresdk/1.0.0@ 
+export CONAN_RUN_TESTS=1
+echo $CONAN_RUN_TESTS
+conan install .. 
+cmake .. 
+make
+```
+### Other linux distributions
+```shell
+#rm -r ~/.conan/data/bitwyresdk
+#conan create . bitwyresdk/1.0.0@ 
 mkdir build
 cd build
 #conan install .. --build=missing
-conan install .. -e CONAN_RUN_TESTS=0
+conan install .. -e CONAN_RUN_TESTS=1
 cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=1
 make
 #&& cd $_ && cmake .. -DUNIT_TESTS=1 -DBUILD_TESTING=1 -DCMAKE_BUILD_TYPE=Debug
