@@ -19,25 +19,26 @@ pointing to our production cluster will be used.
 
 ## Build commands
 
-### Tensorbook Ubuntu
+### My weird Tensorbook Ubuntu (Clang12)
 ```shell
+mkdir build
+cd build
 export CONAN_RUN_TESTS=1
 echo $CONAN_RUN_TESTS
 conan install .. 
 cmake .. 
 make
 ```
-### Other linux distributions
+### Other linux distributions (gcc10)
+
 ```shell
-#rm -r ~/.conan/data/bitwyresdk
-#conan create . bitwyresdk/1.0.0@ 
 mkdir build
 cd build
-#conan install .. --build=missing
-conan install .. -e CONAN_RUN_TESTS=1
-cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=1
+export CONAN_RUN_TESTS=1
+echo $CONAN_RUN_TESTS
+conan install .. --build=missing
+cmake .. 
 make
-#&& cd $_ && cmake .. -DUNIT_TESTS=1 -DBUILD_TESTING=1 -DCMAKE_BUILD_TYPE=Debug
 ```
 
 Note: everytime we run `conan create` we don't need to wait for our changes to be merged in develop branch.
