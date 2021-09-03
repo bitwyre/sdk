@@ -56,7 +56,8 @@ add_library(bitwyresdk
         ${CMAKE_CURRENT_SOURCE_DIR}/rest/private/OpenOrders.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/rest/private/TransactionHistory.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/details/Utils.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/details/Dispatcher.hpp)
+        ${CMAKE_CURRENT_SOURCE_DIR}/details/Dispatcher.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/version.h)
 
 add_dependencies(bitwyresdk versionFileTouchForRebuild) # We want precise time of build in version
 
@@ -81,6 +82,8 @@ install(
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/bitwyresdk"
 )
 
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/version.h
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 # Using macro from cmake/cleanCpppExtensions.cpp included on the top
 # Provides bitwyresdk-run a nd bitwyresdk-dbg
 addRunAndDebugTargets(bitwyresdk)
