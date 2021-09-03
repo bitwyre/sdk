@@ -35,6 +35,7 @@ TEST_CASE("Time request", "[rest][public][time]") {
       mockDispatcher.dispatch(Time::uri(), CommonPublicRequest{});
   auto timeResponse = Time::processResponse(std::move(rawResponse));
   std::cout << timeResponse.unixtime.count() << "\n";
+  std::cout << ".unixtime = " << apiRes["result"]["unixtime"].get<unsigned>() << "\n";
   REQUIRE(timeResponse.unixtime ==
           static_cast<TimeT>(apiRes["result"]["unixtime"].get<unsigned>()));
   REQUIRE(timeResponse.statusCode_ == 200);
@@ -55,7 +56,11 @@ TEST_CASE("AsyncTime request", "[rest][public][futuretime]") {
     auto future = time1.getAsync();
     auto response = future.get();
     std::cout << response.unixtime.count() << "\n";
-    REQUIRE(timeResponse.unixtime == response.unixtime); // ? == ?
+    REQUIRE(response.unixtime.count() ==  apiRes["result"]["unixtime"].get<unsigned>());
+    /*14833002 (0xe2556a)
+    ==
+    2634795155 (0x9d0bc893)*/
+
     REQUIRE(timeResponse.statusCode_ == 200);
 
 }
