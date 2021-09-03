@@ -28,7 +28,7 @@ namespace Bitwyre::Rest::Public {
       timeResponse.statusCode_ = rawResponse["statusCode"].get<int>();
       timeResponse.errors_ = rawResponse["error"].get<ErrorsT>();
       timeResponse.unixtime =
-          static_cast<TimeT>(rawResponse["result"]["unixtime"].get<unsigned>());
+          static_cast<TimeT>(rawResponse["result"]["unixtime"].get<long long int>());
       return timeResponse;
     }
   };

@@ -37,7 +37,7 @@ TEST_CASE("Time request", "[rest][public][time]") {
   std::cout << timeResponse.unixtime.count() << "\n";
   std::cout << ".unixtime = " << apiRes["result"]["unixtime"].get<unsigned>() << "\n";
   REQUIRE(timeResponse.unixtime ==
-          static_cast<TimeT>(apiRes["result"]["unixtime"].get<unsigned>()));
+          static_cast<TimeT>(apiRes["result"]["unixtime"].get<long long int>()));
   REQUIRE(timeResponse.statusCode_ == 200);
 }
 
