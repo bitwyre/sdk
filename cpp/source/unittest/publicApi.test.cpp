@@ -1,4 +1,5 @@
 #include "MockDispatcher.hpp"
+#include "MockAsyncDispatcher.hpp"
 #include "catch2/catch.hpp"
 #include "details/Types.hpp"
 #include "rest/public/Asset.hpp"
@@ -43,22 +44,28 @@ TEST_CASE("Time request", "[rest][public][time]") {
 
 TEST_CASE("AsyncTime request", "[rest][public][futuretime]") {
     MockDispatcher mockDispatcher;
+    MockAsyncDispatcher asyncDispatcher;
     json apiRes =
             R"({"statusCode": 200, "error": [], "result": {"unixtime": 1571744594571020435} })"_json;
 
     EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>()))
     .WillOnce(Return(apiRes));
 
-    auto rawResponse =
-            mockDispatcher.dispatch(Time::uri(), CommonPublicRequest{});
-    auto timeResponse = Time::processResponse(std::move(rawResponse));
-    Time time1;
-    auto future = time1.getAsync<MockDispatcher>();
-    auto response = future.get();
+    EXPECT_CALL(asyncDispatcher,getAsync()).WillOnce(Return(mockDispatcher.dispatch(Time::uri(),CommonPublicRequest{})));
+
+
+
+    auto asyncRawRes =
+            asyncDispatcher.getAsync();
+    auto timeResponse = Time::processResponse(std::move(asyncRawRes));
+  //  Time time1;
+ //   auto future = time1.getAsync<MockDispatcher>();
+  //  auto response = future.get();
  //   std::cout << response.unixtime << "\n";
-    REQUIRE(response.unixtime ==  static_cast<TimeT>(apiRes["result"]["unixtime"].get<long long int>()));
+    REQUIRE(timeResponse.unixtime ==  static_cast<TimeT>(apiRes["result"]["unixtime"].get<long long int>()));
     //REQUIRE( response.unixtime == apiRes["result"]["unixtime"].get<long long int>() );
-  //   REQUIRE(timeResponse.statusCode_ == 200);
+    REQUIRE(timeResponse.statusCode_ == 200);
+    std::cout << "end ! \n";
 }
 
 
