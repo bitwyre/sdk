@@ -53,8 +53,6 @@ TEST_CASE("AsyncTime request", "[rest][public][futuretime]") {
 
     EXPECT_CALL(asyncDispatcher,getAsync()).WillOnce(Return(mockDispatcher.dispatch(Time::uri(),CommonPublicRequest{})));
 
-
-
     auto asyncRawRes =
             asyncDispatcher.getAsync();
     auto timeResponse = Time::processResponse(std::move(asyncRawRes));
