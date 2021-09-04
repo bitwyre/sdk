@@ -58,14 +58,8 @@ TEST_CASE("AsyncTime request", "[rest][public][futuretime]") {
     auto asyncRawRes =
             asyncDispatcher.getAsync();
     auto timeResponse = Time::processResponse(std::move(asyncRawRes));
-  //  Time time1;
- //   auto future = time1.getAsync<MockDispatcher>();
-  //  auto response = future.get();
- //   std::cout << response.unixtime << "\n";
     REQUIRE(timeResponse.unixtime ==  static_cast<TimeT>(apiRes["result"]["unixtime"].get<long long int>()));
-    //REQUIRE( response.unixtime == apiRes["result"]["unixtime"].get<long long int>() );
     REQUIRE(timeResponse.statusCode_ == 200);
-    std::cout << "end ! \n";
 }
 
 
