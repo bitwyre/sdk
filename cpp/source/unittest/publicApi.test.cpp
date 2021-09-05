@@ -43,6 +43,7 @@ TEST_CASE("Time request", "[rest][public][time]") {
 }
 
 TEST_CASE("AsyncTime request", "[rest][public][futuretime]") {
+    // Arrange
     MockDispatcher mockDispatcher;
     MockAsyncDispatcher asyncDispatcher;
     json apiRes =
@@ -484,6 +485,6 @@ TEST_CASE("Supported languages Request", "[rest][public][supportedlanguage]") {
   auto supportedLanguages = SupportedLanguages::get();
 }
 
-//TEST_CASE("Supported languages AsyncRequest", "[rest][public][supportedlanguage]") {
-//  auto supportedLanguages = SupportedLanguages::getAsync();
-//}
+TEST_CASE("Supported languages AsyncRequest", "[rest][public][supportedlanguage]") {
+  auto supportedLanguages = SupportedLanguages::getAsyncLanguage();
+}
