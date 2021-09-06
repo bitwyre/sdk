@@ -12,7 +12,9 @@ namespace Bitwyre::Rest::Public {
     [[nodiscard]] std::string uri() const noexcept {
       return "/public/announcements";
     }
-
+    [[nodiscard]] Response getAsync() const noexcept {
+          return std::async(std::launch::async, [](){return get<Dispatcher>();});
+    }
     [[nodiscard]] Response get() const noexcept {
       return Request::sendGet(uri());
     }

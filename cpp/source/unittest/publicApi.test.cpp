@@ -119,7 +119,8 @@ TEST_CASE("Product request", "[rest][public][product]") {
 TEST_CASE("Asset Request", "[rest][public][asset]") {
 
   MockDispatcher mockDispatcher;
-  json apiRes = R"({
+
+json apiRes = R"({
     "statusCode": 200,
     "error": [],
     "result": [       {
@@ -165,6 +166,58 @@ TEST_CASE("Asset Request", "[rest][public][asset]") {
   REQUIRE(response.assets.size() == 2);
   REQUIRE(response.assets.at(0).name == "Bitcoin");
   REQUIRE(response.statusCode_ == 200);
+}
+
+TEST_CASE("AsyncAsset Request", "[rest][public][futureasset]") {
+
+MockDispatcher mockDispatcher;
+MockAsyncDispatcher asyncDispatcher;
+json apiRes = R"({
+    "statusCode": 200,
+    "error": [],
+    "result": [       {
+            "asset": "btc",
+            "btc_equivalent": "1",
+            "icon_url": "https://storage.bitwyre.com/assets/btc.png",
+            "is_deposit_enabled": true,
+            "is_trading_enabled": true,
+            "is_withdraw_enabled": true,
+            "local_equivalent": "",
+            "local_reference": "",
+            "max_withdrawal": "10",
+            "min_withdrawal": "0.001",
+            "name": "Bitcoin",
+            "precision": "1e-8",
+            "withdrawal_fee": "0.00000001"
+        },
+        {
+            "asset": "eth",
+            "btc_equivalent": "",
+            "icon_url": "https://storage.bitwyre.com/public/images/coins/raster/ETH_500px.png",
+            "is_deposit_enabled": true,
+            "is_trading_enabled": true,
+            "is_withdraw_enabled": true,
+            "local_equivalent": "",
+            "local_reference": "",
+            "max_withdrawal": "10",
+            "min_withdrawal": "0.001",
+            "name": "Ethereum",
+            "precision": "1e-9",
+            "withdrawal_fee": "0.00000001"
+        } ]
+})"_json;
+
+EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>()))
+.WillOnce(Return(apiRes));
+
+EXPECT_CALL(asyncDispatcher,getAsync()).WillOnce(Return(mockDispatcher.dispatch(Asset::uri(),CommonPublicRequest{})));
+auto asyncRawRes = asyncDispatcher.getAsync();
+auto assetResponse = Asset::processResponse(std::move(asyncRawRes));
+
+REQUIRE(assetResponse.assets.empty() == false);
+REQUIRE(assetResponse.assets.size() == 2);
+REQUIRE(assetResponse.assets.at(0).name == "Bitcoin");
+REQUIRE(assetResponse.statusCode_ == 200);
 }
 
 TEST_CASE("Crypto Asset Request", "[rest][public][cryptoasset]") {
@@ -216,6 +269,57 @@ TEST_CASE("Crypto Asset Request", "[rest][public][cryptoasset]") {
   REQUIRE(response.assets.at(0).name == "Bitcoin");
   REQUIRE(response.statusCode_ == 200);
 }
+
+TEST_CASE("AsyncCrypto Asset Request", "[rest][public][Asynccryptoasset]") {
+MockDispatcher mockDispatcher;
+json apiRes = R"({
+    "statusCode": 200,
+    "error": [],
+    "result": [       {
+            "asset": "btc",
+            "btc_equivalent": "1",
+            "icon_url": "https://storage.bitwyre.com/assets/btc.png",
+            "is_deposit_enabled": true,
+            "is_trading_enabled": true,
+            "is_withdraw_enabled": true,
+            "local_equivalent": "",
+            "local_reference": "",
+            "max_withdrawal": "10",
+            "min_withdrawal": "0.001",
+            "name": "Bitcoin",
+            "precision": "1e-8",
+            "withdrawal_fee": "0.00000001"
+        },
+        {
+            "asset": "eth",
+            "btc_equivalent": "",
+            "icon_url": "https://storage.bitwyre.com/public/images/coins/raster/ETH_500px.png",
+            "is_deposit_enabled": true,
+            "is_trading_enabled": true,
+            "is_withdraw_enabled": true,
+            "local_equivalent": "",
+            "local_reference": "",
+            "max_withdrawal": "10",
+            "min_withdrawal": "0.001",
+            "name": "Ethereum",
+            "precision": "1e-9",
+            "withdrawal_fee": "0.00000001"
+        } ]
+})"_json;
+
+EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>()))
+.WillOnce(Return(apiRes));
+
+auto rawResponse =
+        mockDispatcher.dispatch(CryptoAsset::uri(), CommonPublicRequest{});
+auto response = CryptoAsset::processResponse(std::move(rawResponse));
+
+REQUIRE(response.assets.empty() == false);
+REQUIRE(response.assets.size() == 2);
+REQUIRE(response.assets.at(0).name == "Bitcoin");
+REQUIRE(response.statusCode_ == 200);
+}
+
 
 TEST_CASE("Fiat Asset Request", "[rest][public][cryptoasset]") {
 
