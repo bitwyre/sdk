@@ -270,8 +270,10 @@ TEST_CASE("Crypto Asset Request", "[rest][public][cryptoasset]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("AsyncCrypto Asset Request", "[rest][public][Asynccryptoasset]") {
+TEST_CASE("Crypto AsyncAsset Request", "[rest][public][cryptoAsyncasset]") {
 MockDispatcher mockDispatcher;
+MockAsyncDispatcher asyncDispatcher;
+
 json apiRes = R"({
     "statusCode": 200,
     "error": [],
@@ -309,15 +311,18 @@ json apiRes = R"({
 
 EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>()))
 .WillOnce(Return(apiRes));
+EXPECT_CALL(asyncDispatcher, getAsync()).WillOnce(Return(mockDispatcher.dispatch(CryptoAsset::uri(), CommonPublicRequest{})));
+auto asyncRawRes = asyncDispatcher.getAsync();
+auto crytoassetResponse = CryptoAsset::processResponse(std::move(asyncRawRes));
 
-auto rawResponse =
-        mockDispatcher.dispatch(CryptoAsset::uri(), CommonPublicRequest{});
-auto response = CryptoAsset::processResponse(std::move(rawResponse));
+//auto rawResponse =
+//        mockDispatcher.dispatch(CryptoAsset::uri(), CommonPublicRequest{});
+//auto response = CryptoAsset::processResponse(std::move(rawResponse));
 
-REQUIRE(response.assets.empty() == false);
-REQUIRE(response.assets.size() == 2);
-REQUIRE(response.assets.at(0).name == "Bitcoin");
-REQUIRE(response.statusCode_ == 200);
+REQUIRE(crytoassetResponse.assets.empty() == false);
+REQUIRE(crytoassetResponse.assets.size() == 2);
+REQUIRE(crytoassetResponse.assets.at(0).name == "Bitcoin");
+REQUIRE(crytoassetResponse.statusCode_ == 200);
 }
 
 
@@ -525,7 +530,7 @@ TEST_CASE("Depth Request", "[rest][public][depth]") {
     "error": [],
     "result": {
     "bids": [
-      ["124112000", "0.18154050"],
+      ["124112000", "0.1815405"],
       ["124110000", "0.47319750"]
     ],
     "asks": [
@@ -546,7 +551,7 @@ TEST_CASE("Depth Request", "[rest][public][depth]") {
 
   REQUIRE(response.bids.size() == 2);
   REQUIRE(response.bids.at(0).first == 124112000);
-  REQUIRE(response.bids.at(0).second == 0.18154050);
+  REQUIRE(response.bids.at(0).second == 0.1815405);
   REQUIRE(response.asks.size() == 2);
   REQUIRE(response.statusCode_ == 200);
 }
