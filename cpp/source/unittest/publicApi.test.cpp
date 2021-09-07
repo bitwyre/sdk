@@ -90,7 +90,7 @@ TEST_CASE("Market request", "[rest][public][market]") {
   REQUIRE(marketResponse.statusCode_ == 200);
 }
 
-TEST_CASE("Market Asyncrequest", "[rest][public][asyncmarket]") {
+TEST_CASE("Market Asyncrequest", "[rest][public][async][market]") {
 MockDispatcher mockDispatcher;
 MockAsyncDispatcher asyncDispatcher;
 
@@ -195,7 +195,7 @@ json apiRes = R"({
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("AsyncAsset Request", "[rest][public][futureasset]") {
+TEST_CASE("AsyncAsset Request", "[rest][public][future][asset]") {
 
 MockDispatcher mockDispatcher;
 MockAsyncDispatcher asyncDispatcher;
@@ -297,7 +297,7 @@ TEST_CASE("Crypto Asset Request", "[rest][public][cryptoasset]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("Crypto AsyncAsset Request", "[rest][public][futurecryptoasset]") {
+TEST_CASE("Crypto AsyncAsset Request", "[rest][public][future][cryptoasset]") {
 MockDispatcher mockDispatcher;
 MockAsyncDispatcher asyncDispatcher;
 
@@ -390,7 +390,7 @@ TEST_CASE("Fiat Asset Request", "[rest][public][cryptoasset]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("Fiat Asset AsyncRequest", "[rest][public][fiatasyncasset]") {
+TEST_CASE("Fiat Asset AsyncRequest", "[rest][public][async]fiatasset]") {
 
 MockDispatcher mockDispatcher;
 MockAsyncDispatcher asyncDispatcher;
