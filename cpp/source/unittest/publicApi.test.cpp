@@ -90,6 +90,33 @@ TEST_CASE("Market request", "[rest][public][market]") {
   REQUIRE(marketResponse.statusCode_ == 200);
 }
 
+TEST_CASE("Market Asyncrequest", "[rest][public][asyncmarket]") {
+MockDispatcher mockDispatcher;
+MockAsyncDispatcher asyncDispatcher;
+
+json apiRes = R"({
+    "statusCode": 200,
+    "error": [],
+    "result": [
+        "crypto",
+        "equities",
+        "stablecoin",
+        "commodities",
+        "fixed_income",
+        "carbon"
+    ]
+})"_json;
+
+EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>()))
+.WillOnce(Return(apiRes));
+EXPECT_CALL(asyncDispatcher, getAsync()).WillOnce(Return(mockDispatcher.dispatch(Market::uri(), CommonPublicRequest{})));
+auto asyncRawRes = asyncDispatcher.getAsync();
+auto marketResponse = Market::processResponse(std::move(asyncRawRes));
+REQUIRE(marketResponse.markets.size() >= 5);
+REQUIRE(marketResponse.markets.at(0) == "crypto");
+REQUIRE(marketResponse.statusCode_ == 200);
+}
+
 TEST_CASE("Product request", "[rest][public][product]") {
   MockDispatcher mockDispatcher;
   json apiRes = R"({
@@ -270,7 +297,7 @@ TEST_CASE("Crypto Asset Request", "[rest][public][cryptoasset]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("Crypto AsyncAsset Request", "[rest][public][cryptoAsyncasset]") {
+TEST_CASE("Crypto AsyncAsset Request", "[rest][public][futurecryptoasset]") {
 MockDispatcher mockDispatcher;
 MockAsyncDispatcher asyncDispatcher;
 
@@ -361,6 +388,46 @@ TEST_CASE("Fiat Asset Request", "[rest][public][cryptoasset]") {
   REQUIRE(response.assets.size() == 1);
   REQUIRE(response.assets.at(0).name == "Indonesian Rupiah");
   REQUIRE(response.statusCode_ == 200);
+}
+
+TEST_CASE("Fiat Asset AsyncRequest", "[rest][public][fiatasyncasset]") {
+
+MockDispatcher mockDispatcher;
+MockAsyncDispatcher asyncDispatcher;
+json apiRes = R"({
+    "statusCode": 200,
+    "error": [],
+    "result": [        {
+            "asset": "idr",
+            "btc_equivalent": "",
+            "icon_url": "https://storage.bitwyre.com/public/images/coins/raster/IDR.png",
+            "is_deposit_enabled": true,
+            "is_trading_enabled": true,
+            "is_withdraw_enabled": true,
+            "local_equivalent": "",
+            "local_reference": "",
+            "max_withdrawal": "100000000",
+            "min_withdrawal": "100000",
+            "name": "Indonesian Rupiah",
+            "precision": "1",
+            "withdrawal_fee": "0"
+        }
+]
+})"_json;
+
+EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>()))
+.WillOnce(Return(apiRes));
+
+EXPECT_CALL(asyncDispatcher, getAsync()).WillOnce(Return(mockDispatcher.dispatch(FiatAsset::uri(), CommonPublicRequest{})));
+
+auto rawResponse =
+        asyncDispatcher.getAsync();
+auto response = FiatAsset::processResponse(std::move(rawResponse));
+
+REQUIRE(response.assets.empty() == false);
+REQUIRE(response.assets.size() == 1);
+REQUIRE(response.assets.at(0).name == "Indonesian Rupiah");
+REQUIRE(response.statusCode_ == 200);
 }
 
 TEST_CASE("Instrument Request", "[rest][public][instrument]") {
@@ -523,6 +590,27 @@ TEST_CASE("OrderTypes Request", "[rest][public][product]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
+TEST_CASE("OrderTypes AsyncRequest", "[rest][public][asyncproduct]") {
+MockDispatcher mockDispatcher;
+MockAsyncDispatcher asyncDispatcher;
+
+json apiRes = R"({
+    "statusCode": 200,
+    "error": [],
+    "result": [ "Market", "Limit", "Stop", "Stop Limit" ]
+})"_json;
+
+EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>()))
+.WillOnce(Return(apiRes));
+EXPECT_CALL(asyncDispatcher, getAsync()).WillOnce(Return(mockDispatcher.dispatch(OrderTypes::uri(), CommonPublicRequest{})));
+auto asyncRawRes = asyncDispatcher.getAsync();
+auto response = OrderTypes::processResponse(std::move(asyncRawRes));
+
+REQUIRE(response.orderTypes.size() == 4);
+REQUIRE(response.orderTypes.at(0) == "Market");
+REQUIRE(response.statusCode_ == 200);
+}
+
 TEST_CASE("Depth Request", "[rest][public][depth]") {
   MockDispatcher mockDispatcher;
   json apiRes = R"({
@@ -555,6 +643,45 @@ TEST_CASE("Depth Request", "[rest][public][depth]") {
   REQUIRE(response.asks.size() == 2);
   REQUIRE(response.statusCode_ == 200);
 }
+
+//TEST_CASE("Depth AsyncRequest", "[rest][public][depth]") {
+//MockDispatcher mockDispatcher;
+//MockAsyncDispatcher asyncDispatcher;
+//json apiRes = R"({
+//    "statusCode": 200,
+//    "error": [],
+//    "result": {
+//    "bids": [
+//      ["124112000", "0.1815405"],
+//      ["124110000", "0.47319750"]
+//    ],
+//    "asks": [
+//      ["124130000", "0.03701609"],
+//      ["124251000", "0.03223585"]
+//    ],
+//    "is_frozen": 0
+//  }
+//})"_json;
+
+//DepthRequest depthRequest{InstrumentT("btc_usd_spot"), DepthNumT(2)};
+
+//EXPECT_CALL(mockDispatcher, dispatch(_, An<DepthRequest>()))
+//.WillOnce(Return(apiRes));
+//EXPECT_CALL(asyncDispatcher, getAsync(depthRequest)).WillOnce(Return(mockDispatcher.dispatch(Depth::uri(), depthRequest)));
+
+//auto asyncRawRes= asyncDispatcher.getAsync(depthRequest);
+
+//auto response = Depth::processResponse(std::move(asyncRawRes));
+//Depth depth1;
+//auto future = depth1.getAsync(depthRequest);
+//auto response = future.get();
+//std::cout << response.bids.size() << "\n";
+//REQUIRE(response.bids.size() == 2);
+//REQUIRE(response.bids.at(0).first == 124112000);
+//REQUIRE(response.bids.at(0).second == 0.1815405);
+//REQUIRE(response.asks.size() == 2);
+//REQUIRE(response.statusCode_ == 200);
+//}
 
 TEST_CASE("Contract Request", "[rest][public][contract]") {
   MockDispatcher mockDispatcher;
@@ -590,10 +717,47 @@ TEST_CASE("Contract Request", "[rest][public][contract]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("Supported languages Request", "[rest][public][supportedlanguage]") {
-  auto supportedLanguages = SupportedLanguages::get();
-}
-
-TEST_CASE("Supported languages AsyncRequest", "[rest][public][supportedlanguage]") {
-  auto supportedLanguages = SupportedLanguages::getAsyncLanguage();
-}
+//TEST_CASE("Contract AsyncRequest", "[rest][public][futurecontract]") {
+//MockDispatcher mockDispatcher;
+//MockAsyncDispatcher asyncDispatcher;
+//json apiRes = R"({
+//    "statusCode": 200,
+//    "error": [],
+//    "result": {
+//        "instrument": "btcusdtx_usdt_200607F1000000",
+//        "details": "contract for cash delivery of BTC/USD index settled for July 6th, 2020 for the strike price of 10,000 USD",
+//        "pricing_source": "CME Bitcoin Real Time Index",
+//        "bitwyre_index_price": "11500.00",
+//        "bitwyre_index_price_currency": "USD",
+//        "24h_volume": "800,000,000.00",
+//        "24h_volume_currency": "USD",
+//        "open_interest": "600,000,000.00",
+//        "interest_rate": "0.001%",
+//        "contract_value": "1 USD",
+//        "initial_margin_base_value": "1%",
+//        "maintenance_margin_base_value": "0.5%"
+//    }
+//})"_json;
+//
+//ContractRequest contractRequest{InstrumentT{"btcusdtx_usdt_200607F1000000"}};
+//
+//EXPECT_CALL(mockDispatcher, dispatch(_, An<ContractRequest>()))
+//.WillOnce(Return(apiRes));
+//
+//EXPECT_CALL(asyncDispatcher, getAsync(contractRequest)).WillOnce(Return(mockDispatcher.dispatch(Asset::uri(), ContractRequest{})));
+//auto asyncRawRes = asyncDispatcher.getAsync(contractRequest);
+//
+//auto response = Contract::processResponse(std::move(asyncRawRes));
+//
+//REQUIRE(response.contractValue == "1 USD");
+//REQUIRE(response.instrument == "btcusdtx_usdt_200607F1000000");
+//REQUIRE(response.statusCode_ == 200);
+//}
+//
+//TEST_CASE("Supported languages Request", "[rest][public][supportedlanguage]") {
+//  auto supportedLanguages = SupportedLanguages::get();
+//}
+//
+//TEST_CASE("Supported languages AsyncRequest", "[rest][public][supportedlanguage]") {
+//  auto supportedLanguages = SupportedLanguages::getAsyncLanguage();
+//}

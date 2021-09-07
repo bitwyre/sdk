@@ -11,4 +11,6 @@ using namespace Bitwyre::Types::Private;
 class MockAsyncDispatcher {
 public:
     MOCK_METHOD(json, getAsync, ());
+    MOCK_METHOD(json, getAsync, (const DepthRequest& request));
+    MOCK_METHOD(json, getAsync, (const ContractRequest& request));
 };
