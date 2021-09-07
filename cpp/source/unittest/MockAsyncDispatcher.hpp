@@ -14,3 +14,6 @@ public:
     MOCK_METHOD(json, getAsync, (const DepthRequest& request));
     MOCK_METHOD(json, getAsync, (const ContractRequest& request));
 };
+
+// https://stackoverflow.com/questions/36940031/gtest-gmock-matcher-for-subsequence-between-a-pair-of-iterators#37071027
+// https://chromium.googlesource.com/external/gmock/+/refs/heads/master/include/gmock/gmock-matchers.h

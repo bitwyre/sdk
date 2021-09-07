@@ -644,44 +644,44 @@ TEST_CASE("Depth Request", "[rest][public][depth]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-//TEST_CASE("Depth AsyncRequest", "[rest][public][depth]") {
-//MockDispatcher mockDispatcher;
-//MockAsyncDispatcher asyncDispatcher;
-//json apiRes = R"({
-//    "statusCode": 200,
-//    "error": [],
-//    "result": {
-//    "bids": [
-//      ["124112000", "0.1815405"],
-//      ["124110000", "0.47319750"]
-//    ],
-//    "asks": [
-//      ["124130000", "0.03701609"],
-//      ["124251000", "0.03223585"]
-//    ],
-//    "is_frozen": 0
-//  }
-//})"_json;
+TEST_CASE("Depth AsyncRequest", "[rest][public][depth]") {
+MockDispatcher mockDispatcher;
+MockAsyncDispatcher asyncDispatcher;
+json apiRes = R"({
+    "statusCode": 200,
+    "error": [],
+    "result": {
+    "bids": [
+      ["124112000", "0.1815405"],
+      ["124110000", "0.47319750"]
+    ],
+    "asks": [
+      ["124130000", "0.03701609"],
+      ["124251000", "0.03223585"]
+    ],
+    "is_frozen": 0
+  }
+})"_json;
 
-//DepthRequest depthRequest{InstrumentT("btc_usd_spot"), DepthNumT(2)};
+DepthRequest depthRequest{InstrumentT("btc_usd_spot"), DepthNumT(2)};
 
-//EXPECT_CALL(mockDispatcher, dispatch(_, An<DepthRequest>()))
-//.WillOnce(Return(apiRes));
-//EXPECT_CALL(asyncDispatcher, getAsync(depthRequest)).WillOnce(Return(mockDispatcher.dispatch(Depth::uri(), depthRequest)));
+EXPECT_CALL(mockDispatcher, dispatch(_, An<DepthRequest>()))
+.WillOnce(Return(apiRes));
+EXPECT_CALL(asyncDispatcher, getAsync(/*depthRequest*/)).WillOnce(Return(mockDispatcher.dispatch(Depth::uri(), depthRequest)));
 
-//auto asyncRawRes= asyncDispatcher.getAsync(depthRequest);
+auto asyncRawRes= asyncDispatcher.getAsync(/*depthRequest*/);
 
-//auto response = Depth::processResponse(std::move(asyncRawRes));
+auto response = Depth::processResponse(std::move(asyncRawRes));
 //Depth depth1;
 //auto future = depth1.getAsync(depthRequest);
 //auto response = future.get();
 //std::cout << response.bids.size() << "\n";
-//REQUIRE(response.bids.size() == 2);
-//REQUIRE(response.bids.at(0).first == 124112000);
-//REQUIRE(response.bids.at(0).second == 0.1815405);
-//REQUIRE(response.asks.size() == 2);
-//REQUIRE(response.statusCode_ == 200);
-//}
+REQUIRE(response.bids.size() == 2);
+REQUIRE(response.bids.at(0).first == 124112000);
+REQUIRE(response.bids.at(0).second == 0.1815405);
+REQUIRE(response.asks.size() == 2);
+REQUIRE(response.statusCode_ == 200);
+}
 
 TEST_CASE("Contract Request", "[rest][public][contract]") {
   MockDispatcher mockDispatcher;
