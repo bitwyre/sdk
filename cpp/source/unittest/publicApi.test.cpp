@@ -717,47 +717,47 @@ TEST_CASE("Contract Request", "[rest][public][contract]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-//TEST_CASE("Contract AsyncRequest", "[rest][public][futurecontract]") {
-//MockDispatcher mockDispatcher;
-//MockAsyncDispatcher asyncDispatcher;
-//json apiRes = R"({
-//    "statusCode": 200,
-//    "error": [],
-//    "result": {
-//        "instrument": "btcusdtx_usdt_200607F1000000",
-//        "details": "contract for cash delivery of BTC/USD index settled for July 6th, 2020 for the strike price of 10,000 USD",
-//        "pricing_source": "CME Bitcoin Real Time Index",
-//        "bitwyre_index_price": "11500.00",
-//        "bitwyre_index_price_currency": "USD",
-//        "24h_volume": "800,000,000.00",
-//        "24h_volume_currency": "USD",
-//        "open_interest": "600,000,000.00",
-//        "interest_rate": "0.001%",
-//        "contract_value": "1 USD",
-//        "initial_margin_base_value": "1%",
-//        "maintenance_margin_base_value": "0.5%"
-//    }
-//})"_json;
-//
-//ContractRequest contractRequest{InstrumentT{"btcusdtx_usdt_200607F1000000"}};
-//
-//EXPECT_CALL(mockDispatcher, dispatch(_, An<ContractRequest>()))
-//.WillOnce(Return(apiRes));
-//
-//EXPECT_CALL(asyncDispatcher, getAsync(contractRequest)).WillOnce(Return(mockDispatcher.dispatch(Asset::uri(), ContractRequest{})));
-//auto asyncRawRes = asyncDispatcher.getAsync(contractRequest);
-//
-//auto response = Contract::processResponse(std::move(asyncRawRes));
-//
-//REQUIRE(response.contractValue == "1 USD");
-//REQUIRE(response.instrument == "btcusdtx_usdt_200607F1000000");
-//REQUIRE(response.statusCode_ == 200);
-//}
-//
-//TEST_CASE("Supported languages Request", "[rest][public][supportedlanguage]") {
-//  auto supportedLanguages = SupportedLanguages::get();
-//}
-//
-//TEST_CASE("Supported languages AsyncRequest", "[rest][public][supportedlanguage]") {
-//  auto supportedLanguages = SupportedLanguages::getAsyncLanguage();
-//}
+TEST_CASE("Contract AsyncRequest", "[rest][public][futurecontract]") {
+MockDispatcher mockDispatcher;
+MockAsyncDispatcher asyncDispatcher;
+json apiRes = R"({
+    "statusCode": 200,
+    "error": [],
+    "result": {
+        "instrument": "btcusdtx_usdt_200607F1000000",
+        "details": "contract for cash delivery of BTC/USD index settled for July 6th, 2020 for the strike price of 10,000 USD",
+        "pricing_source": "CME Bitcoin Real Time Index",
+        "bitwyre_index_price": "11500.00",
+        "bitwyre_index_price_currency": "USD",
+        "24h_volume": "800,000,000.00",
+        "24h_volume_currency": "USD",
+        "open_interest": "600,000,000.00",
+        "interest_rate": "0.001%",
+        "contract_value": "1 USD",
+        "initial_margin_base_value": "1%",
+        "maintenance_margin_base_value": "0.5%"
+    }
+})"_json;
+
+ContractRequest contractRequest{InstrumentT{"btcusdtx_usdt_200607F1000000"}};
+
+EXPECT_CALL(mockDispatcher, dispatch(_, An<ContractRequest>()))
+.WillOnce(Return(apiRes));
+
+EXPECT_CALL(asyncDispatcher, getAsync(/*contractRequest*/)).WillOnce(Return(mockDispatcher.dispatch(Asset::uri(), contractRequest)));
+auto asyncRawRes = asyncDispatcher.getAsync(/*contractRequest*/);
+
+auto response = Contract::processResponse(std::move(asyncRawRes));
+
+REQUIRE(response.contractValue == "1 USD");
+REQUIRE(response.instrument == "btcusdtx_usdt_200607F1000000");
+REQUIRE(response.statusCode_ == 200);
+}
+
+TEST_CASE("Supported languages Request", "[rest][public][supportedlanguage]") {
+  auto supportedLanguages = SupportedLanguages::get();
+}
+
+TEST_CASE("Supported languages AsyncRequest", "[rest][public][supportedlanguage]") {
+  auto supportedLanguages = SupportedLanguages::getAsyncLanguage();
+}
