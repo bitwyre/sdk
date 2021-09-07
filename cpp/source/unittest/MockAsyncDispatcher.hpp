@@ -11,8 +11,12 @@ using namespace Bitwyre::Types::Private;
 class MockAsyncDispatcher {
 public:
     MOCK_METHOD(json, getAsync, ());
-    MOCK_METHOD(json, getAsync, (const DepthRequest& request));
-    MOCK_METHOD(json, getAsync, (const ContractRequest& request));
+    MOCK_METHOD(json, getAsync, (DepthRequest request));
+  //  MOCK_METHOD(json, getAsync, (const DepthRequest request&));
+    MOCK_METHOD(json, getAsync, (InstrumentRequest request));
+    MOCK_METHOD(json, getAsync, (ContractRequest request));
+    MOCK_METHOD(json, getAsync, (TickerRequest request));
+    MOCK_METHOD(json, getAsync, (TradesRequest request));
 };
 
 // https://stackoverflow.com/questions/36940031/gtest-gmock-matcher-for-subsequence-between-a-pair-of-iterators#37071027

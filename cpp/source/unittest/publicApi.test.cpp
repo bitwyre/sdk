@@ -42,7 +42,7 @@ TEST_CASE("Time request", "[rest][public][time]") {
   REQUIRE(timeResponse.statusCode_ == 200);
 }
 
-TEST_CASE("AsyncTime request", "[rest][public][futuretime]") {
+TEST_CASE("AsyncTime request", "[rest][public][future][time]") {
     // Arrange
     MockDispatcher mockDispatcher;
     MockAsyncDispatcher asyncDispatcher;
@@ -454,6 +454,34 @@ TEST_CASE("Instrument Request", "[rest][public][instrument]") {
   REQUIRE(response.instruments.at(0).instrument == "btc_idr_spot");
   REQUIRE(response.statusCode_ == 200);
 }
+TEST_CASE("Instrument AsyncRequest", "[rest][public][async][instrument]") {
+  MockDispatcher mockDispatcher;
+  MockAsyncDispatcher asyncDispatcher;
+  json apiRes = R"({
+    "statusCode": 200,
+    "error": [],
+    "result": [{"instrument": "btc_idr_spot", "symbol" : "BTC/IDR"},
+              {"instrument": "bch_idr_spot", "symbol": "BCH/IDR"}] }
+)"_json;
+
+  InstrumentRequest instrumentRequest{
+      MarketT("spot"), ProductT("myProduct"), CountryT("mycountry")};
+
+  EXPECT_CALL(mockDispatcher, dispatch(_, An<InstrumentRequest>()))
+      .WillOnce(Return(apiRes));
+  
+  EXPECT_CALL(asyncDispatcher, getAsync(An<InstrumentRequest>()))
+  .WillOnce(Return(mockDispatcher.dispatch(Instrument::uri(), instrumentRequest)));
+  auto asyncRawRes = asyncDispatcher.getAsync(instrumentRequest);
+
+  auto response = Instrument::processResponse(std::move(asyncRawRes));
+
+  REQUIRE(response.instruments.size() == 2);
+  REQUIRE(response.instruments.at(0).instrument == "btc_idr_spot");
+  REQUIRE(response.statusCode_ == 200);
+}
+
+
 
 TEST_CASE("Ticker Request", "[rest][public][ticker]") {
   MockDispatcher mockDispatcher;
@@ -491,8 +519,48 @@ TEST_CASE("Ticker Request", "[rest][public][ticker]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
+TEST_CASE("Ticker AsyncRequest", "[rest][public][async][ticker]") {
+  MockDispatcher mockDispatcher;
+  MockAsyncDispatcher asyncDispatcher;
+  json apiRes = R"({
+    "statusCode": 200,
+    "error": [],
+    "result": [{
+            "instrument": "btc_idr_spot",
+            "asset_base": "btc",
+            "asset_quote": "idr",
+            "high": "126989000",
+            "low": "115201000",
+            "percent_change": "-2.123",
+            "volume_base": "611.66499447",
+            "volume_quote": "7434324.9431",
+            "last": "124783000",
+            "best_bid": "124761000",
+            "best_ask": "124777000",
+            "timestamp": 1571744594571020435,
+            "market": "crypto",
+            "is_frozen": false
+        }] })"_json;
+
+  TickerRequest tickerRequest{InstrumentT("btc_idr_spot")};
+
+  EXPECT_CALL(mockDispatcher, dispatch(_, An<TickerRequest>()))
+      .WillOnce(Return(apiRes));
+  EXPECT_CALL(asyncDispatcher, getAsync(An<TickerRequest>()))
+      .WillOnce(Return(mockDispatcher.dispatch(Ticker::uri(), tickerRequest)));
+  auto asyncRawRes= asyncDispatcher.getAsync(tickerRequest);
+
+  auto response = Ticker::processResponse(std::move(asyncRawRes));
+
+  REQUIRE(response.tickers.size() == 1);
+  REQUIRE(response.tickers.at(0).instrument == "btc_idr_spot");
+  REQUIRE(response.statusCode_ == 200);
+}
+
 TEST_CASE("Ticker Request with no params", "[rest][public][ticker]") {
   MockDispatcher mockDispatcher;
+//  MockAsyncDispatcher asyncDispatcher;
+
   json apiRes = R"({
     "statusCode": 200,
     "error": [],
@@ -521,6 +589,43 @@ TEST_CASE("Ticker Request with no params", "[rest][public][ticker]") {
   auto rawResponse = mockDispatcher.dispatch(Ticker::uri(), tickerRequest);
 
   auto response = Ticker::processResponse(std::move(rawResponse));
+
+  REQUIRE(response.tickers.size() == 1);
+  REQUIRE(response.tickers.at(0).instrument == "btc_idr_spot");
+  REQUIRE(response.statusCode_ == 200);
+}
+
+TEST_CASE("Ticker AsyncRequest with no params", "[rest][public][async][ticker]") {
+  MockDispatcher mockDispatcher;
+  MockAsyncDispatcher asyncDispatcher;
+
+  json apiRes = R"({
+    "statusCode": 200,
+    "error": [],
+    "result": {
+            "instrument": "btc_idr_spot",
+            "asset_base": "btc",
+            "asset_quote": "idr",
+            "high": "126989000",
+            "low": "115201000",
+            "percent_change": "-2.123",
+            "volume_base": "611.66499447",
+            "volume_quote": "7434324.9431",
+            "last": "124783000",
+            "best_bid": "124761000",
+            "best_ask": "124777000",
+            "timestamp": 1571744594571020435,
+            "market": "crypto",
+            "is_frozen": false
+        } })"_json;
+
+  //TickerRequest tickerRequest{};
+
+  EXPECT_CALL(mockDispatcher, dispatch(_, An<TickerRequest>()))
+      .WillOnce(Return(apiRes));
+  EXPECT_CALL(asyncDispatcher, getAsync()).WillOnce(Return(mockDispatcher.dispatch(Ticker::uri(), TickerRequest{})));
+  auto asyncRawRes = asyncDispatcher.getAsync();
+  auto response = Ticker::processResponse(std::move(asyncRawRes));
 
   REQUIRE(response.tickers.size() == 1);
   REQUIRE(response.tickers.at(0).instrument == "btc_idr_spot");
@@ -567,6 +672,49 @@ TEST_CASE("Trades Request", "[rest][public][trades]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
+TEST_CASE("Trades AsyncRequest", "[rest][public][future][trades]") {
+  MockDispatcher mockDispatcher;
+  MockAsyncDispatcher asyncDispatcher;
+
+  json apiRes = R"({
+    "statusCode": 200,
+    "error": [],
+    "result": [
+       {
+            "instrument": "btc_usd_spot",
+            "price": "70000.0",
+            "side": 1,
+            "timestamp": 1617701262147203562,
+            "trade_uuid": "7d0cec66-f130-4fc6-b314-622d394ccec2",
+            "value": "4900.0",
+            "volume": "0.07"
+        },
+        {
+            "instrument": "btc_usd_spot",
+            "price": "70000.0",
+            "side": 2,
+            "timestamp": 1617701262147203562,
+            "trade_uuid": "7d0cec66-f130-4fc6-b314-622d394ccec2",
+            "value": "4900.0",
+            "volume": "0.07"
+        }
+]})"_json;
+
+  TradesRequest tradesRequest{InstrumentT("btc_usd_spot"), TradeNumT(2)};
+
+  EXPECT_CALL(mockDispatcher, dispatch(_, An<TradesRequest>()))
+      .WillOnce(Return(apiRes));
+
+  EXPECT_CALL(asyncDispatcher, getAsync(An<TradesRequest>()))
+  .WillOnce(Return(mockDispatcher.dispatch(Trades::uri(), tradesRequest)));
+  auto asyncRawRes = asyncDispatcher.getAsync(tradesRequest);
+  auto response = Trades::processResponse(std::move(asyncRawRes));
+
+  REQUIRE(response.trades.size() == 2);
+  REQUIRE(response.trades.at(0).instrument == "btc_usd_spot");
+  REQUIRE(response.statusCode_ == 200);
+}
+
 // @TODO add trade request with tradeNum param only
 
 TEST_CASE("OrderTypes Request", "[rest][public][product]") {
@@ -590,7 +738,7 @@ TEST_CASE("OrderTypes Request", "[rest][public][product]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("OrderTypes AsyncRequest", "[rest][public][asyncproduct]") {
+TEST_CASE("OrderTypes AsyncRequest", "[rest][public][async][product]") {
 MockDispatcher mockDispatcher;
 MockAsyncDispatcher asyncDispatcher;
 
@@ -644,9 +792,10 @@ TEST_CASE("Depth Request", "[rest][public][depth]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("Depth AsyncRequest", "[rest][public][depth]") {
+TEST_CASE("Depth AsyncRequest", "[rest][public][async][depth]") {
 MockDispatcher mockDispatcher;
 MockAsyncDispatcher asyncDispatcher;
+
 json apiRes = R"({
     "statusCode": 200,
     "error": [],
@@ -665,11 +814,12 @@ json apiRes = R"({
 
 DepthRequest depthRequest{InstrumentT("btc_usd_spot"), DepthNumT(2)};
 
-EXPECT_CALL(mockDispatcher, dispatch(_, An<DepthRequest>()))
-.WillOnce(Return(apiRes));
-EXPECT_CALL(asyncDispatcher, getAsync(/*depthRequest*/)).WillOnce(Return(mockDispatcher.dispatch(Depth::uri(), depthRequest)));
+EXPECT_CALL(mockDispatcher, dispatch(_, An<DepthRequest>())).WillOnce(Return(apiRes));
 
-auto asyncRawRes= asyncDispatcher.getAsync(/*depthRequest*/);
+EXPECT_CALL(asyncDispatcher, getAsync(An<DepthRequest>()))
+.WillOnce(Return(mockDispatcher.dispatch(Depth::uri(), depthRequest)));
+
+auto asyncRawRes= asyncDispatcher.getAsync(depthRequest);
 
 auto response = Depth::processResponse(std::move(asyncRawRes));
 //Depth depth1;
@@ -717,7 +867,7 @@ TEST_CASE("Contract Request", "[rest][public][contract]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("Contract AsyncRequest", "[rest][public][futurecontract]") {
+TEST_CASE("Contract AsyncRequest", "[rest][public][future][contract]") {
 MockDispatcher mockDispatcher;
 MockAsyncDispatcher asyncDispatcher;
 json apiRes = R"({
@@ -744,8 +894,8 @@ ContractRequest contractRequest{InstrumentT{"btcusdtx_usdt_200607F1000000"}};
 EXPECT_CALL(mockDispatcher, dispatch(_, An<ContractRequest>()))
 .WillOnce(Return(apiRes));
 
-EXPECT_CALL(asyncDispatcher, getAsync(/*contractRequest*/)).WillOnce(Return(mockDispatcher.dispatch(Asset::uri(), contractRequest)));
-auto asyncRawRes = asyncDispatcher.getAsync(/*contractRequest*/);
+EXPECT_CALL(asyncDispatcher, getAsync(An<ContractRequest>())).WillOnce(Return(mockDispatcher.dispatch(Contract::uri(), contractRequest)));
+auto asyncRawRes = asyncDispatcher.getAsync(contractRequest);
 
 auto response = Contract::processResponse(std::move(asyncRawRes));
 
