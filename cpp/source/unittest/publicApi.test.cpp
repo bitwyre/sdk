@@ -42,7 +42,7 @@ TEST_CASE("Time request", "[rest][public][time]") {
   REQUIRE(timeResponse.statusCode_ == 200);
 }
 
-TEST_CASE("AsyncTime request", "[rest][public][future][time]") {
+TEST_CASE("AsyncTime request", "[rest][public][async][time]") {
     // Arrange
     MockDispatcher mockDispatcher;
     MockAsyncDispatcher asyncDispatcher;
@@ -147,40 +147,40 @@ TEST_CASE("Asset Request", "[rest][public][asset]") {
 
   MockDispatcher mockDispatcher;
 
-json apiRes = R"({
-    "statusCode": 200,
-    "error": [],
-    "result": [       {
-            "asset": "btc",
-            "btc_equivalent": "1",
-            "icon_url": "https://storage.bitwyre.com/assets/btc.png",
-            "is_deposit_enabled": true,
-            "is_trading_enabled": true,
-            "is_withdraw_enabled": true,
-            "local_equivalent": "",
-            "local_reference": "",
-            "max_withdrawal": "10",
-            "min_withdrawal": "0.001",
-            "name": "Bitcoin",
-            "precision": "1e-8",
-            "withdrawal_fee": "0.00000001"
-        },
-        {
-            "asset": "eth",
-            "btc_equivalent": "",
-            "icon_url": "https://storage.bitwyre.com/public/images/coins/raster/ETH_500px.png",
-            "is_deposit_enabled": true,
-            "is_trading_enabled": true,
-            "is_withdraw_enabled": true,
-            "local_equivalent": "",
-            "local_reference": "",
-            "max_withdrawal": "10",
-            "min_withdrawal": "0.001",
-            "name": "Ethereum",
-            "precision": "1e-9",
-            "withdrawal_fee": "0.00000001"
-        } ]
-})"_json;
+  json apiRes = R"({
+      "statusCode": 200,
+      "error": [],
+      "result": [       {
+              "asset": "btc",
+              "btc_equivalent": "1",
+              "icon_url": "https://storage.bitwyre.com/assets/btc.png",
+              "is_deposit_enabled": true,
+              "is_trading_enabled": true,
+              "is_withdraw_enabled": true,
+              "local_equivalent": "",
+              "local_reference": "",
+              "max_withdrawal": "10",
+              "min_withdrawal": "0.001",
+              "name": "Bitcoin",
+              "precision": "1e-8",
+              "withdrawal_fee": "0.00000001"
+          },
+          {
+              "asset": "eth",
+              "btc_equivalent": "",
+              "icon_url": "https://storage.bitwyre.com/public/images/coins/raster/ETH_500px.png",
+              "is_deposit_enabled": true,
+              "is_trading_enabled": true,
+              "is_withdraw_enabled": true,
+              "local_equivalent": "",
+              "local_reference": "",
+              "max_withdrawal": "10",
+              "min_withdrawal": "0.001",
+              "name": "Ethereum",
+              "precision": "1e-9",
+              "withdrawal_fee": "0.00000001"
+          } ]
+  })"_json;
 
   EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>()))
       .WillOnce(Return(apiRes));
@@ -195,44 +195,44 @@ json apiRes = R"({
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("AsyncAsset Request", "[rest][public][future][asset]") {
+TEST_CASE("AsyncAsset Request", "[rest][public][async][asset]") {
 
-MockDispatcher mockDispatcher;
-MockAsyncDispatcher asyncDispatcher;
-json apiRes = R"({
-    "statusCode": 200,
-    "error": [],
-    "result": [       {
-            "asset": "btc",
-            "btc_equivalent": "1",
-            "icon_url": "https://storage.bitwyre.com/assets/btc.png",
-            "is_deposit_enabled": true,
-            "is_trading_enabled": true,
-            "is_withdraw_enabled": true,
-            "local_equivalent": "",
-            "local_reference": "",
-            "max_withdrawal": "10",
-            "min_withdrawal": "0.001",
-            "name": "Bitcoin",
-            "precision": "1e-8",
-            "withdrawal_fee": "0.00000001"
-        },
-        {
-            "asset": "eth",
-            "btc_equivalent": "",
-            "icon_url": "https://storage.bitwyre.com/public/images/coins/raster/ETH_500px.png",
-            "is_deposit_enabled": true,
-            "is_trading_enabled": true,
-            "is_withdraw_enabled": true,
-            "local_equivalent": "",
-            "local_reference": "",
-            "max_withdrawal": "10",
-            "min_withdrawal": "0.001",
-            "name": "Ethereum",
-            "precision": "1e-9",
-            "withdrawal_fee": "0.00000001"
-        } ]
-})"_json;
+  MockDispatcher mockDispatcher;
+  MockAsyncDispatcher asyncDispatcher;
+  json apiRes = R"({
+      "statusCode": 200,
+      "error": [],
+      "result": [       {
+              "asset": "btc",
+              "btc_equivalent": "1",
+              "icon_url": "https://storage.bitwyre.com/assets/btc.png",
+              "is_deposit_enabled": true,
+              "is_trading_enabled": true,
+              "is_withdraw_enabled": true,
+              "local_equivalent": "",
+              "local_reference": "",
+              "max_withdrawal": "10",
+              "min_withdrawal": "0.001",
+              "name": "Bitcoin",
+              "precision": "1e-8",
+              "withdrawal_fee": "0.00000001"
+          },
+          {
+              "asset": "eth",
+              "btc_equivalent": "",
+              "icon_url": "https://storage.bitwyre.com/public/images/coins/raster/ETH_500px.png",
+              "is_deposit_enabled": true,
+              "is_trading_enabled": true,
+              "is_withdraw_enabled": true,
+              "local_equivalent": "",
+              "local_reference": "",
+              "max_withdrawal": "10",
+              "min_withdrawal": "0.001",
+              "name": "Ethereum",
+              "precision": "1e-9",
+              "withdrawal_fee": "0.00000001"
+          } ]
+  })"_json;
 
   EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>()))
   .WillOnce(Return(apiRes));
@@ -297,44 +297,44 @@ TEST_CASE("Crypto Asset Request", "[rest][public][cryptoasset]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("Crypto AsyncAsset Request", "[rest][public][future][cryptoasset]") {
-MockDispatcher mockDispatcher;
-MockAsyncDispatcher asyncDispatcher;
+TEST_CASE("Crypto AsyncAsset Request", "[rest][public][async][cryptoasset]") {
+  MockDispatcher mockDispatcher;
+  MockAsyncDispatcher asyncDispatcher;
 
-json apiRes = R"({
-    "statusCode": 200,
-    "error": [],
-    "result": [       {
-            "asset": "btc",
-            "btc_equivalent": "1",
-            "icon_url": "https://storage.bitwyre.com/assets/btc.png",
-            "is_deposit_enabled": true,
-            "is_trading_enabled": true,
-            "is_withdraw_enabled": true,
-            "local_equivalent": "",
-            "local_reference": "",
-            "max_withdrawal": "10",
-            "min_withdrawal": "0.001",
-            "name": "Bitcoin",
-            "precision": "1e-8",
-            "withdrawal_fee": "0.00000001"
-        },
-        {
-            "asset": "eth",
-            "btc_equivalent": "",
-            "icon_url": "https://storage.bitwyre.com/public/images/coins/raster/ETH_500px.png",
-            "is_deposit_enabled": true,
-            "is_trading_enabled": true,
-            "is_withdraw_enabled": true,
-            "local_equivalent": "",
-            "local_reference": "",
-            "max_withdrawal": "10",
-            "min_withdrawal": "0.001",
-            "name": "Ethereum",
-            "precision": "1e-9",
-            "withdrawal_fee": "0.00000001"
-        } ]
-})"_json;
+  json apiRes = R"({
+      "statusCode": 200,
+      "error": [],
+      "result": [       {
+              "asset": "btc",
+              "btc_equivalent": "1",
+              "icon_url": "https://storage.bitwyre.com/assets/btc.png",
+              "is_deposit_enabled": true,
+              "is_trading_enabled": true,
+              "is_withdraw_enabled": true,
+              "local_equivalent": "",
+              "local_reference": "",
+              "max_withdrawal": "10",
+              "min_withdrawal": "0.001",
+              "name": "Bitcoin",
+              "precision": "1e-8",
+              "withdrawal_fee": "0.00000001"
+          },
+          {
+              "asset": "eth",
+              "btc_equivalent": "",
+              "icon_url": "https://storage.bitwyre.com/public/images/coins/raster/ETH_500px.png",
+              "is_deposit_enabled": true,
+              "is_trading_enabled": true,
+              "is_withdraw_enabled": true,
+              "local_equivalent": "",
+              "local_reference": "",
+              "max_withdrawal": "10",
+              "min_withdrawal": "0.001",
+              "name": "Ethereum",
+              "precision": "1e-9",
+              "withdrawal_fee": "0.00000001"
+          } ]
+  })"_json;
 
   EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>()))
   .WillOnce(Return(apiRes));
@@ -433,7 +433,7 @@ TEST_CASE("Instrument Request", "[rest][public][instrument]") {
     "error": [],
     "result": [{"instrument": "btc_idr_spot", "symbol" : "BTC/IDR"},
               {"instrument": "bch_idr_spot", "symbol": "BCH/IDR"}] }
-)"_json;
+  )"_json;
 
   InstrumentRequest instrumentRequest{
       MarketT("spot"), ProductT("myProduct"), CountryT("mycountry")};
@@ -668,7 +668,7 @@ TEST_CASE("Trades Request", "[rest][public][trades]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("Trades AsyncRequest", "[rest][public][future][trades]") {
+TEST_CASE("Trades AsyncRequest", "[rest][public][async][trades]") {
   MockDispatcher mockDispatcher;
   MockAsyncDispatcher asyncDispatcher;
 
@@ -859,7 +859,7 @@ TEST_CASE("Contract Request", "[rest][public][contract]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("Contract AsyncRequest", "[rest][public][future][contract]") {
+TEST_CASE("Contract AsyncRequest", "[rest][public][async][contract]") {
   MockDispatcher mockDispatcher;
   MockAsyncDispatcher asyncDispatcher;
   json apiRes = R"({
