@@ -13,17 +13,7 @@ We are building a cross-platform open source library allows one to create asynch
 
 ## Build commands
 
-### My weird Tensorbook Ubuntu (Clang12)
-```shell
-mkdir build
-cd build
-export CONAN_RUN_TESTS=1
-echo $CONAN_RUN_TESTS
-conan install .. 
-cmake .. 
-make
-```
-### Other linux distributions (gcc10)
+### general linux distributions
 
 ```shell
 mkdir build
@@ -35,8 +25,8 @@ cmake ..
 make
 ```
 
-Note: everytime we run `conan create` we don't need to wait for our changes to be merged in develop branch.
-The `create` command will update our local cache and we can run the examples with the updates.
+Note: everytime you run `conan create` you don't need to wait for your changes to be merged in develop branch.
+The `create` command will update your local cache and you can run the examples with the updates.
 
 In order to build the test suite add `-DBUILD_TESTING` definition.
 
