@@ -10,10 +10,12 @@ namespace Bitwyre::Rest::Public {
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/ordertypes";
     }
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] auto getAsync() noexcept -> OrderTypesResponse {
       return std::async(std::launch::async, [](){return get<Dispatcher>();});
     }
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto get() noexcept -> OrderTypesResponse {
       auto rawResponse = Dispatcher()(uri(), CommonPublicRequest{});

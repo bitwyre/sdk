@@ -11,6 +11,7 @@ namespace Bitwyre::Rest::Public {
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/products";
     }
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] auto getAsync() noexcept -> ProductResponse {
       return std::async(std::launch::async, [](){return get<Dispatcher>();});

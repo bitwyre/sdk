@@ -10,10 +10,12 @@ namespace Bitwyre::Rest::Public {
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/languages";
     }
-      template<typename Dispatcher = Dispatcher>
-      [[nodiscard]] static auto getAsyncLanguage() noexcept -> AsyncSupportedLanguagesResponse {
-          return std::async(std::launch::async, [](){return get<Dispatcher>();});
-      }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsyncLanguage() noexcept -> AsyncSupportedLanguagesResponse {
+        return std::async(std::launch::async, [](){return get<Dispatcher>();});
+    }
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto get() noexcept -> SupportedLanguagesResponse {
       auto rawResponse = Dispatcher()(uri(), CommonPublicRequest{});

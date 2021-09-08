@@ -11,6 +11,7 @@ namespace Bitwyre::Rest::Public {
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/depth";
     }
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] auto getAsync(const DepthRequest& request) noexcept -> AsyncDepthResponse {
       return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});

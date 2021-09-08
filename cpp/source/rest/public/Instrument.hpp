@@ -12,6 +12,7 @@ namespace Bitwyre::Rest::Public {
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/pairs";
     }
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] auto getAsync(const InstrumentRequest& request) noexcept -> AsyncInstrumentResponse {
       return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});

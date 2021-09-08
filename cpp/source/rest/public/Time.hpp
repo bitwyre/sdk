@@ -12,11 +12,12 @@ namespace Bitwyre::Rest::Public {
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/time";
     }
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] auto getAsync() noexcept -> AsyncTimeResponse {
       return std::async(std::launch::async, [/*this*/](){return get<Dispatcher>();});
     }
-//
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto get() noexcept -> TimeResponse { //from Types.hpp
       auto response = Dispatcher()(uri(), CommonPublicRequest{});

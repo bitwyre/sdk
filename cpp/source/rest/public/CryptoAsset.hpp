@@ -12,10 +12,12 @@ namespace Bitwyre::Rest::Public {
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/assets/crypto";
     }
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] auto getAsync() noexcept -> CryptoAssetResponse {
       return std::async(std::launch::async, [](){return get<Dispatcher>();});
     }
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto get() noexcept -> CryptoAssetResponse {
       auto rawResponse = Dispatcher()(uri(), CommonPublicRequest{});
