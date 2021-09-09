@@ -1,7 +1,12 @@
 # Official Bitwyre C++ Software Development Kit
 
-## C++ REST API
+## C++ REST SDK
 We are building a cross-platform open source library allows one to create asynchronous REST clients.
+
+The Dispatcher class is responsible to send request. Each end point has to process response, write it to JSON format output.
+
+The API URL is retrieved from the environment variable `URL_API_BITWYRE`, but if you do not set it, a default one
+pointing to our production cluster will be used.
 
 # Building from source 
 

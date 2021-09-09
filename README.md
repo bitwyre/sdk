@@ -21,11 +21,6 @@ all the complexity calling an API directly into specific programming languages u
 ## What is a REST API?
 Roughly speaking, a REST API is about getting request and processing response.
 
-The Dispatcher class is responsible to send request. Each end point has to process response, write it to JSON format output.
-
-The API URL is retrieved from the environment variable `URL_API_BITWYRE`, but if you do not set it, a default one
-pointing to our production cluster will be used.
-
 ## Gateways
 
 Bitwyre electronic trading team developed several interfaces to trade on our exchange
