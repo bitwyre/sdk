@@ -20,14 +20,13 @@ mkdir build
 cd build
 export CONAN_RUN_TESTS=1
 echo $CONAN_RUN_TESTS
-conan install .. --build=missing
-cmake .. 
+cmake .. -DUNIT_TESTS=1 -DBUILD_TESTING=1 -DCMAKE_BUILD_TYPE=Debug
 make
 ```
-
+<!---
 Note: everytime you run `conan create` you don't need to wait for your changes to be merged in develop branch.
 The `create` command will update your local cache and you can run the examples with the updates.
-
+--->
 In order to build the test suite add `-DBUILD_TESTING` definition.
 
 # Package Managers 

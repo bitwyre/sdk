@@ -35,8 +35,8 @@ TEST_CASE("Time request", "[rest][public][time]") {
   auto rawResponse =
       mockDispatcher.dispatch(Time::uri(), CommonPublicRequest{});
   auto timeResponse = Time::processResponse(std::move(rawResponse));
-  std::cout << timeResponse.unixtime.count() << "\n";
-  std::cout << ".unixtime = " << apiRes["result"]["unixtime"].get<long long int>() << "\n";
+  // std::cout << timeResponse.unixtime.count() << "\n";
+  //std::cout << ".unixtime = " << apiRes["result"]["unixtime"].get<long long int>() << "\n";
   REQUIRE(timeResponse.unixtime ==
           static_cast<TimeT>(apiRes["result"]["unixtime"].get<long long int>()));
   REQUIRE(timeResponse.statusCode_ == 200);
@@ -896,10 +896,10 @@ TEST_CASE("Contract AsyncRequest", "[rest][public][async][contract]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("Supported languages Request", "[rest][public][supportedlanguage]") {
-  auto supportedLanguages = SupportedLanguages::get();
-}
+//TEST_CASE("Supported languages Request", "[rest][public][supportedlanguage]") {
+//  auto supportedLanguages = SupportedLanguages::get();
+//}
 
-TEST_CASE("Supported languages AsyncRequest", "[rest][public][supportedlanguage]") {
-  auto supportedLanguages = SupportedLanguages::getAsyncLanguage();
-}
+//TEST_CASE("Supported languages AsyncRequest", "[rest][public][supportedlanguage]") {
+//  auto supportedLanguages = SupportedLanguages::getAsyncLanguage();
+//}
