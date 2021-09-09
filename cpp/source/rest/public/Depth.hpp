@@ -13,7 +13,7 @@ namespace Bitwyre::Rest::Public {
     }
 
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] auto getAsync(const DepthRequest& request) noexcept -> AsyncDepthResponse {
+    [[nodiscard]] static auto getAsync(const DepthRequest& request) noexcept -> AsyncDepthResponse {
       return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
     }
 

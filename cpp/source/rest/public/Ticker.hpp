@@ -14,7 +14,7 @@ namespace Bitwyre::Rest::Public {
     }
 
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] auto getAsync(const TickerRequest& request) noexcept -> AsyncTickerRequest {
+    [[nodiscard]] static auto getAsync(const TickerRequest& request) noexcept -> AsyncTickerRequest {
       return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
     }
 

@@ -14,7 +14,7 @@ namespace Bitwyre::Rest::Public {
     }
 
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] auto getAsync(const InstrumentRequest& request) noexcept -> AsyncInstrumentResponse {
+    [[nodiscard]] static auto getAsync(const InstrumentRequest& request) noexcept -> AsyncInstrumentResponse {
       return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
     }
 

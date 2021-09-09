@@ -14,7 +14,7 @@ namespace Bitwyre::Rest::Public {
     }
 
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] auto getAsync() noexcept -> CryptoAssetResponse {
+    [[nodiscard]] static auto getAsync() noexcept -> CryptoAssetResponse {
       return std::async(std::launch::async, [](){return get<Dispatcher>();});
     }
 

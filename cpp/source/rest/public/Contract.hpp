@@ -13,7 +13,7 @@ namespace Bitwyre::Rest::Public {
     }
 
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] auto getAsync(const ContractRequest& request) noexcept ->  AsyncContractRequest {
+    [[nodiscard]] static auto getAsync(const ContractRequest& request) noexcept ->  AsyncContractRequest {
         return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
     }
 
