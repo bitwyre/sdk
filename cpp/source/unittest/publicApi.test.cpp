@@ -35,18 +35,8 @@ TEST_CASE("Time request", "[rest][public][time]") {
   auto rawResponse =
       mockDispatcher.dispatch(Time::uri(), CommonPublicRequest{});
   auto timeResponse = Time::processResponse(std::move(rawResponse));
-<<<<<<< HEAD
-<<<<<<< HEAD
   // std::cout << timeResponse.unixtime.count() << "\n";
   //std::cout << ".unixtime = " << apiRes["result"]["unixtime"].get<long long int>() << "\n";
-=======
-  std::cout << timeResponse.unixtime.count() << "\n";
-  std::cout << ".unixtime = " << apiRes["result"]["unixtime"].get<long long int>() << "\n";
->>>>>>> d872085... getAsync<MockDispatcher> leads a SF
-=======
-  // std::cout << timeResponse.unixtime.count() << "\n";
-  //std::cout << ".unixtime = " << apiRes["result"]["unixtime"].get<long long int>() << "\n";
->>>>>>> 78de4bb433f62c0c3730cf56d4cebdb4cb307d4f
   REQUIRE(timeResponse.unixtime ==
           static_cast<TimeT>(apiRes["result"]["unixtime"].get<long long int>()));
   REQUIRE(timeResponse.statusCode_ == 200);
