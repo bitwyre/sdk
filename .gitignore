@@ -33,22 +33,3 @@
 
 # IDE
 *.idea
-*.prefs
-java/.metadata/.lock
-java/.metadata/.log
-*.version
-*.index
-*.tree
-*.xmi
-*.dat
-*.ser
-*.log
-*.setup
-*.ini
-*.resources
-*.xml
-java/.metadata/.plugins/org.eclipse.egit.core/.org.eclipse.egit.core.cmp/.project
-java/.metadata/.plugins/org.eclipse.jdt.core/assumedExternalFilesCache
-java/.metadata/.plugins/org.eclipse.jdt.core/externalFilesCache
-java/.metadata/.plugins/org.eclipse.jdt.core/nonChainingJarsCache
-java/.metadata/.plugins/org.eclipse.ui.intro/introstate
