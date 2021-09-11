@@ -3,13 +3,18 @@
 #include "../../details/Dispatcher.hpp"
 
 using namespace Bitwyre::Details;
-
+using AsyncProductRequest = std::future<ProductResponse>;
 namespace Bitwyre::Rest::Public {
 
   struct Product {
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/products";
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync() noexcept -> ProductResponse {
+      return std::async(std::launch::async, [](){return get<Dispatcher>();});
     }
 
     template<typename Dispatcher = Dispatcher>

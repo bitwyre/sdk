@@ -3,6 +3,7 @@
 #include "../../details/Dispatcher.hpp"
 
 using namespace Bitwyre::Details;
+using AsyncCrytoAssetResponse = std::future<CryptoAssetResponse>;
 
 namespace Bitwyre::Rest::Public {
 
@@ -10,6 +11,11 @@ namespace Bitwyre::Rest::Public {
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/assets/crypto";
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync() noexcept -> CryptoAssetResponse {
+      return std::async(std::launch::async, [](){return get<Dispatcher>();});
     }
 
     template<typename Dispatcher = Dispatcher>

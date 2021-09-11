@@ -3,13 +3,18 @@
 #include "../../details/Dispatcher.hpp"
 
 using namespace Bitwyre::Details;
-
+using AsyncFiatAssetResponse = std::future<FiatAssetResponse>;
 namespace Bitwyre::Rest::Public {
 
   struct FiatAsset {
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/assets/fiat";
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync() noexcept ->  FiatAssetResponse {
+      return std::async(std::launch::async, [](){return get<Dispatcher>();});
     }
 
     template<typename Dispatcher = Dispatcher>
