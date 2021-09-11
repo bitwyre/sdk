@@ -1,11 +1,14 @@
 # Official Bitwyre C++ Software Development Kit
 
-# Getting Started
+## C++ REST SDK
+We are building a cross-platform open source library allows one to create asynchronous REST clients.
 
-The API URL is retrieve from the environment variable `URL_API_BITWYRE`, but if you do not set it, a default one
+The Dispatcher class is responsible to send request. Each end point has to process response, write it to JSON format output.
+
+The API URL is retrieved from the environment variable `URL_API_BITWYRE`, but if you do not set it, a default one
 pointing to our production cluster will be used.
 
-# Building from source 
+# Building from source
 
 ## Requirements
 
@@ -15,15 +18,25 @@ pointing to our production cluster will be used.
 
 ## Build commands
 
-```shell
-mkdir build && cd $_ && cmake .. -DCMAKE_BUILD_TYPE=Debug
-```
+### general linux distributions
 
+```shell
+mkdir build
+cd build
+export CONAN_RUN_TESTS=1
+echo $CONAN_RUN_TESTS
+cmake .. -DUNIT_TESTS=1 -DBUILD_TESTING=1 -DCMAKE_BUILD_TYPE=Debug
+make
+```
+<!---
+Note: everytime you run `conan create` you don't need to wait for your changes to be merged in develop branch.
+The `create` command will update your local cache and you can run the examples with the updates.
+--->
 In order to build the test suite add `-DBUILD_TESTING` definition.
 
-# Package Managers 
+# Package Managers
 
-## Conan 
+## Conan
 
 Add our remote https://conan.bitwyre.id/artifactory/api/conan/bitwyre to your list of remotes
 
@@ -33,22 +46,22 @@ conan remote add bitwyre  https://conan.bitwyre.id/artifactory/api/conan/bitwyre
 
 Then inside your `conanfile.py` or `conanfile.txt` add `bitwyresdk/[>=1.0]`
 
-## Vckpg 
+## Vckpg
 
-Coming Soon 
+Coming Soon
 
 # Example of usage Public API
 
 - Getting the Server time https://docs.bitwyre.id/#server-time
 
 ```c++
-#include "rest/public/Time.hpp"
+#include "bitwyresdk/rest/public/Time.hpp"
 
 auto main() -> int {
     // TimeResponse here can be replaced with auto
-    TimeResponse tr = Time::get();
+    TimeResponse tr = Bitwyre::Rest::Public::Time::get();
     
-    std::cout << tr.unixtime << "\n";
+    std::cout << tr.unixtime.count() << "\n";
 }
 ```
 
