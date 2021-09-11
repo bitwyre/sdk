@@ -33,16 +33,3 @@
 
 # IDE
 *.idea
-*.prefs
-*.version
-*.index
-*.tree
-*.xmi
-*.dat
-*.ser
-*.log
-*.setup
-*.ini
-*.resources
-*.xml
-java/*
