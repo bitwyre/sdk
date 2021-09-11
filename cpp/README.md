@@ -8,7 +8,7 @@ The Dispatcher class is responsible to send request. Each end point has to proce
 The API URL is retrieved from the environment variable `URL_API_BITWYRE`, but if you do not set it, a default one
 pointing to our production cluster will be used.
 
-# Building from source
+# Building from source 
 
 ## Requirements
 
@@ -34,9 +34,9 @@ The `create` command will update your local cache and you can run the examples w
 --->
 In order to build the test suite add `-DBUILD_TESTING` definition.
 
-# Package Managers
+# Package Managers 
 
-## Conan
+## Conan 
 
 Add our remote https://conan.bitwyre.id/artifactory/api/conan/bitwyre to your list of remotes
 
@@ -46,9 +46,9 @@ conan remote add bitwyre  https://conan.bitwyre.id/artifactory/api/conan/bitwyre
 
 Then inside your `conanfile.py` or `conanfile.txt` add `bitwyresdk/[>=1.0]`
 
-## Vckpg
+## Vckpg 
 
-Coming Soon
+Coming Soon 
 
 # Example of usage Public API
 
