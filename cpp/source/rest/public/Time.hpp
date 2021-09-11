@@ -1,7 +1,8 @@
 #pragma once
 #include "../../details/Dispatcher.hpp"
-
+#include <future>
 using namespace Bitwyre::Details;
+using AsyncTimeResponse = std::future<TimeResponse>;
 
 namespace Bitwyre::Rest::Public {
   using TimeT = std::chrono::nanoseconds;
@@ -13,7 +14,12 @@ namespace Bitwyre::Rest::Public {
     }
 
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto get() noexcept -> TimeResponse {
+    [[nodiscard]] static auto getAsync() noexcept -> AsyncTimeResponse {
+      return std::async(std::launch::async, [](){return get<Dispatcher>();});
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto get() noexcept -> TimeResponse { //from Types.hpp
       auto response = Dispatcher()(uri(), CommonPublicRequest{});
       return processResponse(std::move(response));
     }

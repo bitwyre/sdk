@@ -1,14 +1,19 @@
 #pragma once
 #include "../../details/Dispatcher.hpp"
-
+#include <future>
 using namespace Bitwyre::Details;
-
+using AsyncSupportedLanguagesResponse = std::future<SupportedLanguagesResponse>;
 namespace Bitwyre::Rest::Public {
 
   struct SupportedLanguages {
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/languages";
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsyncLanguage() noexcept -> AsyncSupportedLanguagesResponse {
+        return std::async(std::launch::async, [](){return get<Dispatcher>();});
     }
 
     template<typename Dispatcher = Dispatcher>

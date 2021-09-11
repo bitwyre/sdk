@@ -3,13 +3,18 @@
 #include "../../details/Dispatcher.hpp"
 
 using namespace Bitwyre::Details;
-
+using AsyncDepthResponse = std::future<DepthResponse>;
 namespace Bitwyre::Rest::Public {
 
   struct Depth {
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/depth";
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(const DepthRequest& request) noexcept -> AsyncDepthResponse {
+      return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
     }
 
     template<typename Dispatcher = Dispatcher>

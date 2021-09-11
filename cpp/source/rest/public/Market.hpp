@@ -2,13 +2,18 @@
 #include "../../details/Dispatcher.hpp"
 
 using namespace Bitwyre::Details;
-
+using AsyncMarketResponse = std::future<MarketResponse>;
 namespace Bitwyre::Rest::Public {
 
   struct Market {
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/markets";
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync() noexcept ->  MarketResponse {
+      return std::async(std::launch::async, [](){return get<Dispatcher>();});
     }
 
     template<typename Dispatcher = Dispatcher>
