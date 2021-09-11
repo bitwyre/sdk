@@ -4,9 +4,22 @@
   </a>
 </p>
 
-# Bitwyre's Software Development Kit 
+# Bitwyre's Software Development Kit
 
 Algorithmic trading development on Bitwyre's crypto spot and derivative exchange.
+
+# Getting Started
+
+## What is SDK?
+
+A software development kit (aka `SDK`) refers to a set of tools, guidelines
+and programs used to develop application for our algorithmic trading platform.
+Our SDK includes APIs to a variety of programming languages, documentation, libraries, code samples
+and other utilities. Our SDK boast a set of robust features and functionalities by wrapping
+all the complexity calling an API directly into specific programming languages users consider.
+
+## What is a REST API?
+Roughly speaking, a REST API is about getting request and processing response.
 
 ## Gateways
 
