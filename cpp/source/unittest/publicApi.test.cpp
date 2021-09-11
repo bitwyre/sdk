@@ -36,10 +36,14 @@ TEST_CASE("Time request", "[rest][public][time]") {
       .WillOnce(Return(apiRes));
   auto rawResponse =
       mockDispatcher.dispatch(Time::uri(), CommonPublicRequest{});
-  // This return {"statusCode": 200, "error": [], "result": {"unixtime": 1571744594571020435} }
-  auto timeResponse = Time::processResponse(std::move(apiRes));
+  auto timeResponse = Time::processResponse(std::move(rawResponse));
+<<<<<<< HEAD
   // std::cout << timeResponse.unixtime.count() << "\n";
+  //std::cout << ".unixtime = " << apiRes["result"]["unixtime"].get<long long int>() << "\n";
+=======
+  std::cout << timeResponse.unixtime.count() << "\n";
   std::cout << ".unixtime = " << apiRes["result"]["unixtime"].get<long long int>() << "\n";
+>>>>>>> d872085... getAsync<MockDispatcher> leads a SF
   REQUIRE(timeResponse.unixtime ==
           static_cast<TimeT>(apiRes["result"]["unixtime"].get<long long int>()));
   REQUIRE(timeResponse.statusCode_ == 200);
@@ -55,6 +59,7 @@ TEST_CASE("AsyncTime request", "[rest][public][async][time]") {
     EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>()))
     .WillOnce(Return(apiRes));
 
+<<<<<<< HEAD
     EXPECT_CALL(asyncDispatcher,getAsync()).WillOnce(Return(mockDispatcher.dispatch(Time::uri(),CommonPublicRequest{})));
 
     auto asyncRawRes =
@@ -62,6 +67,18 @@ TEST_CASE("AsyncTime request", "[rest][public][async][time]") {
     auto timeResponse = Time::processResponse(std::move(asyncRawRes));
     REQUIRE(timeResponse.unixtime ==  static_cast<TimeT>(apiRes["result"]["unixtime"].get<long long int>()));
     REQUIRE(timeResponse.statusCode_ == 200);
+=======
+    auto rawResponse =
+            mockDispatcher.dispatch(Time::uri(), CommonPublicRequest{});
+    auto timeResponse = Time::processResponse(std::move(rawResponse));
+    Time time1;
+    auto future = time1.getAsync<MockDispatcher>();
+    auto response = future.get();
+ //   std::cout << response.unixtime << "\n";
+    REQUIRE(response.unixtime ==  static_cast<TimeT>(apiRes["result"]["unixtime"].get<long long int>()));
+    //REQUIRE( response.unixtime == apiRes["result"]["unixtime"].get<long long int>() );
+  //   REQUIRE(timeResponse.statusCode_ == 200);
+>>>>>>> d872085... getAsync<MockDispatcher> leads a SF
 }
 
 //TEST_CASE("AsyncCallbackTime request", "[rest][public][async][callback][time]") {
