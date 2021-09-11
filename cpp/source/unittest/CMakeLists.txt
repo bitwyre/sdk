@@ -4,7 +4,7 @@
 # For testing on the function/class level.
 
 add_executable(unittests
-        testMain.cpp
+        testmain.cpp
         publicApi.test.cpp
         privateApi.test.cpp
         utils.test.cpp.hpp

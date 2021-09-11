@@ -27,8 +27,8 @@ class bitwyresdkCpp(ConanFile):
 
     def requirements(self):
         if tools.get_env("CONAN_RUN_TESTS"):
-            self.requires("catch2/2.13.6@bitwyre/stable")
-            self.requires("gtest/cci.20210126@bitwyre/stable")
+        self.requires("catch2/2.13.6@bitwyre/stable")
+        self.requires("gtest/cci.20210126@bitwyre/stable")
 
     def config_options(self):
         if self.settings.os == "Windows":
