@@ -16,4 +16,5 @@ public:
     MOCK_METHOD(json, getAsync, (ContractRequest request));
     MOCK_METHOD(json, getAsync, (TickerRequest request));
     MOCK_METHOD(json, getAsync, (TradesRequest request));
+    MOCK_METHOD(json, getAsync, (AccountBalanceRequest request));
 };

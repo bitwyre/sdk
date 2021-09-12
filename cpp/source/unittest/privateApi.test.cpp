@@ -1,4 +1,5 @@
 #include "MockDispatcher.hpp"
+#include "MockAsyncDispatcher.hpp"
 #include "catch2/catch.hpp"
 #include "details/Utils.hpp"
 #include "rest/private/AccountBalance.hpp"
@@ -53,6 +54,55 @@ TEST_CASE("Account balance", "[rest][private][accountbalance]") {
       mockDispatcher.dispatch(AccountBalance::uri(), accountBalanceRequest);
 
   auto response = AccountBalance::processResponse(std::move(rawResponse));
+
+  REQUIRE(response.balances.size() == 2);
+  REQUIRE(response.balances.at(0).availableBalance == 10000);
+  REQUIRE(response.balances.at(0).asset == "btc");
+  REQUIRE(response.statusCode_ == 200);
+}
+
+TEST_CASE("AsyncAccount balance", "[rest][private][async][accountbalance]") {
+
+  MockDispatcher mockDispatcher;
+  MockAsyncDispatcher asyncDispatcher;
+  json apiRes = R"({
+    "statusCode": 200,
+    "error": [],
+    "result": [
+        {
+            "asset": "btc",
+            "available_balance": 10000.3434,
+            "btc_equivalent": 1,
+            "local_equivalent": 0,
+            "local_reference": "",
+            "locked_balance": 0,
+            "total_balance": 0
+        },
+        {
+            "asset": "eth",
+            "available_balance": 0,
+            "btc_equivalent": 0,
+            "local_equivalent": 0,
+            "local_reference": "",
+            "locked_balance": 0,
+            "total_balance": 0
+        }
+  ]
+})"_json;
+
+  AccountBalanceRequest accountBalanceRequest{InstrumentT("btc_usd_spot")};
+
+  EXPECT_CALL(mockDispatcher, dispatch(_, An<AccountBalanceRequest>()))
+      .WillOnce(Return(apiRes));
+  EXPECT_CALL(asyncDispatcher, getAsync(An<AccountBalanceRequest>()))
+  .WillOnce(Return(mockDispatcher.dispatch(AccountBalance::uri(),accountBalanceRequest)));
+
+  auto asyncRawRes = asyncDispatcher.getAsync(accountBalanceRequest);
+  auto response = AccountBalance::processResponse(std::move(asyncRawRes));
+//  auto rawResponse =
+//      mockDispatcher.dispatch(AccountBalance::uri(), accountBalanceRequest);
+//
+//  auto response = AccountBalance::processResponse(std::move(rawResponse));
 
   REQUIRE(response.balances.size() == 2);
   REQUIRE(response.balances.at(0).availableBalance == 10000);
