@@ -19,13 +19,4 @@ public:
     MOCK_METHOD(json, getAsync, (TickerRequest request));
     MOCK_METHOD(json, getAsync, (TradesRequest request));
     MOCK_METHOD(json, getAsync, (AccountBalanceRequest request));
-    MOCK_METHOD(json, getAsync, (AccountStatementRequest request));
-    MOCK_METHOD(json, delAsync, (CancelOrderRequest request));
-    MOCK_METHOD(json, getAsync, (OpenOrdersRequest request));
-    MOCK_METHOD(json, getAsync, (ClosedOrdersRequest request));
-    MOCK_METHOD(json, postAsync, (NewOrderRequest request));
-    MOCK_METHOD(json, getAsync, (OrderInfoRequest request));
-    MOCK_METHOD(json, getAsync, (TradesHistoryRequest request));
-    MOCK_METHOD(json, getAsync, (TransactionHistoryRequest request));
-
 };

@@ -61,7 +61,7 @@ TEST_CASE("Account balance", "[rest][private][accountbalance]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("Async Account balance", "[rest][private][async][accountbalance]") {
+TEST_CASE("AsyncAccount balance", "[rest][private][async][accountbalance]") {
 
   MockDispatcher mockDispatcher;
   MockAsyncDispatcher asyncDispatcher;
