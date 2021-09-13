@@ -539,7 +539,7 @@ TEST_CASE("Closed orders request", "[rest][private][closedorders]") {
 }
 
 
-TEST_CASE("Closed orders async request", "[rest][private][async][closedorders]") {
+TEST_CASE("Async Closed orders request", "[rest][private][async][closedorders]") {
   MockDispatcher mockDispatcher;
   MockAsyncDispatcher asyncDispatcher;
   auto apiRes = R"({
@@ -706,7 +706,7 @@ TEST_CASE("Open orders request", "[rest][private][closedorders]") {
   REQUIRE(response.openOrders.at(0).first == "btc_usd_spot");
 }
 
-TEST_CASE("Open orders async request", "[rest][private][async][openorders]") {
+TEST_CASE("Async Open orders request", "[rest][private][async][openorders]") {
   MockDispatcher mockDispatcher;
   MockAsyncDispatcher asyncDispatcher;
   auto apiRes = R"({
