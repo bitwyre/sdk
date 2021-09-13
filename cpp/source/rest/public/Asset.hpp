@@ -1,5 +1,6 @@
 #pragma once
 #include "../../details/Dispatcher.hpp"
+
 using namespace Bitwyre::Details;
 using AsyncAssetResponse = std::future<AssetResponse>;
 namespace Bitwyre::Rest::Public {

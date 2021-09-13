@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <utility>
+#include "../../details/Dispatcher.hpp"
 
 using namespace Bitwyre::Details;
 
