@@ -1,6 +1,5 @@
 #pragma once
 #include "../../details/Dispatcher.hpp"
-
 using namespace Bitwyre::Details;
 using AsyncDepthResponse = std::future<DepthResponse>;
 namespace Bitwyre::Rest::Public {
