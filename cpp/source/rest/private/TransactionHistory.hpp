@@ -1,6 +1,7 @@
 #pragma once
 #include "../../details/Types.hpp"
-#include<future>
+#include "../../details/Dispatcher.hpp"
+
 using namespace Bitwyre::Types::Private;
 
 namespace Bitwyre::Rest::Private {
