@@ -1,6 +1,5 @@
 #pragma once
 #include "../../details/Dispatcher.hpp"
-
 using namespace Bitwyre::Details;
 using AsyncProductResponse = std::future<ProductResponse>;
 
