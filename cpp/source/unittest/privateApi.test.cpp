@@ -61,7 +61,7 @@ TEST_CASE("Account balance", "[rest][private][accountbalance]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("AsyncAccount balance", "[rest][private][async][accountbalance]") {
+TEST_CASE("Async Account balance", "[rest][private][async][accountbalance]") {
 
   MockDispatcher mockDispatcher;
   MockAsyncDispatcher asyncDispatcher;
@@ -539,7 +539,7 @@ TEST_CASE("Closed orders request", "[rest][private][closedorders]") {
 }
 
 
-TEST_CASE("Async Closed orders request", "[rest][private][async][closedorders]") {
+TEST_CASE("Closed orders async request", "[rest][private][async][closedorders]") {
   MockDispatcher mockDispatcher;
   MockAsyncDispatcher asyncDispatcher;
   auto apiRes = R"({
@@ -626,6 +626,7 @@ TEST_CASE("Async Closed orders request", "[rest][private][async][closedorders]")
 
 TEST_CASE("Open orders request", "[rest][private][closedorders]") {
   MockDispatcher mockDispatcher;
+  MockAsyncDispatcher asyncDispatcher;
   auto apiRes = R"({
     "statusCode": 200,
     "error": [],
@@ -706,92 +707,9 @@ TEST_CASE("Open orders request", "[rest][private][closedorders]") {
   REQUIRE(response.openOrders.at(0).first == "btc_usd_spot");
 }
 
-TEST_CASE("Async Open orders request", "[rest][private][async][openorders]") {
+TEST_CASE("Open orders async request", "[rest][private][async][openorders]") {
   MockDispatcher mockDispatcher;
   MockAsyncDispatcher asyncDispatcher;
-  auto apiRes = R"({
-    "statusCode": 200,
-    "error": [],
-    "result": {
-    "btc_usd_spot": [
-        {
-            "AvgPx": "0",
-            "LastLiquidityInd": "0",
-            "LastPx": "0",
-            "LastQty": "0",
-            "account": "a9e3d010-3169-489d-9063-ced912b0fdc8",
-            "cancelondisconnect": 0,
-            "clorderid": "",
-            "cumqty": "0",
-            "execid": "",
-            "exectype": 1,
-            "expiry": 0,
-            "fill_price": "0",
-            "instrument": "btc_usd_spot",
-            "leavesqty": "1",
-            "orderid": "a9e3d010-3169-489d-9063-ced912b0fdc9",
-            "orderqty": "1",
-            "ordrejreason": "",
-            "ordstatus": 1,
-            "ordstatusReqID": "a9e3d010-3169-489d-9063-ced912b0fdc9",
-            "ordtype": 1,
-            "origclid": "a9e3d010-3169-489d-9063-ced912b0fdc9",
-            "price": "10.0",
-            "side": 1,
-            "stoppx": "0",
-            "time_in_force": 0,
-            "timestamp": 123123132123,
-            "transacttime": 0,
-            "value": "100.0"
-        },
-        {
-            "AvgPx": "0",
-            "LastLiquidityInd": "0",
-            "LastPx": "0",
-            "LastQty": "0",
-            "account": "a9e3d010-3169-489d-9063-ced912b0fdc8",
-            "cancelondisconnect": 0,
-            "clorderid": "",
-            "cumqty": "0",
-            "execid": "",
-            "exectype": 1,
-            "expiry": 0,
-            "fill_price": "0",
-            "instrument": "btc_usd_spot",
-            "leavesqty": "1",
-            "orderid": "a9e3d010-3169-489d-9063-ced912b0fdc1",
-            "orderqty": "1",
-            "ordrejreason": "",
-            "ordstatus": 1,
-            "ordstatusReqID": "a9e3d010-3169-489d-9063-ced912b0fdc1",
-            "ordtype": 1,
-            "origclid": "a9e3d010-3169-489d-9063-ced912b0fdc1",
-            "price": "10.0",
-            "side": 1,
-            "stoppx": "0",
-            "time_in_force": 0,
-            "timestamp": 2345676543246,
-            "transacttime": 0,
-            "value": "100.0"
-        }
-    ]
-    } })"_json;
-
-  OpenOrdersRequest request{InstrumentT{"btc_usd_spot"}};
-
-  EXPECT_CALL(mockDispatcher, dispatch(_, An<OpenOrdersRequest>()))
-      .WillOnce(Return(apiRes));
-  EXPECT_CALL(asyncDispatcher, getAsync(An<OpenOrdersRequest>()))
-  .WillOnce(Return(mockDispatcher.dispatch(OpenOrders::uri(), request)));
-  auto asyncRawRes = asyncDispatcher.getAsync(request);
-  auto response = OpenOrders::processResponse(std::move(asyncRawRes));
-  REQUIRE(response.openOrders.size() == 1);
-  REQUIRE(response.openOrders.at(0).second.size() == 2);
-  REQUIRE(response.openOrders.at(0).first == "btc_usd_spot");
-}
-
-TEST_CASE("Order info", "[rest][private][orderinfo]") {
-  MockDispatcher mockDispatcher;
   auto apiRes = R"({
     "statusCode": 200,
     "error": [],
@@ -863,8 +781,95 @@ TEST_CASE("Order info", "[rest][private][orderinfo]") {
 
   EXPECT_CALL(mockDispatcher, dispatch(_, An<OrderInfoRequest>()))
       .WillOnce(Return(apiRes));
-  auto rawResponse = mockDispatcher.dispatch(OrderInfo::uri(), request);
-  auto response = OrderInfo::processResponse(std::move(rawResponse));
+  EXPECT_CALL(asyncDispatcher, getAsync(An<OpenOrdersRequest>()))
+  .WillOnce(Return(mockDispatcher.dispatch(OpenOrders::uri(), request)));
+  auto asyncRawRes = asyncDispatcher.getAsync(request);
+  auto response = OpenOrders::processResponse(std::move(asyncRawRes));
+  REQUIRE(response.openOrders.size() == 1);
+  REQUIRE(response.openOrders.at(0).second.size() == 2);
+  REQUIRE(response.openOrders.at(0).first == "btc_usd_spot");
+}
+
+
+TEST_CASE("Async Order info", "[rest][private][async][orderinfo]") {
+  MockDispatcher mockDispatcher;
+  MockAsyncDispatcher asyncDispatcher;
+  auto apiRes = R"({
+    "statusCode": 200,
+    "error": [],
+    "result": [
+        {
+            "AvgPx": "0",
+            "LastLiquidityInd": "0",
+            "LastPx": "0",
+            "LastQty": "0",
+            "account": "a9e3d010-3169-489d-9063-ced912b0fdc8",
+            "cancelondisconnect": 0,
+            "clorderid": "",
+            "cumqty": "0",
+            "execid": "",
+            "exectype": 1,
+            "expiry": 0,
+            "fill_price": "0",
+            "instrument": "btc_usd_spot",
+            "leavesqty": "1",
+            "orderid": "a9e3d010-3169-489d-9063-ced912b0fdc9",
+            "orderqty": "1",
+            "ordrejreason": "",
+            "ordstatus": 1,
+            "ordstatusReqID": "a9e3d010-3169-489d-9063-ced912b0fdc9",
+            "ordtype": 1,
+            "origclid": "a9e3d010-3169-489d-9063-ced912b0fdc9",
+            "price": "10.0",
+            "side": 1,
+            "stoppx": "0",
+            "time_in_force": 0,
+            "timestamp": 123123132123,
+            "transacttime": 0,
+            "value": "100.0"
+        },
+        {
+            "AvgPx": "0",
+            "LastLiquidityInd": "0",
+            "LastPx": "0",
+            "LastQty": "0",
+            "account": "a9e3d010-3169-489d-9063-ced912b0fdc8",
+            "cancelondisconnect": 0,
+            "clorderid": "",
+            "cumqty": "0",
+            "execid": "",
+            "exectype": 1,
+            "expiry": 0,
+            "fill_price": "0",
+            "instrument": "btc_usd_spot",
+            "leavesqty": "1",
+            "orderid": "a9e3d010-3169-489d-9063-ced912b0fdc1",
+            "orderqty": "1",
+            "ordrejreason": "",
+            "ordstatus": 1,
+            "ordstatusReqID": "a9e3d010-3169-489d-9063-ced912b0fdc1",
+            "ordtype": 1,
+            "origclid": "a9e3d010-3169-489d-9063-ced912b0fdc1",
+            "price": "10.0",
+            "side": 1,
+            "stoppx": "0",
+            "time_in_force": 0,
+            "timestamp": 2345676543246,
+            "transacttime": 0,
+            "value": "100.0"
+        }
+    ]
+})"_json;
+
+  OrderInfoRequest request{OrderIdT{"9be73240-c3e4-4d0d-a8d7-57d9a6d798e1"}};
+
+  EXPECT_CALL(mockDispatcher, dispatch(_, An<OrderInfoRequest>()))
+      .WillOnce(Return(apiRes));
+  EXPECT_CALL(asyncDispatcher, getAsync())
+     .WillOnce(Return(mockDispatcher.dispatch(OrderInfo::uri(), request)));
+
+  auto asyncRawRes = asyncDispatcher.getAsync();
+  auto response = OrderInfo::processResponse(std::move(asyncRawRes));
 
   REQUIRE(response.ordersInfo.size() == 2);
   REQUIRE(response.ordersInfo.at(0).instrument == "btc_usd_spot");
@@ -1008,7 +1013,7 @@ TEST_CASE("New Order ", "[rest][private][neworder]") {
   REQUIRE(response.instrument == "btc_usd_spot");
 }
 
-TEST_CASE("Async New Order", "[rest][private][async][neworder]") {
+TEST_CASE("New Order Async ", "[rest][private][async][neworder]") {
   MockDispatcher mockDispatcher;
   MockAsyncDispatcher asyncDispatcher;
   auto apiRes = R"({
