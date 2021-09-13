@@ -1,6 +1,5 @@
 #pragma once
 #include "../../details/Dispatcher.hpp"
-
 using namespace Bitwyre::Types::Private;
 using AsyncExecutionReport = std::future<ExecutionReport>;
 
@@ -23,7 +22,7 @@ namespace Bitwyre::Rest::Private {
 
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto delAsync(const CancelOrderRequest& request) noexcept
-        -> ExecutionReport {
+        -> AsyncExecutionReport {
       return std::async(std::launch::async, [&request](){return del<Dispatcher>(request);});
     }
 
