@@ -61,7 +61,7 @@ TEST_CASE("Account balance", "[rest][private][accountbalance]") {
   REQUIRE(response.statusCode_ == 200);
 }
 
-TEST_CASE("AsyncAccount balance", "[rest][private][async][accountbalance]") {
+TEST_CASE("Async Account balance", "[rest][private][async][accountbalance]") {
 
   MockDispatcher mockDispatcher;
   MockAsyncDispatcher asyncDispatcher;
@@ -539,7 +539,7 @@ TEST_CASE("Closed orders request", "[rest][private][closedorders]") {
 }
 
 
-TEST_CASE("Async Closed orders request", "[rest][private][async][closedorders]") {
+TEST_CASE("Closed orders async request", "[rest][private][async][closedorders]") {
   MockDispatcher mockDispatcher;
   MockAsyncDispatcher asyncDispatcher;
   auto apiRes = R"({
@@ -707,7 +707,7 @@ TEST_CASE("Open orders request", "[rest][private][closedorders]") {
   REQUIRE(response.openOrders.at(0).first == "btc_usd_spot");
 }
 
-TEST_CASE("Async Open orders request", "[rest][private][async][openorders]") {
+TEST_CASE("Open orders async request", "[rest][private][async][openorders]") {
   MockDispatcher mockDispatcher;
   MockAsyncDispatcher asyncDispatcher;
   auto apiRes = R"({
@@ -1013,7 +1013,7 @@ TEST_CASE("New Order ", "[rest][private][neworder]") {
   REQUIRE(response.instrument == "btc_usd_spot");
 }
 
-TEST_CASE("Async New Order", "[rest][private][async][neworder]") {
+TEST_CASE("New Order Async ", "[rest][private][async][neworder]") {
   MockDispatcher mockDispatcher;
   MockAsyncDispatcher asyncDispatcher;
   auto apiRes = R"({
