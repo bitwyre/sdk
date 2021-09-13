@@ -1008,7 +1008,7 @@ TEST_CASE("New Order ", "[rest][private][neworder]") {
   REQUIRE(response.instrument == "btc_usd_spot");
 }
 
-TEST_CASE("New Order Async ", "[rest][private][async][neworder]") {
+TEST_CASE("Async New Order", "[rest][private][async][neworder]") {
   MockDispatcher mockDispatcher;
   MockAsyncDispatcher asyncDispatcher;
   auto apiRes = R"({
@@ -1268,6 +1268,90 @@ TEST_CASE("Transaction History", "[rest][private][txhistory]") {
   auto rawResponse =
       mockDispatcher.dispatch(TransactionHistory::uri(), request);
   auto response = TransactionHistory::processResponse(std::move(rawResponse));
+
+  REQUIRE(response.withdrawals.size() > 1);
+  REQUIRE(response.deposits.size() >= 2);
+}
+
+TEST_CASE("Async Transaction History", "[rest][private][async][txhistory]") {
+  MockDispatcher mockDispatcher;
+  MockAsyncDispatcher asyncDispatcher;
+  auto apiRes = R"({
+    "statusCode": 200,
+    "error": [],
+        "result": {
+        "deposit": {
+            "idr": [
+                {
+                    "account_balance_id": 1,
+                    "address": "thisisaddress",
+                    "amount": "100000000.0",
+                    "asset": "idr",
+                    "fee": "0.0",
+                    "final_balance": "1100000000.0",
+                    "notes": "",
+                    "status": "Cancelled",
+                    "time": 1618206392203845000,
+                    "type": 1
+                 }
+            ],
+            "btc": [
+                {
+                    "account_balance_id": 2,
+                    "address": "thisisaddress",
+                    "amount": "1.0",
+                    "asset": "btc",
+                    "fee": "0.0",
+                    "final_balance": "10.0",
+                    "notes": "",
+                    "status": "Cancelled",
+                    "time": 1618206125002066000,
+                    "type": 1
+                }
+            ]
+        },
+        "withdrawal": {
+            "btc": [
+                {
+                    "account_balance_id": 4,
+                    "address": "thisisaddress",
+                    "amount": "-1.0",
+                    "asset": "btc",
+                    "fee": "0.0",
+                    "final_balance": "9.0",
+                    "notes": "",
+                    "status": "Pending",
+                    "time": 1617974544507879000,
+                    "type": 2
+                }
+            ],
+            "idr": [
+                {
+                    "account_balance_id": 3,
+                    "address": "thisisaddress",
+                    "amount": "-1000.0",
+                    "asset": "idr",
+                    "fee": "0.0",
+                    "final_balance": "1099999000.0",
+                    "notes": "",
+                    "status": "Pending",
+                    "time": 1618207558627212000,
+                    "type": 2
+                }
+            ]
+        }
+}
+})"_json;
+
+  TransactionHistoryRequest request{};
+
+  EXPECT_CALL(mockDispatcher, dispatch(_, An<TransactionHistoryRequest>()))
+      .WillOnce(Return(apiRes));
+  EXPECT_CALL(asyncDispatcher, getAsync(An<TransactionHistoryRequest>()))
+  .WillOnce(Return(mockDispatcher.dispatch(TransactionHistory::uri(),request)));
+  auto asyncRawRes =
+      asyncDispatcher.getAsync(request);
+  auto response = TransactionHistory::processResponse(std::move(asyncRawRes));
 
   REQUIRE(response.withdrawals.size() > 1);
   REQUIRE(response.deposits.size() >= 2);

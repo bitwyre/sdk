@@ -12,7 +12,14 @@ namespace Bitwyre::Rest::Private {
     }
 
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] auto static get(
+    [[nodiscard]] static auto getAsync(
+        const TransactionHistoryRequest& request) noexcept
+        -> TransactionHistoryResponse {
+      return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto get(
         const TransactionHistoryRequest& request) noexcept
         -> TransactionHistoryResponse {
       auto rawResponse = Dispatcher()(uri(), request);
