@@ -23,7 +23,7 @@ namespace Bitwyre::Rest::Private {
     
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(const OpenOrdersRequest& request) noexcept
-        -> AsyncResponse {
+        -> Response {
       return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
     }
 

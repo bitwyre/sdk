@@ -28,6 +28,5 @@ public:
     MOCK_METHOD(json, postAsync, (NewOrderRequest request));
     MOCK_METHOD(json, getAsync, (OrderInfoRequest request));
     MOCK_METHOD(json, getAsync, (TradesHistoryRequest request));
-    MOCK_METHOD(json, getAsync, (TransactionHistoryRequest request));
 
 };
