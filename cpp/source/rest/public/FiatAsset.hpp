@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../../details/Dispatcher.hpp"
-
 using namespace Bitwyre::Details;
 using AsyncFiatAssetResponse = std::future<FiatAssetResponse>;
 namespace Bitwyre::Rest::Public {

@@ -1,6 +1,6 @@
 #pragma once
 #include "../../details/Types.hpp"
-
+#include<future>
 using namespace Bitwyre::Types::Private;
 using AsyncResponse = std::future<Response>;
 namespace Bitwyre::Rest::Private {
