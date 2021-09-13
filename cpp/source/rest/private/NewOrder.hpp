@@ -1,7 +1,7 @@
 #pragma once
 #include "../../details/Dispatcher.hpp"
 using namespace Bitwyre::Types::Private;
-
+using AsyncNewOrderRequest = std::future<NewOrderRequest>;
 namespace Bitwyre::Rest::Private {
 
   struct NewOrder {
@@ -12,7 +12,7 @@ namespace Bitwyre::Rest::Private {
 
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto postAsync(const NewOrderRequest& request) noexcept
-        -> NewOrderRequest {
+        -> AsyncNewOrderRequest {
       return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
     }
 

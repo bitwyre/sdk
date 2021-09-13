@@ -2,6 +2,7 @@
 #include "../../details/Types.hpp"
 
 using namespace Bitwyre::Types::Private;
+using AsyncAccountStatementResponse = std::future<AccountStatementResponse>;
 
 namespace Bitwyre::Rest::Private {
 
@@ -20,7 +21,7 @@ namespace Bitwyre::Rest::Private {
 
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(const AccountStatementRequest& request) noexcept
-        -> AccountStatementResponse {
+        -> AsyncAccountStatementResponse {
       return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
     }
 
