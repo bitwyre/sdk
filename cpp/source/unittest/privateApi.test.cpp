@@ -1013,7 +1013,7 @@ TEST_CASE("New Order ", "[rest][private][neworder]") {
   REQUIRE(response.instrument == "btc_usd_spot");
 }
 
-TEST_CASE("New Order Async ", "[rest][private][async][neworder]") {
+TEST_CASE("Async New Order", "[rest][private][async][neworder]") {
   MockDispatcher mockDispatcher;
   MockAsyncDispatcher asyncDispatcher;
   auto apiRes = R"({
