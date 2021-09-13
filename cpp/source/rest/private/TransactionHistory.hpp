@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../../details/Dispatcher.hpp"
 
 using namespace Bitwyre::Types::Private;
