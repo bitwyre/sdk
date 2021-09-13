@@ -11,6 +11,13 @@ namespace Bitwyre::Rest::Private {
       return "/private/orders/info";
     }
 
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(const OrderInfoRequest& request) noexcept
+        -> OrderInfoResponse {
+      return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
+    }
+
+    template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto get(const OrderInfoRequest& request) noexcept
         -> OrderInfoResponse {
       auto rawResponse = Dispatcher()(uri(), request);

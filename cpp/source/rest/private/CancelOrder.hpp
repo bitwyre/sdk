@@ -11,6 +11,12 @@ namespace Bitwyre::Rest::Private {
     }
 
     template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto delAsync(const CancelOrderRequest& request) noexcept
+        -> ExecutionReport {
+      return std::async(std::launch::async, [&request](){return del<Dispatcher>(request);});
+    }
+
+    template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto del(const CancelOrderRequest& request) noexcept
         -> ExecutionReport {
       auto rawResponse = Dispatcher()(uri(), request);

@@ -10,10 +10,22 @@ namespace Bitwyre::Rest::Private {
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/account/statement";
     }
+//
+//    template<typename Dispatcher = Dispatcher>
+//    [[nodiscard]] static auto
+//    getAsync(const AccountStatementRequest& request) noexcept
+//        -> AccountStatementResponse {
+//      return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
+//    }
 
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto
-    get(const AccountStatementRequest& request) noexcept
+    [[nodiscard]] static auto getAsync(const AccountStatementRequest& request) noexcept
+        -> AccountStatementResponse {
+      return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto get(const AccountStatementRequest& request) noexcept
         -> AccountStatementResponse {
       auto rawResponse = Dispatcher()(uri(), request);
       return processResponse(std::move(rawResponse));
