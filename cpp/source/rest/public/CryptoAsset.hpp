@@ -1,6 +1,5 @@
 #pragma once
 #include "../../details/Dispatcher.hpp"
-
 using namespace Bitwyre::Details;
 using AsyncCrytoAssetResponse = std::future<CryptoAssetResponse>;
 

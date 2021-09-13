@@ -1,6 +1,6 @@
 #pragma once
-#include "../../details/Dispatcher.hpp"
-
+#include "../../details/Types.hpp"
+#include<future>
 using namespace Bitwyre::Types::Private;
 using AsyncAccountStatementResponse = std::future<AccountStatementResponse>;
 
@@ -13,13 +13,6 @@ namespace Bitwyre::Rest::Private {
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/account/statement";
     }
-//
-//    template<typename Dispatcher = Dispatcher>
-//    [[nodiscard]] static auto
-//    getAsync(const AccountStatementRequest& request) noexcept
-//        -> AccountStatementResponse {
-//      return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
-//    }
 
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb, const AccountStatementRequest& request) noexcept -> void {
