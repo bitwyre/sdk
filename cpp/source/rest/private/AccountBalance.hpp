@@ -1,9 +1,8 @@
 #pragma once
 #include "../../details/Dispatcher.hpp"
-
 using namespace Bitwyre::Types::Private;
 using namespace Bitwyre::Details;
-
+using AsyncAccountBalanceResponse = std::future<AccountBalanceResponse>;
 namespace Bitwyre::Rest::Private {
   using json = nlohmann::json;
 
@@ -11,6 +10,12 @@ namespace Bitwyre::Rest::Private {
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/account/spotbalance";
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(const AccountBalanceRequest& request) noexcept
+        -> AsyncAccountBalanceResponse {
+      return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
     }
 
     template<typename Dispatcher = Dispatcher>

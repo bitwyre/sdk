@@ -6,6 +6,7 @@
 #include "nlohmann/json.hpp"
 #include <string_view>
 #include <utility>
+#include <future>
 
 using namespace Bitwyre::Types::Public;
 using namespace Bitwyre::Types::Private;

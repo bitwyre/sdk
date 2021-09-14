@@ -1,13 +1,20 @@
 #pragma once
 #include "../../details/Dispatcher.hpp"
-using namespace Bitwyre::Types::Private;
 
+using namespace Bitwyre::Types::Private;
+using AsyncExecutionReport = std::future<ExecutionReport>;
 namespace Bitwyre::Rest::Private {
 
   struct CancelOrder {
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/orders/cancel";
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto delAsync(const CancelOrderRequest& request) noexcept
+        -> AsyncExecutionReport {
+      return std::async(std::launch::async, [&request](){return del<Dispatcher>(request);});
     }
 
     template<typename Dispatcher = Dispatcher>

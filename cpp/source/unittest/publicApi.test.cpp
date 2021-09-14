@@ -51,7 +51,6 @@ TEST_CASE("AsyncTime request", "[rest][public][async][time]") {
 
     EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>()))
     .WillOnce(Return(apiRes));
-
     EXPECT_CALL(asyncDispatcher,getAsync()).WillOnce(Return(mockDispatcher.dispatch(Time::uri(),CommonPublicRequest{})));
 
     auto asyncRawRes =

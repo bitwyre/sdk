@@ -2,13 +2,19 @@
 #include "../../details/Dispatcher.hpp"
 
 using namespace Bitwyre::Types::Private;
-
+using AsyncResponse = std::future<Response>;
 namespace Bitwyre::Rest::Private {
 
   struct OpenOrders {
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/orders/open";
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(const OpenOrdersRequest& request) noexcept
+        -> AsyncResponse {
+      return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
     }
 
     template<typename Dispatcher = Dispatcher>
