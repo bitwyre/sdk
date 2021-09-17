@@ -15,6 +15,11 @@ namespace Bitwyre::Rest::Public {
       return "/public/time";
     }
 
+    template<class Callback, typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getCallback(Callback cb) noexcept -> AsyncTimeResponse {
+      return std::async(std::launch::async, [](Callback cb){return cb(get<Dispatcher>());}, std::move(cb));
+    }
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb) noexcept -> void {
       auto result = getAsync();
