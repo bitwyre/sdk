@@ -1,6 +1,6 @@
 #include "MockDispatcher.hpp"
 #include "MockAsyncDispatcher.hpp"
-//#include "MockAsyncCallbackDispatcher.hpp"
+#include "MockAsyncCallbackDispather.hpp"
 #include "catch2/catch.hpp"
 #include "details/Types.hpp"
 #include "rest/public/Asset.hpp"
@@ -36,9 +36,10 @@ TEST_CASE("Time request", "[rest][public][time]") {
       .WillOnce(Return(apiRes));
   auto rawResponse =
       mockDispatcher.dispatch(Time::uri(), CommonPublicRequest{});
-  auto timeResponse = Time::processResponse(std::move(rawResponse));
+  // This return {"statusCode": 200, "error": [], "result": {"unixtime": 1571744594571020435} }
+  auto timeResponse = Time::processResponse(std::move(apiRes));
   // std::cout << timeResponse.unixtime.count() << "\n";
-  //std::cout << ".unixtime = " << apiRes["result"]["unixtime"].get<long long int>() << "\n";
+  std::cout << ".unixtime = " << apiRes["result"]["unixtime"].get<long long int>() << "\n";
   REQUIRE(timeResponse.unixtime ==
           static_cast<TimeT>(apiRes["result"]["unixtime"].get<long long int>()));
   REQUIRE(timeResponse.statusCode_ == 200);
@@ -66,15 +67,18 @@ TEST_CASE("AsyncTime request", "[rest][public][async][time]") {
 TEST_CASE("AsyncCallbackTime request", "[rest][public][async][callback][time]") {
   // Arrange
   MockDispatcher mockDispatcher;
-  MockAsyncDispatcher asyncDispatcher;
+  MockAsyncCallbackDispather asyncCallbackDispatcher;
   json apiRes =
       R"({"statusCode": 200, "error": [], "result": {"unixtime": 1571744594571020435} })"_json;
-  auto func = [](const TimeResponse& res){ };
-//  EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>())).WillOnce(Return(apiRes));
-//  EXPECT_CALL(asyncDispatcher,getAsync(An<std::function<void(const TimeResponse&)>>)).WillOnce(Return(mockDispatcher.dispatch(Time::uri(),CommonPublicRequest{})));
+
+  EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>())).WillOnce(Return(apiRes));
+  EXPECT_CALL(asyncCallbackDispatcher,getAsyncCallback(An<CommonPublicRequest>())).WillOnce(Return(mockDispatcher.dispatch(Time::uri(), CommonPublicRequest{})));
+
 //  auto asyncRawRes =
-//      asyncDispatcher.getAsync(func);
+//      asyncDispatcher.getAsync();
 //  auto timeResponse = Time::processResponse(std::move(asyncRawRes));
+//  REQUIRE(timeResponse.unixtime ==  static_cast<TimeT>(apiRes["result"]["unixtime"].get<long long int>()));
+//  REQUIRE(timeResponse.statusCode_ == 200);
 
 }
 
