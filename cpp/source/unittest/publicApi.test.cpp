@@ -72,7 +72,7 @@ TEST_CASE("AsyncCallbackTime request", "[rest][public][async][callback][time]") 
   json apiRes =
       R"({"statusCode": 200, "error": [], "result": {"unixtime": 1571744594571020435} })"_json;
 
- // EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>())).WillOnce(Return(apiRes));
+  EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>())).WillOnce(Return(apiRes));
   auto func =[&](const TimeResponse&){return apiRes["result"]["unixtime"].get<long long int>();};
   auto asyncRawRes =
       asyncDispatcher.getAsync(func);
