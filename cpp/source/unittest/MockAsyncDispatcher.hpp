@@ -27,28 +27,6 @@ public:
     MOCK_METHOD(json, getAsync, (OrderInfoRequest request));
     MOCK_METHOD(json, getAsync, (TradesHistoryRequest request));
     MOCK_METHOD(json, getAsync, (TransactionHistoryRequest request));
-
-//    MOCK_METHOD(json, getCallback, (Callback cb));
-//  //  template<class Callback, typename Dispatcher = Dispatcher>
-//    template<typename Callback>
-//    auto GetValue(Callback& call);
-//    template<>
-//    auto GetValue(json& value){
-//      getCallback(value);
-//    }
-//    [[nodiscard]] static auto getAsync(Callback cb) noexcept -> AsyncTimeResponse {
-//      return std::async(std::launch::async, [](Callback cb){return cb(get<Dispatcher>());}, std::move(cb));
-//    }
-
-//    template<typename ValueType>
-//    void GetValue(ValueType& value)
-//
-//    template <typename ValueType>
-//    void getValue(ValueType& value);
-//
-//    template<>
-//    void getValue(Callback cb) {
-//      getAsync(cb);
-//    }
+    MOCK_METHOD(json, getAsync, (Callback cb));
 
 };
