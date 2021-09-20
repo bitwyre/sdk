@@ -71,11 +71,13 @@ TEST_CASE("AsyncCallbackTime request", "[rest][public][async][callback][time]") 
   MockAsyncDispatcher asyncDispatcher;
   json apiRes =
       R"({"statusCode": 200, "error": [], "result": {"unixtime": 1571744594571020435} })"_json;
-
-  EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>())).WillOnce(Return(apiRes));
   auto func =[&](const TimeResponse&){return apiRes["result"]["unixtime"].get<long long int>();};
+
+  //EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>())).WillOnce(Return(apiRes));
+ // EXPECT_CALL(asyncDispatcher,getAsync(func)).WillOnce(Return(mockDispatcher.dispatch(Time::uri(),CommonPublicRequest{})));
   auto asyncRawRes =
       asyncDispatcher.getAsync(func);
+  std::cout << "asyncRawRes " << asyncRawRes << "\n";
   auto timeResponse = Time::processResponse(std::move(asyncRawRes));
   REQUIRE(timeResponse.unixtime ==  static_cast<TimeT>(apiRes["result"]["unixtime"].get<long long int>()));
   REQUIRE(timeResponse.statusCode_ == 200);
