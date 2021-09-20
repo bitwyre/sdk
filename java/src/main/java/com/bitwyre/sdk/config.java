@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class config {
     final static int TIMEOUT = 5;
-    final static String URL_API_BITWYRE = "https://api.bitwyre.id";
+    final static String URL_API_BITWYRE = "https://api.bitwyre.com";
     public static String getPublicAPIEndPoint(String key) {
         HashMap<String, String> URI_PUBLIC_API_BITWYRE = new HashMap<>();
         URI_PUBLIC_API_BITWYRE.put("SERVERTIME", "/public/time");
