@@ -10,12 +10,6 @@ import java.security.NoSuchAlgorithmException;
  */
 public class App 
 {
-	//specify your api key
-	final static String API_KEY = "";
-	
-	//specify your secret key
-	final static String SECRET_KEY = ""; 
-	
     public static void main( String[] args ) throws IOException, InterruptedException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException
     {
     	/*
@@ -30,7 +24,7 @@ public class App
         PublicAPI.get_announcements();
         */
     	
-    	PrivateAPI p = new PrivateAPI(SECRET_KEY, API_KEY);
+    	PrivateAPI p = new PrivateAPI(System.getenv("SECRET_KEY"), System.getenv("API_KEY"));
     	p.get_account_balance();
     	//p.get_account_statement();
         //p.get_transaction_histories();
