@@ -85,13 +85,12 @@ public class PrivateAPI {
     }
     public void get_account_balance() throws IOException, InterruptedException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         String payload = "\"\\\"\\\"\"";
-        String uri_path = "/private/account/spotbalance";
 
         PrivateAPI priv = new PrivateAPI(secret_key, api_key);
         String nonce = priv.getNonce();
         String checksum = priv.getChecksum(payload);
         String nonce_checksum = priv.getNonceChecksum(nonce, checksum);
-        String signature = priv.getSignature(uri_path, nonce_checksum);
+        String signature = priv.getSignature(config.getPrivateAPIEndPoint("ACCOUNT_BALANCE"), nonce_checksum);
 
         //construct query parameters
         String params = new StringBuilder()
@@ -106,7 +105,7 @@ public class PrivateAPI {
         //construct request body
         HttpRequest request = HttpRequest.newBuilder()
             .GET()
-            .uri(URI.create("https://api.bitwyre.id"+uri_path+params))
+            .uri(URI.create(config.URL_API_BITWYRE+config.getPrivateAPIEndPoint("ACCOUNT_BALANCE")+params))
             .setHeader("API-Key", api_key)
             .setHeader("API-Sign", signature)
             .build();
@@ -128,13 +127,12 @@ public class PrivateAPI {
     }
     public void get_account_statement() throws IOException, InterruptedException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         String payload = "\"\\\"\\\"\"";
-        String uri_path = "/private/account/statement";
 
         PrivateAPI priv = new PrivateAPI(secret_key, api_key);
         String nonce = priv.getNonce();
         String checksum = priv.getChecksum(payload);
         String nonce_checksum = priv.getNonceChecksum(nonce, checksum);
-        String signature = priv.getSignature(uri_path, nonce_checksum);
+        String signature = priv.getSignature(config.getPrivateAPIEndPoint("ACCOUNT_STATEMENT"), nonce_checksum);
 
         //construct query parameters
         String params = new StringBuilder()
@@ -149,7 +147,7 @@ public class PrivateAPI {
         //construct request body
         HttpRequest request = HttpRequest.newBuilder()
             .GET()
-            .uri(URI.create("https://api.bitwyre.id"+uri_path+params))
+            .uri(URI.create(config.URL_API_BITWYRE+config.getPrivateAPIEndPoint("ACCOUNT_STATEMENT")+params))
             .setHeader("API-Key", api_key)
             .setHeader("API-Sign", signature)
             .build();
@@ -171,13 +169,12 @@ public class PrivateAPI {
     }
     public void get_transaction_histories() throws IOException, InterruptedException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         String payload = "\"\\\"\\\"\"";
-        String uri_path = "/private/account/transactions";
 
         PrivateAPI priv = new PrivateAPI(secret_key, api_key);
         String nonce = priv.getNonce();
         String checksum = priv.getChecksum(payload);
         String nonce_checksum = priv.getNonceChecksum(nonce, checksum);
-        String signature = priv.getSignature(uri_path, nonce_checksum);
+        String signature = priv.getSignature(config.getPrivateAPIEndPoint("TRANSACTION_HISTORIES"), nonce_checksum);
 
         //construct query parameters
         String params = new StringBuilder()
@@ -192,7 +189,7 @@ public class PrivateAPI {
         //construct request body
         HttpRequest request = HttpRequest.newBuilder()
             .GET()
-            .uri(URI.create("https://api.bitwyre.id"+uri_path+params))
+            .uri(URI.create(config.URL_API_BITWYRE+config.getPrivateAPIEndPoint("TRANSACTION_HISTORIES")+params))
             .setHeader("API-Key", api_key)
             .setHeader("API-Sign", signature)
             .build();
@@ -214,13 +211,12 @@ public class PrivateAPI {
     }
     public void get_open_orders(String instrument, int from_time, int to_time) throws IOException, InterruptedException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         String payload = "\"\\\"{\\\\\\\"instrument\\\\\\\":\\\\\\\"" + instrument + "\\\\\\\",\\\\\\\"from_time\\\\\\\":" + from_time + ",\\\\\\\"to_time\\\\\\\":" + to_time + "}\\\"\"";
-        String uri_path = "/private/orders/open";
 
         PrivateAPI priv = new PrivateAPI(secret_key, api_key);
         String nonce = priv.getNonce();
         String checksum = priv.getChecksum(payload);
         String nonce_checksum = priv.getNonceChecksum(nonce, checksum);
-        String signature = priv.getSignature(uri_path, nonce_checksum);
+        String signature = priv.getSignature(config.getPrivateAPIEndPoint("OPEN_ORDERS"), nonce_checksum);
         String payload2 = "{\"instrument\":" + "\"" + instrument + "\"" + ",\"from_time\":" + from_time + ",\"to_time\":" + to_time + "}";
         String encodedPayload = URLEncoder.encode(payload2, "UTF-8");
 
@@ -237,7 +233,7 @@ public class PrivateAPI {
         //construct request body
         HttpRequest request = HttpRequest.newBuilder()
             .GET()
-            .uri(URI.create("https://api.bitwyre.id"+uri_path+params))
+            .uri(URI.create(config.URL_API_BITWYRE+config.getPrivateAPIEndPoint("OPEN_ORDERS")+params))
             .setHeader("API-Key", api_key)
             .setHeader("API-Sign", signature)
             .build();
@@ -259,13 +255,12 @@ public class PrivateAPI {
     } 
     public void get_closed_orders(String instrument, int from_time, int to_time) throws IOException, InterruptedException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         String payload = "\"\\\"{\\\\\\\"instrument\\\\\\\":\\\\\\\"" + instrument + "\\\\\\\",\\\\\\\"from_time\\\\\\\":" + from_time + ",\\\\\\\"to_time\\\\\\\":" + to_time + "}\\\"\"";
-        String uri_path = "/private/orders/closed";
 
         PrivateAPI priv = new PrivateAPI(secret_key, api_key);
         String nonce = priv.getNonce();
         String checksum = priv.getChecksum(payload);
         String nonce_checksum = priv.getNonceChecksum(nonce, checksum);
-        String signature = priv.getSignature(uri_path, nonce_checksum);
+        String signature = priv.getSignature(config.getPrivateAPIEndPoint("CLOSED_ORDERS"), nonce_checksum);
         String payload2 = "{\"instrument\":" + "\"" + instrument + "\"" + ",\"from_time\":" + from_time + ",\"to_time\":" + to_time + "}";
         String encodedPayload = URLEncoder.encode(payload2, "UTF-8");
 
@@ -282,7 +277,7 @@ public class PrivateAPI {
         //construct request body
         HttpRequest request = HttpRequest.newBuilder()
             .GET()
-            .uri(URI.create("https://api.bitwyre.id"+uri_path+params))
+            .uri(URI.create(config.URL_API_BITWYRE+config.getPrivateAPIEndPoint("CLOSED_ORDERS")+params))
             .setHeader("API-Key", api_key)
             .setHeader("API-Sign", signature)
             .build();
@@ -304,13 +299,12 @@ public class PrivateAPI {
     } 
     public void get_order_info(String order_id) throws IOException, InterruptedException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         String payload = "\"\\\"\\\"\"";
-        String uri_path = "/private/orders/info" + "/" + order_id;
 
         PrivateAPI priv = new PrivateAPI(secret_key, api_key);
         String nonce = priv.getNonce();
         String checksum = priv.getChecksum(payload);
         String nonce_checksum = priv.getNonceChecksum(nonce, checksum);
-        String signature = priv.getSignature(uri_path, nonce_checksum);
+        String signature = priv.getSignature(config.getPrivateAPIEndPoint("ORDER_INFO")+"/"+order_id, nonce_checksum);
 
         //construct query parameters
         String params = new StringBuilder()
@@ -325,7 +319,7 @@ public class PrivateAPI {
         //construct request body
         HttpRequest request = HttpRequest.newBuilder()
             .GET()
-            .uri(URI.create("https://api.bitwyre.id"+uri_path+params))
+            .uri(URI.create(config.URL_API_BITWYRE+config.getPrivateAPIEndPoint("ORDER_INFO")+"/"+order_id+params))
             .setHeader("API-Key", api_key)
             .setHeader("API-Sign", signature)
             .build();
@@ -347,13 +341,12 @@ public class PrivateAPI {
     }
     public void get_trade_history(String instrument, int count, int from_time, int to_time) throws IOException, InterruptedException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         String payload = "\"\\\"{\\\\\\\"instrument\\\\\\\":\\\\\\\"" + instrument + "\\\\\\\",\\\\\\\"count\\\\\\\":" + count + ",\\\\\\\"from_time\\\\\\\":" + from_time + ",\\\\\\\"to_time\\\\\\\":" + to_time + "}\\\"\"";
-        String uri_path = "/private/trades";
 
         PrivateAPI priv = new PrivateAPI(secret_key, api_key);
         String nonce = priv.getNonce();
         String checksum = priv.getChecksum(payload);
         String nonce_checksum = priv.getNonceChecksum(nonce, checksum);
-        String signature = priv.getSignature(uri_path, nonce_checksum);
+        String signature = priv.getSignature(config.getPrivateAPIEndPoint("TRADE_HISTORY"), nonce_checksum);
         String payload2 = "{\"instrument\":" + "\"" + instrument + "\"" + ",\"count\":" + count + ",\"from_time\":" + from_time + ",\"to_time\":" + to_time + "}";
         String encodedPayload = URLEncoder.encode(payload2, "UTF-8");
 
@@ -370,7 +363,7 @@ public class PrivateAPI {
         //construct request body
         HttpRequest request = HttpRequest.newBuilder()
             .GET()
-            .uri(URI.create("https://api.bitwyre.id"+uri_path+params))
+            .uri(URI.create(config.URL_API_BITWYRE+config.getPrivateAPIEndPoint("TRADE_HISTORY")+params))
             .setHeader("API-Key", api_key)
             .setHeader("API-Sign", signature)
             .build();
@@ -400,13 +393,12 @@ public class PrivateAPI {
       
         String payload = "\"\\\"{\\\\\\\"instrument\\\\\\\":\\\\\\\"" + instrument + "\\\\\\\",\\\\\\\"side\\\\\\\":" + side + ",\\\\\\\"price\\\\\\\":\\\\\\\"" + price + 
         "\\\\\\\",\\\\\\\"ordtype\\\\\\\":" + ordtype + ",\\\\\\\"orderqty\\\\\\\":\\\\\\\""+ orderqty + "\\\\\\\"}\\\"\"";
-        String uri_path = "/private/orders";
 
         PrivateAPI priv = new PrivateAPI(secret_key, api_key);
         String nonce = priv.getNonce();
         String checksum = priv.getChecksum(payload);
         String nonce_checksum = priv.getNonceChecksum(nonce, checksum);
-        String signature = priv.getSignature(uri_path, nonce_checksum);
+        String signature = priv.getSignature(config.getPrivateAPIEndPoint("ORDER"), nonce_checksum);
         String payload2 = "{\\\"instrument\\\":" + "\\\"" + instrument + "\\\"" + ",\\\"side\\\":" + side + ",\\\"price\\\":" + "\\\"" + price + "\\\"" + ",\\\"ordtype\\\":" + ordtype +
         ",\\\"orderqty\\\":" + "\\\"" + orderqty + "\\\"" + "}";
 
@@ -429,7 +421,7 @@ public class PrivateAPI {
         //construct request body
         HttpRequest request = HttpRequest.newBuilder()
             .POST(HttpRequest.BodyPublishers.ofString(data))
-            .uri(URI.create("https://api.bitwyre.id"+uri_path))
+            .uri(URI.create(config.URL_API_BITWYRE+config.getPrivateAPIEndPoint("ORDER")))
             .setHeader("API-Key", api_key)
             .setHeader("API-Sign", signature)
             .setHeader("Content-Type", "application/json")
@@ -460,8 +452,7 @@ public class PrivateAPI {
         for (Integer qty:qtys){
             list2.add(qty);
         }
-        System.out.println("order_ids : "+list);  
-        System.out.println("qtys : "+list2);
+        
         int j;
         String orderids = "";
         for (int i = 0; i < order_ids.length; i++) {
@@ -482,13 +473,12 @@ public class PrivateAPI {
         } 
         
         String payload = "\"\\\"{\\\\\\\"order_ids\\\\\\\":["+orderids+"],\\\\\\\"qtys\\\\\\\":["+temp+"]}\\\"\"";
-        String uri_path = "/private/orders/cancel";
 
         PrivateAPI priv = new PrivateAPI(secret_key, api_key);
         String nonce = priv.getNonce();
         String checksum = priv.getChecksum(payload);
         String nonce_checksum = priv.getNonceChecksum(nonce, checksum);
-        String signature = priv.getSignature(uri_path, nonce_checksum);
+        String signature = priv.getSignature(config.getPrivateAPIEndPoint("CANCEL_ORDER"), nonce_checksum);
        
         int l;
         String orderids2 = "";
@@ -525,7 +515,7 @@ public class PrivateAPI {
         //construct request body
         HttpRequest request = HttpRequest.newBuilder()
             .DELETE()
-            .uri(URI.create("https://api.bitwyre.id"+uri_path+params))
+            .uri(URI.create(config.URL_API_BITWYRE+config.getPrivateAPIEndPoint("CANCEL_ORDER")+params))
             .setHeader("API-Key", api_key)
             .setHeader("API-Sign", signature)
             .build();
@@ -547,13 +537,12 @@ public class PrivateAPI {
     }
     public void cancelling_open_order_per_instrument(String instrument) throws IOException, InterruptedException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         String payload = "\"\\\"\\\"\"";
-        String uri_path = "/private/orders/cancel" + "/" + "instrument" + "/" + instrument;
 
         PrivateAPI priv = new PrivateAPI(secret_key, api_key);
         String nonce = priv.getNonce();
         String checksum = priv.getChecksum(payload);
         String nonce_checksum = priv.getNonceChecksum(nonce, checksum);
-        String signature = priv.getSignature(uri_path, nonce_checksum);
+        String signature = priv.getSignature(config.getPrivateAPIEndPoint("CANCEL_ORDER")+"/"+"instrument"+"/"+instrument, nonce_checksum);
 
         //construct query parameters
         String params = new StringBuilder()
@@ -568,7 +557,7 @@ public class PrivateAPI {
         //construct request body
         HttpRequest request = HttpRequest.newBuilder()
             .DELETE()
-            .uri(URI.create("https://api.bitwyre.id"+uri_path+params))
+            .uri(URI.create(config.URL_API_BITWYRE+config.getPrivateAPIEndPoint("CANCEL_ORDER")+"/"+"instrument"+"/"+instrument+params))
             .setHeader("API-Key", api_key)
             .setHeader("API-Sign", signature)
             .build();
