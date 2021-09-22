@@ -14,6 +14,13 @@ namespace Bitwyre::Rest::Public {
       return "/public/languages";
     }
 
+    using Callback = std::function<void(const SupportedLanguagesResponse&)>;
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsyncLanguage(Callback cb) noexcept -> void {
+      auto result = getAsyncLanguage();
+      return cb(result.get());
+    }//
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsyncLanguage(Callback cb) noexcept -> void {
       auto result = getAsyncLanguage();

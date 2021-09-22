@@ -14,6 +14,7 @@ namespace Bitwyre::Rest::Private {
       return "/private/account/transactions";
     }
 
+    using Callback = std::function<void(const TransactionHistoryResponse&)>;
     template <typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb, const TransactionHistoryRequest& request) noexcept -> void {
       auto result = getAsync(request);

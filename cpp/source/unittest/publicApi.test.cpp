@@ -71,8 +71,12 @@ TEST_CASE("AsyncCallbackTime request", "[rest][public][async][callback][time]") 
   json apiRes =
       R"({"statusCode": 200, "error": [], "result": {"unixtime": 1571744594571020435} })"_json;
   auto func = [](const TimeResponse& res){ };
-  EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>())).WillOnce(Return(apiRes));
-  EXPECT_CALL(asyncDispatcher,getAsync(An<std::function<void(const TimeResponse&)>>)).WillOnce(Return(mockDispatcher.dispatch(Time::uri(),CommonPublicRequest{})));
+//  EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>())).WillOnce(Return(apiRes));
+//  EXPECT_CALL(asyncDispatcher,getAsync(An<std::function<void(const TimeResponse&)>>)).WillOnce(Return(mockDispatcher.dispatch(Time::uri(),CommonPublicRequest{})));
+//  auto asyncRawRes =
+//      asyncDispatcher.getAsync(func);
+//  auto timeResponse = Time::processResponse(std::move(asyncRawRes));
+
 }
 
 TEST_CASE("Market request", "[rest][public][market]") {

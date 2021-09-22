@@ -15,6 +15,13 @@ namespace Bitwyre::Rest::Private {
       return "/private/account/spotbalance";
     }
 
+    using Callback = std::function<void(const AccountBalanceResponse&)>;
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(Callback cb, const AccountBalanceRequest& request) noexcept -> void {
+      auto result = getAsync(request);
+      return cb(result.get());
+    }
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb, const AccountBalanceRequest& request) noexcept -> void {
       auto result = getAsync(request);

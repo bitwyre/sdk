@@ -14,6 +14,13 @@ namespace Bitwyre::Rest::Public {
       return "/public/contract";
     }
 
+    using Callback = std::function<void(const ContractResponse&)>;
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(Callback cb, const ContractRequest& request) noexcept -> void {
+      auto result = getAsync(request);
+      return cb(result.get());
+    }
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb, const ContractRequest& request) noexcept -> void {
       auto result = getAsync(request);
