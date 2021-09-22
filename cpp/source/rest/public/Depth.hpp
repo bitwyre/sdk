@@ -11,6 +11,13 @@ namespace Bitwyre::Rest::Public {
       return "/public/depth";
     }
 
+    using Callback = std::function<void(const DepthResponse&)>;
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(Callback cb, const DepthRequest& request) noexcept -> void {
+      auto result = getAsync(request);
+      return cb(result.get());
+    }
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(const DepthRequest& request) noexcept -> AsyncDepthResponse {
       return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});

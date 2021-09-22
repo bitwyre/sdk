@@ -11,6 +11,13 @@ namespace Bitwyre::Rest::Private {
       return "/private/orders/closed";
     }
 
+    using Callback = std::function<void(const ClosedOrdersResponse&)>;
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(Callback cb, const ClosedOrderRequest& request) noexcept -> void{
+      auto result = getAsync(request);
+      return cb(result.get());
+    }
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(const ClosedOrdersRequest& request) noexcept
         -> AsyncCloseOrdersResponse {

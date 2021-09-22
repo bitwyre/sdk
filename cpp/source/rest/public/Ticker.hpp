@@ -12,6 +12,13 @@ namespace Bitwyre::Rest::Public {
       return "/public/ticker";
     }
 
+    using Callback = std::function<void(const TickerResponse&)>;
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(Callback cb, const TickerRequest& request) noexcept -> void {
+      auto result = getAsync(request);
+      return cb(result.get());
+    }
+
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(const TickerRequest& request) noexcept -> AsyncTickerRequest {
       return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});

@@ -11,8 +11,15 @@ namespace Bitwyre::Rest::Public {
       return "/public/assets/fiat";
     }
 
+    using Callback = std::function<void(const FiatAssetResponse&)>;
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto getAsync() noexcept ->  FiatAssetResponse {
+    [[nodiscard]] static auto getAsync(Callback cb) noexcept -> void {
+      auto result = getAsync();
+      return cb(result.get());
+    }//
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync() noexcept ->  AsyncFiatAssetResponse {
       return std::async(std::launch::async, [](){return get<Dispatcher>();});
     }
 
