@@ -14,9 +14,9 @@ namespace Bitwyre::Rest::Public {
       return "/public/assets";
     }
 
+    using Callback = std::function<void(const AssetResponse&)>;
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb) noexcept -> void {
-      static_assert( std::is_nothrow_invocable_v<decltype(cb), AssetResponse> );
       auto result = getAsync();
       return cb(result.get());
     }

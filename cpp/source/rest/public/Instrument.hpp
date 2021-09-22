@@ -14,6 +14,12 @@ namespace Bitwyre::Rest::Public {
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/pairs";
     }
+    using Callback = std::function<void(const InstrumentResponse&)>;
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(Callback cb, const InstrumentRequest& request) noexcept -> void {
+      auto result = getAsync(request);
+      return cb(result.get());
+    }
 
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb, const InstrumentRequest& request) noexcept -> void {
