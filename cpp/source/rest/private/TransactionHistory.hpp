@@ -2,7 +2,7 @@
 #include "../../details/Dispatcher.hpp"
 
 using namespace Bitwyre::Types::Private;
-
+using AsyncTransactionHistoryResponse = std::future<TransactionHistoryResponse>;
 namespace Bitwyre::Rest::Private {
 
   struct TransactionHistory {
@@ -19,15 +19,13 @@ namespace Bitwyre::Rest::Private {
     }
 
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto getAsync(
-        const TransactionHistoryRequest& request) noexcept
+    [[nodiscard]] static auto getAsync(const TransactionHistoryRequest& request) noexcept
         -> TransactionHistoryResponse {
       return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
     }
 
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto get(
-        const TransactionHistoryRequest& request) noexcept
+    [[nodiscard]] static auto get(const TransactionHistoryRequest& request) noexcept
         -> TransactionHistoryResponse {
       auto rawResponse = Dispatcher()(uri(), request);
       return processResponse(std::move(rawResponse));

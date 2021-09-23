@@ -2,7 +2,7 @@
 #include "../../details/Dispatcher.hpp"
 
 using namespace Bitwyre::Details;
-using AsyncProductRequest = std::future<ProductResponse>;
+using AsyncProductResponse = std::future<ProductResponse>;
 namespace Bitwyre::Rest::Public {
 
   struct Product {
@@ -19,7 +19,7 @@ namespace Bitwyre::Rest::Public {
     }//
 
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto getAsync() noexcept -> ProductResponse {
+    [[nodiscard]] static auto getAsync() noexcept -> AsyncProductResponse {
       return std::async(std::launch::async, [](){return get<Dispatcher>();});
     }
 
