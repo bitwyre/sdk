@@ -3,6 +3,7 @@
 
 using namespace Bitwyre::Types::Private;
 using AsyncResponse = std::future<Response>;
+using Callback = std::function<void(const Response&)>;
 
 namespace Bitwyre::Rest::Private {
 
@@ -11,7 +12,6 @@ namespace Bitwyre::Rest::Private {
       return "/private/trades";
     }
 
-    using Callback = std::function<void(const Response&)>;
     template <typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb, const TradesHistoryRequest& request) noexcept -> void {
       auto result = getAsync(request);

@@ -3,6 +3,7 @@
 
 using namespace Bitwyre::Details;
 using AsyncTimeResponse = std::future<TimeResponse>;
+using Callback = std::function<void(const TimeResponse&)>;
 
 namespace Bitwyre::Rest::Public {
   using TimeT = std::chrono::nanoseconds;
@@ -12,10 +13,8 @@ namespace Bitwyre::Rest::Public {
       return "/public/time";
     }
 
-    using Callback = std::function<void(const TimeResponse&)>;
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb) noexcept -> void {
-      //return std::async(std::launch::async, [&](){return cb(get<Dispatcher>());});
       auto result = getAsync();
       return cb(result.get());
     }

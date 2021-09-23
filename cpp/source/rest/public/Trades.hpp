@@ -3,15 +3,16 @@
 
 using namespace Bitwyre::Details;
 using AsyncTradesResponse = std::future<TradesResponse>;
+using Callback = std::function<void(const TradesResponse&)>;
 
 namespace Bitwyre::Rest::Public {
 
   struct Trades {
+
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/trades";
     }
 
-    using Callback = std::function<void(const TradesResponse&)>;
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb, const TradesRequest& request) noexcept -> void {
       auto result = getAsync(request);
