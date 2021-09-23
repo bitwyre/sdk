@@ -3,7 +3,6 @@
 
 using namespace Bitwyre::Types::Private;
 using AsyncAccountStatementResponse = std::future<AccountStatementResponse>;
-using Callback = std::function<void(const AccountStatementResponse&)>;
 
 namespace Bitwyre::Rest::Private {
 
