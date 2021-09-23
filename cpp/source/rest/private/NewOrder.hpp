@@ -3,7 +3,6 @@
 
 using namespace Bitwyre::Types::Private;
 using AsyncNewOrderResponse = std::future<NewOrderResponse>;
-
 namespace Bitwyre::Rest::Private {
 
   struct NewOrder {
@@ -17,7 +16,7 @@ namespace Bitwyre::Rest::Private {
     using Callback = std::function<void(const NewOrderResponse&)>;
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto postAsync(Callback cb, const NewOrderRequest& request) noexcept -> void {
-      auto result = getAsync(request);
+      auto result = postAsync(request);
       return cb(result.get());
     }
 
@@ -29,7 +28,7 @@ namespace Bitwyre::Rest::Private {
 
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto postAsync(const NewOrderRequest& request) noexcept
-        -> AsyncNewOrderRequest {
+        -> AsyncNewOrderResponse {
       return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
     }
 

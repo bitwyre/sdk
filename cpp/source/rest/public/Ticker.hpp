@@ -4,7 +4,6 @@
 using namespace Bitwyre::Details;
 using namespace Bitwyre::Types;
 using AsyncTickerResponse = std::future<TickerResponse>;
-
 namespace Bitwyre::Rest::Public {
 
   struct Ticker {
@@ -16,12 +15,6 @@ namespace Bitwyre::Rest::Public {
     }
 
     using Callback = std::function<void(const TickerResponse&)>;
-    template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto getAsync(Callback cb, const TickerRequest& request) noexcept -> void {
-      auto result = getAsync(request);
-      return cb(result.get());
-    }
-
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb, const TickerRequest& request) noexcept -> void {
       auto result = getAsync(request);
