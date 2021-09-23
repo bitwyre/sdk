@@ -3,11 +3,12 @@
 
 using namespace Bitwyre::Details;
 using AsyncContractResponse = std::future<ContractResponse>;
-using Callback = std::function<void(const ContractResponse&)>;
 
 namespace Bitwyre::Rest::Public {
 
   struct Contract {
+
+    using Callback = std::function<void(const ContractResponse&)>;
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/contract";

@@ -4,11 +4,12 @@
 using namespace Bitwyre::Details;
 using namespace Bitwyre::Types::Public;
 using AsyncInstrumentResponse = std::future<InstrumentResponse>;
-using Callback = std::function<void(const InstrumentResponse&)>;
 
 namespace Bitwyre::Rest::Public {
 
   struct Instrument {
+
+    using Callback = std::function<void(const InstrumentResponse&)>;
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/pairs";

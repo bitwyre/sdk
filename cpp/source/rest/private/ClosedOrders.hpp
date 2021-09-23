@@ -3,7 +3,6 @@
 
 using namespace Bitwyre::Types::Private;
 using AsyncCloseOrdersResponse = std::future<ClosedOrdersResponse>;
-using Callback = std::function<void(const ClosedOrdersResponse&)>;
 
 namespace Bitwyre::Rest::Private {
 

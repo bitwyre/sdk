@@ -3,7 +3,6 @@
 
 using namespace Bitwyre::Types::Private;
 using AsyncResponse = std::future<Response>;
-using Callback = std::function<void(const Response&)>;
 
 namespace Bitwyre::Rest::Private {
 

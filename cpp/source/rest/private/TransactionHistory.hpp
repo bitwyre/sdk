@@ -3,11 +3,13 @@
 
 using namespace Bitwyre::Types::Private;
 using AsyncTransactionHistoryResponse = std::future<TransactionHistoryResponse>;
-using Callback = std::function<void(const TransactionHistoryResponse&)>;
 
 namespace Bitwyre::Rest::Private {
 
   struct TransactionHistory {
+
+    using Callback = std::function<void(const TransactionHistoryResponse&)>;
+
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/account/transactions";
     }
