@@ -3,7 +3,6 @@
 
 using namespace Bitwyre::Details;
 using AsyncProductResponse = std::future<ProductResponse>;
-
 namespace Bitwyre::Rest::Public {
 
   struct Product {
@@ -20,13 +19,6 @@ namespace Bitwyre::Rest::Public {
       auto result = getAsync();
       return cb(result.get());
     }//
-
-    template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto getAsync(Callback cb) noexcept -> void {
-      static_assert( std::is_nothrow_invocable_v<decltype(cb), ProductResponse> );
-      auto result = getAsync();
-      return cb(result.get());
-    }
 
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync() noexcept -> AsyncProductResponse {

@@ -21,13 +21,6 @@ namespace Bitwyre::Rest::Public {
     }//
 
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto getAsync(Callback cb) noexcept -> void {
-      static_assert( std::is_nothrow_invocable_v<decltype(cb), CryptoAssetResponse> );
-      auto result = getAsync();
-      return cb(result.get());
-    }
-
-    template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync() noexcept -> AsyncCrytoAssetResponse {
       return std::async(std::launch::async, [](){return get<Dispatcher>();});
 
