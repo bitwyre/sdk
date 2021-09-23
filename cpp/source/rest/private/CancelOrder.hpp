@@ -3,6 +3,7 @@
 
 using namespace Bitwyre::Types::Private;
 using AsyncExecutionReport = std::future<ExecutionReport>;
+using Callback = std::function<void(const ExecutionReport&)>;
 
 namespace Bitwyre::Rest::Private {
 
@@ -14,7 +15,6 @@ namespace Bitwyre::Rest::Private {
       return "/private/orders/cancel";
     }
 
-    using Callback = std::function<void(const ExecutionReport&)>;
     template <typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto delAsync(Callback cb, const CancelOrderRequest& request) noexcept -> void {
       auto result = delAsync(request);

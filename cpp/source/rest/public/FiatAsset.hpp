@@ -3,20 +3,21 @@
 
 using namespace Bitwyre::Details;
 using AsyncFiatAssetResponse = std::future<FiatAssetResponse>;
+using Callback = std::function<void(const FiatAssetResponse&)>;
 
 namespace Bitwyre::Rest::Public {
 
   struct FiatAsset {
+
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/assets/fiat";
     }
 
-    using Callback = std::function<void(const FiatAssetResponse&)>;
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb) noexcept -> void {
       auto result = getAsync();
       return cb(result.get());
-    }//
+    }
 
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync() noexcept ->  AsyncFiatAssetResponse {

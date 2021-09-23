@@ -3,19 +3,21 @@
 
 using namespace Bitwyre::Details;
 using AsyncProductResponse = std::future<ProductResponse>;
+using Callback = std::function<void(const ProductResponse&)>;
+
 namespace Bitwyre::Rest::Public {
 
   struct Product {
+
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/products";
     }
 
-    using Callback = std::function<void(const ProductResponse&)>;
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb) noexcept -> void {
       auto result = getAsync();
       return cb(result.get());
-    }//
+    }
 
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync() noexcept -> AsyncProductResponse {

@@ -34,8 +34,6 @@
 # IDE
 *.idea
 *.prefs
-java/.metadata/.lock
-java/.metadata/.log
 *.version
 *.index
 *.tree
@@ -47,9 +45,4 @@ java/.metadata/.log
 *.ini
 *.resources
 *.xml
-java/.metadata/.plugins/org.eclipse.egit.core/.org.eclipse.egit.core.cmp/.project
-java/.metadata/.plugins/org.eclipse.jdt.core/assumedExternalFilesCache
-java/.metadata/.plugins/org.eclipse.jdt.core/externalFilesCache
-java/.metadata/.plugins/org.eclipse.jdt.core/nonChainingJarsCache
-java/.metadata/.plugins/org.eclipse.ui.intro/introstate
->>>>>>> 3c17960f08fdea3b0adbb49e2b80d8fad0b70b66
+java/*

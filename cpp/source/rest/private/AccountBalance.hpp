@@ -3,6 +3,7 @@
 using namespace Bitwyre::Types::Private;
 using namespace Bitwyre::Details;
 using AsyncAccountBalanceResponse = std::future<AccountBalanceResponse>;
+using Callback = std::function<void(const AccountBalanceResponse&)>;
 
 namespace Bitwyre::Rest::Private {
   using json = nlohmann::json;
@@ -15,7 +16,6 @@ namespace Bitwyre::Rest::Private {
       return "/private/account/spotbalance";
     }
 
-    using Callback = std::function<void(const AccountBalanceResponse&)>;
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb, const AccountBalanceRequest& request) noexcept -> void {
       auto result = getAsync(request);

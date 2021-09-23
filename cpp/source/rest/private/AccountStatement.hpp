@@ -4,6 +4,7 @@
 
 using namespace Bitwyre::Types::Private;
 using AsyncAccountStatementResponse = std::future<AccountStatementResponse>;
+using Callback = std::function<void(const AccountStatementResponse&)>;
 
 namespace Bitwyre::Rest::Private {
 
@@ -15,7 +16,6 @@ namespace Bitwyre::Rest::Private {
       return "/private/account/statement";
     }
 
-    using Callback = std::function<void(const AccountStatementResponse&)>;
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb, const AccountStatementRequest& request) noexcept -> void {
       auto result = getAsync(request);
