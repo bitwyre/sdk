@@ -4,14 +4,16 @@
 using namespace Bitwyre::Details;
 using namespace Bitwyre::Types;
 using AsyncTickerResponse = std::future<TickerResponse>;
+using Callback = std::function<void(const TickerResponse&)>;
+
 namespace Bitwyre::Rest::Public {
 
   struct Ticker {
+
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/ticker";
     }
 
-    using Callback = std::function<void(const TickerResponse&)>;
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb, const TickerRequest& request) noexcept -> void {
       auto result = getAsync(request);

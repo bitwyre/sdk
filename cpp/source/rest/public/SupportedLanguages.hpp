@@ -3,14 +3,16 @@
 
 using namespace Bitwyre::Details;
 using AsyncSupportedLanguagesResponse = std::future<SupportedLanguagesResponse>;
+using Callback = std::function<void(const SupportedLanguagesResponse&)>;
+
 namespace Bitwyre::Rest::Public {
 
   struct SupportedLanguages {
+
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/languages";
     }
 
-    using Callback = std::function<void(const SupportedLanguagesResponse&)>;
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsyncLanguage(Callback cb) noexcept -> void {
       auto result = getAsyncLanguage();
