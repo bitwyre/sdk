@@ -6,9 +6,6 @@ using AsyncNewOrderResponse = std::future<NewOrderResponse>;
 namespace Bitwyre::Rest::Private {
 
   struct NewOrder {
-
-    using Callback = std::function<void(const NewOrderResponse&)>;
-
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/orders";
     }

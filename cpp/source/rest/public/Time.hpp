@@ -8,9 +8,6 @@ namespace Bitwyre::Rest::Public {
   using TimeT = std::chrono::nanoseconds;
 
   struct Time {
-
-    using Callback = std::function<void(const TimeResponse&)>;
-
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/time";
     }
@@ -21,7 +18,7 @@ namespace Bitwyre::Rest::Public {
       //return std::async(std::launch::async, [&](){return cb(get<Dispatcher>());});
       auto result = getAsync();
       return cb(result.get());
-    }//
+    }
 
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb) noexcept -> void {
