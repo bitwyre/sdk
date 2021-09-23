@@ -6,7 +6,6 @@ using AsyncTransactionHistoryResponse = std::future<TransactionHistoryResponse>;
 namespace Bitwyre::Rest::Private {
 
   struct TransactionHistory {
-
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/account/transactions";
     }

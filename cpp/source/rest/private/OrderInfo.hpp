@@ -6,7 +6,6 @@ using AsyncOrderInfoResponse = std::future<OrderInfoResponse>;
 namespace Bitwyre::Rest::Private {
 
   struct OrderInfo {
-
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/orders/info";
     }

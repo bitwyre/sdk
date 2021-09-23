@@ -84,7 +84,6 @@ namespace Bitwyre::Rest::Private {
 
       executionReport.cancelOnDisconnect =
           static_cast<bool>(result["cancelondisconnect"].get<short>());
-
       return executionReport;
     }
   };

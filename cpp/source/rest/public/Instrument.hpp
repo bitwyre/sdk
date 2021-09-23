@@ -8,7 +8,6 @@ using AsyncInstrumentResponse = std::future<InstrumentResponse>;
 namespace Bitwyre::Rest::Public {
 
   struct Instrument {
-
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/pairs";
     }

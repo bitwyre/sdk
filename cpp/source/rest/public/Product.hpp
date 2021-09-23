@@ -6,7 +6,6 @@ using AsyncProductResponse = std::future<ProductResponse>;
 namespace Bitwyre::Rest::Public {
 
   struct Product {
-
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/products";
     }

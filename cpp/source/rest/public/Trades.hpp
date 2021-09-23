@@ -7,7 +7,6 @@ using AsyncTradesResponse = std::future<TradesResponse>;
 namespace Bitwyre::Rest::Public {
 
   struct Trades {
-
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/trades";
     }
@@ -17,7 +16,7 @@ namespace Bitwyre::Rest::Public {
     [[nodiscard]] static auto getAsync(Callback cb, const TradesRequest& request) noexcept -> void {
       auto result = getAsync(request);
       return cb(result.get());
-    }//
+    }
 
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(const TradesRequest& request) noexcept -> AsyncTradesResponse {

@@ -6,7 +6,6 @@ using AsyncAssetResponse = std::future<AssetResponse>;
 namespace Bitwyre::Rest::Public {
 
   struct Asset {
-
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/assets";
     }

@@ -6,7 +6,6 @@ using AsyncMarketResponse = std::future<MarketResponse>;
 namespace Bitwyre::Rest::Public {
 
   struct Market {
-
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/markets";
     }

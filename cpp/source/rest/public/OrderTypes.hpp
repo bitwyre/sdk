@@ -6,7 +6,6 @@ using AsyncOrderTypesResponse = std::future<OrderTypesResponse>;
 namespace Bitwyre::Rest::Public {
 
   struct OrderTypes {
-
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/ordertypes";
     }

@@ -6,7 +6,6 @@ using AsyncDepthResponse = std::future<DepthResponse>;
 namespace Bitwyre::Rest::Public {
 
   struct Depth {
-
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/depth";
     }

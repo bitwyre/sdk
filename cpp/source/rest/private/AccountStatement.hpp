@@ -74,7 +74,6 @@ namespace Bitwyre::Rest::Private {
 
       for (auto it = withdrawals.cbegin(); it != withdrawals.cend(); ++it) {
         std::vector<AccountStatementElement> assetDeposits;
-
         for (const auto& withdrawal : it.value()) {
           AccountStatementElement statementElement{};
           statementElement.fee = withdrawal["fee"].get<long double>();
@@ -104,4 +103,4 @@ namespace Bitwyre::Rest::Private {
       return statementResponse;
     }
   };
-} // namespace Bitwyre::Rest::Private
+}// namespace Bitwyre::Rest::Private

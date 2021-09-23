@@ -7,7 +7,6 @@ using AsyncTickerResponse = std::future<TickerResponse>;
 namespace Bitwyre::Rest::Public {
 
   struct Ticker {
-
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/ticker";
     }

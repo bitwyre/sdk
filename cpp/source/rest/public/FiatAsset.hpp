@@ -6,7 +6,6 @@ using AsyncFiatAssetResponse = std::future<FiatAssetResponse>;
 namespace Bitwyre::Rest::Public {
 
   struct FiatAsset {
-
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/assets/fiat";
     }

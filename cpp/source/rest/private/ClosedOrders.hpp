@@ -72,7 +72,6 @@ namespace Bitwyre::Rest::Private {
           } else {
             executionReport.ordRejReason = 0;
           }
-
           executionReport.ordStatusReqId =
               closedOrder["ordstatusReqID"].get<std::string>();
           executionReport.origcliId =
