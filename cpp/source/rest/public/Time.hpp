@@ -3,12 +3,14 @@
 
 using namespace Bitwyre::Details;
 using AsyncTimeResponse = std::future<TimeResponse>;
-using Callback = std::function<void(const TimeResponse&)>;
 
 namespace Bitwyre::Rest::Public {
   using TimeT = std::chrono::nanoseconds;
 
   struct Time {
+
+    using Callback = std::function<void(const TimeResponse&)>;
+
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/time";
     }

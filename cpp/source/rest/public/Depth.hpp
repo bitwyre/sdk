@@ -3,11 +3,12 @@
 
 using namespace Bitwyre::Details;
 using AsyncDepthResponse = std::future<DepthResponse>;
-using Callback = std::function<void(const DepthResponse&)>;
 
 namespace Bitwyre::Rest::Public {
 
   struct Depth {
+
+    using Callback = std::function<void(const DepthResponse&)>;
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/depth";

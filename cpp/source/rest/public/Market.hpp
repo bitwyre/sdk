@@ -3,11 +3,12 @@
 
 using namespace Bitwyre::Details;
 using AsyncMarketResponse = std::future<MarketResponse>;
-using Callback = std::function<void(const MarketResponse&)>;
 
 namespace Bitwyre::Rest::Public {
 
   struct Market {
+
+    using Callback = std::function<void(const MarketResponse&)>;
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/markets";

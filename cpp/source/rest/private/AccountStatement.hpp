@@ -3,11 +3,12 @@
 
 using namespace Bitwyre::Types::Private;
 using AsyncAccountStatementResponse = std::future<AccountStatementResponse>;
-using Callback = std::function<void(const AccountStatementResponse&)>;
 
 namespace Bitwyre::Rest::Private {
 
   struct AccountStatement {
+
+    using Callback = std::function<void(const AccountStatementResponse&)>;
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/account/statement";

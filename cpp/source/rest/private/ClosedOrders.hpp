@@ -3,11 +3,12 @@
 
 using namespace Bitwyre::Types::Private;
 using AsyncCloseOrdersResponse = std::future<ClosedOrdersResponse>;
-using Callback = std::function<void(const ClosedOrdersResponse&)>;
 
 namespace Bitwyre::Rest::Private {
 
   struct ClosedOrders {
+
+    using Callback = std::function<void(const ClosedOrdersResponse&)>;
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/orders/closed";

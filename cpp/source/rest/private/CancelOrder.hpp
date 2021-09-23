@@ -3,11 +3,12 @@
 
 using namespace Bitwyre::Types::Private;
 using AsyncExecutionReport = std::future<ExecutionReport>;
-using Callback = std::function<void(const ExecutionReport&)>;
 
 namespace Bitwyre::Rest::Private {
 
   struct CancelOrder {
+
+    using Callback = std::function<void(const ExecutionReport&)>;
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/orders/cancel";
