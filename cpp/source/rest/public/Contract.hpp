@@ -6,9 +6,6 @@ using AsyncContractResponse = std::future<ContractResponse>;
 namespace Bitwyre::Rest::Public {
 
   struct Contract {
-
-    using Callback = std::function<void(const ContractResponse&)>;
-
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/contract";
     }
