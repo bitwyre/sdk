@@ -3,12 +3,21 @@
 
 using namespace Bitwyre::Types::Private;
 using AsyncCloseOrdersResponse = std::future<ClosedOrdersResponse>;
+
 namespace Bitwyre::Rest::Private {
 
   struct ClosedOrders {
 
+    using Callback = std::function<void(const ClosedOrdersResponse&)>;
+
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/orders/closed";
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(Callback cb, const ClosedOrdersRequest& request) noexcept -> void{
+      auto result = getAsync(request);
+      return cb(result.get());
     }
 
     template<typename Dispatcher = Dispatcher>
@@ -65,7 +74,6 @@ namespace Bitwyre::Rest::Private {
           } else {
             executionReport.ordRejReason = 0;
           }
-
           executionReport.ordStatusReqId =
               closedOrder["ordstatusReqID"].get<std::string>();
           executionReport.origcliId =

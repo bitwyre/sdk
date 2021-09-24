@@ -9,8 +9,16 @@ namespace Bitwyre::Rest::Public {
 
   struct Instrument {
 
+    using Callback = std::function<void(const InstrumentResponse&)>;
+
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/pairs";
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(Callback cb, const InstrumentRequest& request) noexcept -> void {
+      auto result = getAsync(request);
+      return cb(result.get());
     }
 
     template<typename Dispatcher = Dispatcher>

@@ -3,12 +3,21 @@
 
 using namespace Bitwyre::Types::Private;
 using AsyncOrderInfoResponse = std::future<OrderInfoResponse>;
+
 namespace Bitwyre::Rest::Private {
 
   struct OrderInfo {
 
+    using Callback = std::function<void(const OrderInfoResponse&)>;
+
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/orders/info";
+    }
+
+    template <typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(Callback cb, const OrderInfoRequest& request) noexcept -> void {
+      auto result = getAsync(request);
+      return cb(result.get());
     }
 
     template<typename Dispatcher = Dispatcher>

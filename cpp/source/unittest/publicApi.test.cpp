@@ -1,5 +1,6 @@
 #include "MockDispatcher.hpp"
 #include "MockAsyncDispatcher.hpp"
+//#include "MockAsyncCallbackDispatcher.hpp"
 #include "catch2/catch.hpp"
 #include "details/Types.hpp"
 #include "rest/public/Asset.hpp"
@@ -17,6 +18,8 @@
 #include "rest/public/Trades.hpp"
 #include <type_traits>
 #include <future>
+#include <chrono>
+#include <thread>
 
 using namespace Bitwyre::Rest::Public;
 using namespace Bitwyre::Types;
@@ -28,15 +31,15 @@ TEST_CASE("Time request", "[rest][public][time]") {
   MockDispatcher mockDispatcher;
   json apiRes =
       R"({"statusCode": 200, "error": [], "result": {"unixtime": 1571744594571020435} })"_json;
-
+  // when we send request to server, the server will return us REST
   EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>()))
       .WillOnce(Return(apiRes));
-
   auto rawResponse =
       mockDispatcher.dispatch(Time::uri(), CommonPublicRequest{});
-  auto timeResponse = Time::processResponse(std::move(rawResponse));
+  // This return {"statusCode": 200, "error": [], "result": {"unixtime": 1571744594571020435} }
+  auto timeResponse = Time::processResponse(std::move(apiRes));
   // std::cout << timeResponse.unixtime.count() << "\n";
-  //std::cout << ".unixtime = " << apiRes["result"]["unixtime"].get<long long int>() << "\n";
+  std::cout << ".unixtime = " << apiRes["result"]["unixtime"].get<long long int>() << "\n";
   REQUIRE(timeResponse.unixtime ==
           static_cast<TimeT>(apiRes["result"]["unixtime"].get<long long int>()));
   REQUIRE(timeResponse.statusCode_ == 200);
@@ -51,6 +54,7 @@ TEST_CASE("AsyncTime request", "[rest][public][async][time]") {
 
     EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>()))
     .WillOnce(Return(apiRes));
+
     EXPECT_CALL(asyncDispatcher,getAsync()).WillOnce(Return(mockDispatcher.dispatch(Time::uri(),CommonPublicRequest{})));
 
     auto asyncRawRes =
@@ -60,6 +64,20 @@ TEST_CASE("AsyncTime request", "[rest][public][async][time]") {
     REQUIRE(timeResponse.statusCode_ == 200);
 }
 
+TEST_CASE("AsyncCallbackTime request", "[rest][public][async][callback][time]") {
+  // Arrange
+  MockDispatcher mockDispatcher;
+  MockAsyncDispatcher asyncDispatcher;
+  json apiRes =
+      R"({"statusCode": 200, "error": [], "result": {"unixtime": 1571744594571020435} })"_json;
+  auto func = [](const TimeResponse& res){ };
+//  EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>())).WillOnce(Return(apiRes));
+//  EXPECT_CALL(asyncDispatcher,getAsync(An<std::function<void(const TimeResponse&)>>)).WillOnce(Return(mockDispatcher.dispatch(Time::uri(),CommonPublicRequest{})));
+//  auto asyncRawRes =
+//      asyncDispatcher.getAsync(func);
+//  auto timeResponse = Time::processResponse(std::move(asyncRawRes));
+
+}
 
 TEST_CASE("Market request", "[rest][public][market]") {
   MockDispatcher mockDispatcher;

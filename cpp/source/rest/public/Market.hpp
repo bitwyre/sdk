@@ -3,16 +3,25 @@
 
 using namespace Bitwyre::Details;
 using AsyncMarketResponse = std::future<MarketResponse>;
+
 namespace Bitwyre::Rest::Public {
 
   struct Market {
+
+    using Callback = std::function<void(const MarketResponse&)>;
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/markets";
     }
 
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto getAsync() noexcept ->  MarketResponse {
+    [[nodiscard]] static auto getAsync(Callback cb) noexcept -> void {
+      auto result = getAsync();
+      return cb(result.get());
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync() noexcept ->  AsyncMarketResponse {
       return std::async(std::launch::async, [](){return get<Dispatcher>();});
     }
 

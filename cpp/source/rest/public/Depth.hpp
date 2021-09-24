@@ -3,12 +3,21 @@
 
 using namespace Bitwyre::Details;
 using AsyncDepthResponse = std::future<DepthResponse>;
+
 namespace Bitwyre::Rest::Public {
 
   struct Depth {
 
+    using Callback = std::function<void(const DepthResponse&)>;
+
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/depth";
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(Callback cb, const DepthRequest& request) noexcept -> void {
+      auto result = getAsync(request);
+      return cb(result.get());
     }
 
     template<typename Dispatcher = Dispatcher>

@@ -626,6 +626,7 @@ TEST_CASE("Async Closed orders request", "[rest][private][async][closedorders]")
 
 TEST_CASE("Open orders request", "[rest][private][closedorders]") {
   MockDispatcher mockDispatcher;
+  MockAsyncDispatcher asyncDispatcher;
   auto apiRes = R"({
     "statusCode": 200,
     "error": [],
@@ -712,8 +713,7 @@ TEST_CASE("Async Open orders request", "[rest][private][async][openorders]") {
   auto apiRes = R"({
     "statusCode": 200,
     "error": [],
-    "result": {
-    "btc_usd_spot": [
+    "result": [
         {
             "AvgPx": "0",
             "LastLiquidityInd": "0",
@@ -775,11 +775,11 @@ TEST_CASE("Async Open orders request", "[rest][private][async][openorders]") {
             "value": "100.0"
         }
     ]
-    } })"_json;
+})"_json;
 
-  OpenOrdersRequest request{InstrumentT{"btc_usd_spot"}};
+  OrderInfoRequest request{OrderIdT{"9be73240-c3e4-4d0d-a8d7-57d9a6d798e1"}};
 
-  EXPECT_CALL(mockDispatcher, dispatch(_, An<OpenOrdersRequest>()))
+  EXPECT_CALL(mockDispatcher, dispatch(_, An<OrderInfoRequest>()))
       .WillOnce(Return(apiRes));
   EXPECT_CALL(asyncDispatcher, getAsync(An<OpenOrdersRequest>()))
   .WillOnce(Return(mockDispatcher.dispatch(OpenOrders::uri(), request)));
@@ -790,8 +790,10 @@ TEST_CASE("Async Open orders request", "[rest][private][async][openorders]") {
   REQUIRE(response.openOrders.at(0).first == "btc_usd_spot");
 }
 
-TEST_CASE("Order info", "[rest][private][orderinfo]") {
+
+TEST_CASE("Async Order info", "[rest][private][async][orderinfo]") {
   MockDispatcher mockDispatcher;
+  MockAsyncDispatcher asyncDispatcher;
   auto apiRes = R"({
     "statusCode": 200,
     "error": [],
@@ -863,8 +865,11 @@ TEST_CASE("Order info", "[rest][private][orderinfo]") {
 
   EXPECT_CALL(mockDispatcher, dispatch(_, An<OrderInfoRequest>()))
       .WillOnce(Return(apiRes));
-  auto rawResponse = mockDispatcher.dispatch(OrderInfo::uri(), request);
-  auto response = OrderInfo::processResponse(std::move(rawResponse));
+  EXPECT_CALL(asyncDispatcher, getAsync())
+     .WillOnce(Return(mockDispatcher.dispatch(OrderInfo::uri(), request)));
+
+  auto asyncRawRes = asyncDispatcher.getAsync();
+  auto response = OrderInfo::processResponse(std::move(asyncRawRes));
 
   REQUIRE(response.ordersInfo.size() == 2);
   REQUIRE(response.ordersInfo.at(0).instrument == "btc_usd_spot");

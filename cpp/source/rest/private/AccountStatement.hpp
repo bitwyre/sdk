@@ -8,8 +8,16 @@ namespace Bitwyre::Rest::Private {
 
   struct AccountStatement {
 
+    using Callback = std::function<void(const AccountStatementResponse&)>;
+
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/account/statement";
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(Callback cb, const AccountStatementRequest& request) noexcept -> void {
+      auto result = getAsync(request);
+      return cb(result.get());
     }
 
     template<typename Dispatcher = Dispatcher>
@@ -67,7 +75,6 @@ namespace Bitwyre::Rest::Private {
 
       for (auto it = withdrawals.cbegin(); it != withdrawals.cend(); ++it) {
         std::vector<AccountStatementElement> assetDeposits;
-
         for (const auto& withdrawal : it.value()) {
           AccountStatementElement statementElement{};
           statementElement.fee = withdrawal["fee"].get<long double>();
@@ -97,4 +104,4 @@ namespace Bitwyre::Rest::Private {
       return statementResponse;
     }
   };
-} // namespace Bitwyre::Rest::Private
+}// namespace Bitwyre::Rest::Private

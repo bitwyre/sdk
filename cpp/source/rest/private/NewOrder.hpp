@@ -2,18 +2,27 @@
 #include "../../details/Dispatcher.hpp"
 
 using namespace Bitwyre::Types::Private;
-using AsyncNewOrderRequest = std::future<NewOrderRequest>;
+using AsyncNewOrderResponse = std::future<NewOrderResponse>;
+
 namespace Bitwyre::Rest::Private {
 
   struct NewOrder {
+
+    using Callback = std::function<void(const NewOrderResponse&)>;
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/orders";
     }
 
     template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto postAsync(Callback cb, const NewOrderRequest& request) noexcept -> void {
+      auto result = postAsync(request);
+      return cb(result.get());
+    }
+
+    template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto postAsync(const NewOrderRequest& request) noexcept
-        -> AsyncNewOrderRequest {
+        -> AsyncNewOrderResponse {
       return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
     }
 

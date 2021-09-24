@@ -3,16 +3,25 @@
 
 using namespace Bitwyre::Details;
 using AsyncOrderTypesResponse = std::future<OrderTypesResponse>;
+
 namespace Bitwyre::Rest::Public {
 
   struct OrderTypes {
+
+    using Callback = std::function<void(const OrderTypesResponse&)>;
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/ordertypes";
     }
 
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto getAsync() noexcept -> OrderTypesResponse {
+    [[nodiscard]] static auto getAsync(Callback cb) noexcept -> void {
+      auto result = getAsync();
+      return cb(result.get());
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync() noexcept -> AsyncOrderTypesResponse {
       return std::async(std::launch::async, [](){return get<Dispatcher>();});
     }
 

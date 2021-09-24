@@ -2,17 +2,26 @@
 #include "../../details/Dispatcher.hpp"
 
 using namespace Bitwyre::Details;
-using AsyncContractRequest = std::future<ContractRequest>;
+using AsyncContractResponse = std::future<ContractResponse>;
+
 namespace Bitwyre::Rest::Public {
 
   struct Contract {
+
+    using Callback = std::function<void(const ContractResponse&)>;
 
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/public/contract";
     }
 
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto getAsync(const ContractRequest& request) noexcept ->  AsyncContractRequest {
+    [[nodiscard]] static auto getAsync(Callback cb, const ContractRequest& request) noexcept -> void {
+      auto result = getAsync(request);
+      return cb(result.get());
+    }
+
+    template<typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(const ContractRequest& request) noexcept ->  AsyncContractResponse {
         return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
     }
 

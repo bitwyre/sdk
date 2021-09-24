@@ -3,12 +3,21 @@
 
 using namespace Bitwyre::Types::Private;
 using AsyncExecutionReport = std::future<ExecutionReport>;
+
 namespace Bitwyre::Rest::Private {
 
   struct CancelOrder {
 
+    using Callback = std::function<void(const ExecutionReport&)>;
+
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/orders/cancel";
+    }
+
+    template <typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto delAsync(Callback cb, const CancelOrderRequest& request) noexcept -> void {
+      auto result = delAsync(request);
+      return cb(result.get());
     }
 
     template<typename Dispatcher = Dispatcher>
@@ -77,7 +86,6 @@ namespace Bitwyre::Rest::Private {
 
       executionReport.cancelOnDisconnect =
           static_cast<bool>(result["cancelondisconnect"].get<short>());
-
       return executionReport;
     }
   };

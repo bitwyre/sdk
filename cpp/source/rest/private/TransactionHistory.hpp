@@ -2,25 +2,32 @@
 #include "../../details/Dispatcher.hpp"
 
 using namespace Bitwyre::Types::Private;
+using AsyncTransactionHistoryResponse = std::future<TransactionHistoryResponse>;
 
 namespace Bitwyre::Rest::Private {
 
   struct TransactionHistory {
 
+    using Callback = std::function<void(const TransactionHistoryResponse&)>;
+
     [[nodiscard]] static auto uri() noexcept -> std::string {
       return "/private/account/transactions";
     }
 
+    template <typename Dispatcher = Dispatcher>
+    [[nodiscard]] static auto getAsync(Callback cb, const TransactionHistoryRequest& request) noexcept -> void {
+      auto result = getAsync(request);
+      return cb(result.get());
+    }
+
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto getAsync(
-        const TransactionHistoryRequest& request) noexcept
-        -> TransactionHistoryResponse {
+    [[nodiscard]] static auto getAsync(const TransactionHistoryRequest& request) noexcept
+        -> AsyncTransactionHistoryResponse {
       return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
     }
 
     template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto get(
-        const TransactionHistoryRequest& request) noexcept
+    [[nodiscard]] static auto get(const TransactionHistoryRequest& request) noexcept
         -> TransactionHistoryResponse {
       auto rawResponse = Dispatcher()(uri(), request);
       return processResponse(std::move(rawResponse));
