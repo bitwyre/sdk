@@ -17,6 +17,7 @@ namespace Bitwyre::Rest::Public {
 
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb, const InstrumentRequest& request) noexcept -> void {
+      static_assert( std::is_nothrow_invocable_v<decltype(cb), InstrumentResponse> );
       auto result = getAsync(request);
       return cb(result.get());
     }

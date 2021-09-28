@@ -777,9 +777,10 @@ TEST_CASE("Open orders async request", "[rest][private][async][openorders]") {
     ]
 })"_json;
 
-  OrderInfoRequest request{OrderIdT{"9be73240-c3e4-4d0d-a8d7-57d9a6d798e1"}};
+ // OrderInfoRequest request{OrderIdT{"9be73240-c3e4-4d0d-a8d7-57d9a6d798e1"}};
+  OpenOrdersRequest request{InstrumentT{"btc_usd_spot"}};
 
-  EXPECT_CALL(mockDispatcher, dispatch(_, An<OrderInfoRequest>()))
+  EXPECT_CALL(mockDispatcher, dispatch(_, An<OpenOrdersRequest>()))
       .WillOnce(Return(apiRes));
   EXPECT_CALL(asyncDispatcher, getAsync(An<OpenOrdersRequest>()))
   .WillOnce(Return(mockDispatcher.dispatch(OpenOrders::uri(), request)));
@@ -790,10 +791,8 @@ TEST_CASE("Open orders async request", "[rest][private][async][openorders]") {
   REQUIRE(response.openOrders.at(0).first == "btc_usd_spot");
 }
 
-
-TEST_CASE("Async Order info", "[rest][private][async][orderinfo]") {
+TEST_CASE("Order info", "[rest][private][orderinfo]") {
   MockDispatcher mockDispatcher;
-  MockAsyncDispatcher asyncDispatcher;
   auto apiRes = R"({
     "statusCode": 200,
     "error": [],
@@ -865,11 +864,8 @@ TEST_CASE("Async Order info", "[rest][private][async][orderinfo]") {
 
   EXPECT_CALL(mockDispatcher, dispatch(_, An<OrderInfoRequest>()))
       .WillOnce(Return(apiRes));
-  EXPECT_CALL(asyncDispatcher, getAsync())
-     .WillOnce(Return(mockDispatcher.dispatch(OrderInfo::uri(), request)));
-
-  auto asyncRawRes = asyncDispatcher.getAsync();
-  auto response = OrderInfo::processResponse(std::move(asyncRawRes));
+  auto rawResponse = mockDispatcher.dispatch(OrderInfo::uri(), request);
+  auto response = OrderInfo::processResponse(std::move(rawResponse));
 
   REQUIRE(response.ordersInfo.size() == 2);
   REQUIRE(response.ordersInfo.at(0).instrument == "btc_usd_spot");

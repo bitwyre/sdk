@@ -16,6 +16,7 @@ namespace Bitwyre::Rest::Private {
 
     template <typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto delAsync(Callback cb, const CancelOrderRequest& request) noexcept -> void {
+      static_assert( std::is_nothrow_invocable_v<decltype(cb), ExecutionReport>);
       auto result = delAsync(request);
       return cb(result.get());
     }

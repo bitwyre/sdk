@@ -16,6 +16,7 @@ namespace Bitwyre::Rest::Private {
 
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto postAsync(Callback cb, const NewOrderRequest& request) noexcept -> void {
+      static_assert( std::is_nothrow_invocable_v<decltype(cb), NewOrderResponse>);
       auto result = postAsync(request);
       return cb(result.get());
     }
