@@ -16,6 +16,7 @@ namespace Bitwyre::Rest::Public {
 
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsyncLanguage(Callback cb) noexcept -> void {
+      static_assert( std::is_nothrow_invocable_v<decltype(cb), SupportedLanguagesResponse> );
       auto result = getAsyncLanguage();
       return cb(result.get());
     }
