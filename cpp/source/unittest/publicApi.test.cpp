@@ -77,7 +77,9 @@ TEST_CASE("AsyncTime request", "[rest][public][async][time]") {
 //    std::cout << "callback is invoked\n";
 //    REQUIRE(res.statusCode_ == 200);
 //  };
-//  Time::getAsync(func).get();
+//  //Time::getAsync(func).get();
+//  Time::getAsync(func);
+//  std::cerr << "After calling Time::getAsync()\n";
 //  REQUIRE(callback_was_called);
 //}
 
@@ -484,7 +486,7 @@ TEST_CASE("Instrument AsyncRequest", "[rest][public][async][instrument]") {
 
   EXPECT_CALL(mockDispatcher, dispatch(_, An<InstrumentRequest>()))
       .WillOnce(Return(apiRes));
-  
+
   EXPECT_CALL(asyncDispatcher, getAsync(An<InstrumentRequest>()))
   .WillOnce(Return(mockDispatcher.dispatch(Instrument::uri(), instrumentRequest)));
   auto asyncRawRes = asyncDispatcher.getAsync(instrumentRequest);
