@@ -21,35 +21,6 @@ namespace Bitwyre::Rest::Public {
       return cb(result.get());
     }
 
-//    template<class Callback, typename Dispatcher = Dispatcher>
-//    [[nodiscard]] static auto getAsync(Callback cb) noexcept -> std::future<void> {
-//      static_assert( std::is_nothrow_invocable_v<decltype(cb), TradesResponse> );
-//      return std::async(std::launch::async, [cb](){return cb(get<Dispatcher>());});
-//    }
-
-    template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto getAsync(const TradesRequest& request) noexcept -> AsyncTradesResponse {
-      return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
-    }
-
-    template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto getAsync(Callback cb, const TradesRequest& request) noexcept -> void {
-      static_assert( std::is_nothrow_invocable_v<decltype(cb), TradesResponse> );
-      auto result = getAsync(request);
-      return cb(result.get());
-    }
-
-    template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto getAsync(const TradesRequest& request) noexcept -> AsyncTradesResponse {
-      return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
-    }
-
-    template<typename Dispatcher = Dispatcher>
-    [[nodiscard]] static auto getAsync(Callback cb, const TradesRequest& request) noexcept -> void {
-      auto result = getAsync(request);
-      return cb(result.get());
-    }
-
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(const TradesRequest& request) noexcept -> AsyncTradesResponse {
       return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
