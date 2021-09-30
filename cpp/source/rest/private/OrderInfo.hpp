@@ -16,9 +16,16 @@ namespace Bitwyre::Rest::Private {
 
     template <typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(Callback cb, const OrderInfoRequest& request) noexcept -> void {
+      static_assert( std::is_invocable_v<decltype(cb), OrderInfoResponse>);
       auto result = getAsync(request);
       return cb(result.get());
     }
+
+//    template<class Callback, typename Dispatcher = Dispatcher>
+//    [[nodiscard]] static auto getAsync(Callback cb) noexcept -> std::future<void> {
+//      static_assert( std::is_nothrow_invocable_v<decltype(cb), OrderInfoResponse> );
+//      return std::async(std::launch::async, [cb](){return cb(get<Dispatcher>());});
+//    }
 
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto getAsync(const OrderInfoRequest& request) noexcept
