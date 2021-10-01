@@ -12,7 +12,6 @@ using Callback = std::function<void(const TimeResponse&)>;
 
 class MockAsyncDispatcher {
 public:
-    //MOCK_METHOD(std::future<void>, getAsync, (Callback cb));
     MOCK_METHOD(void, getAsync, (Callback cb));
     MOCK_METHOD(json, getAsync, ());
     MOCK_METHOD(json, getAsync, (DepthRequest request));

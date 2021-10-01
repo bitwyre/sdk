@@ -99,10 +99,6 @@ TEST_CASE("Async Account balance", "[rest][private][async][accountbalance]") {
 
   auto asyncRawRes = asyncDispatcher.getAsync(accountBalanceRequest);
   auto response = AccountBalance::processResponse(std::move(asyncRawRes));
-//  auto rawResponse =
-//      mockDispatcher.dispatch(AccountBalance::uri(), accountBalanceRequest);
-//
-//  auto response = AccountBalance::processResponse(std::move(rawResponse));
 
   REQUIRE(response.balances.size() == 2);
   REQUIRE(response.balances.at(0).availableBalance == 10000);
@@ -777,7 +773,6 @@ TEST_CASE("Open orders async request", "[rest][private][async][openorders]") {
     ]
 })"_json;
 
- // OrderInfoRequest request{OrderIdT{"9be73240-c3e4-4d0d-a8d7-57d9a6d798e1"}};
   OpenOrdersRequest request{InstrumentT{"btc_usd_spot"}};
 
   EXPECT_CALL(mockDispatcher, dispatch(_, An<OpenOrdersRequest>()))

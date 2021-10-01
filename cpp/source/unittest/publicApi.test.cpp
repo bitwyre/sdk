@@ -31,14 +31,11 @@ TEST_CASE("Time request", "[rest][public][time]") {
   MockDispatcher mockDispatcher;
   json apiRes =
       R"({"statusCode": 200, "error": [], "result": {"unixtime": 1571744594571020435} })"_json;
-  // when we send request to server, the server will return us REST
   EXPECT_CALL(mockDispatcher, dispatch(_, An<CommonPublicRequest>()))
       .WillOnce(Return(apiRes));
   auto rawResponse =
       mockDispatcher.dispatch(Time::uri(), CommonPublicRequest{});
-  // This return {"statusCode": 200, "error": [], "result": {"unixtime": 1571744594571020435} }
   auto timeResponse = Time::processResponse(std::move(apiRes));
-  // std::cout << timeResponse.unixtime.count() << "\n";
   std::cout << ".unixtime = " << apiRes["result"]["unixtime"].get<long long int>() << "\n";
   REQUIRE(timeResponse.unixtime ==
           static_cast<TimeT>(apiRes["result"]["unixtime"].get<long long int>()));
@@ -46,7 +43,6 @@ TEST_CASE("Time request", "[rest][public][time]") {
 }
 
 TEST_CASE("AsyncTime request", "[rest][public][async][time]") {
-    // Arrange
     MockDispatcher mockDispatcher;
     MockAsyncDispatcher asyncDispatcher;
     json apiRes =
@@ -63,25 +59,6 @@ TEST_CASE("AsyncTime request", "[rest][public][async][time]") {
     REQUIRE(timeResponse.unixtime ==  static_cast<TimeT>(apiRes["result"]["unixtime"].get<long long int>()));
     REQUIRE(timeResponse.statusCode_ == 200);
 }
-
-//TEST_CASE("AsyncCallbackTime request", "[rest][public][async][callback][time]") {
-//  // Arrange
-//  MockDispatcher mockDispatcher;
-//  MockAsyncDispatcher asyncDispatcher;
-//  json apiRes =
-//      R"({"statusCode": 200, "error": [], "result": {"unixtime": 1571744594571020435} })"_json;
-//  bool callback_was_called = false;
-//  auto func = [&](const TimeResponse& res) noexcept -> void
-//  {
-//    callback_was_called = true;
-//    std::cout << "callback is invoked\n";
-//    REQUIRE(res.statusCode_ == 200);
-//  };
-//  //Time::getAsync(func).get();
-//  Time::getAsync(func);
-//  std::cerr << "After calling Time::getAsync()\n";
-//  REQUIRE(callback_was_called);
-//}
 
 TEST_CASE("Market request", "[rest][public][market]") {
   MockDispatcher mockDispatcher;
@@ -916,11 +893,3 @@ TEST_CASE("Contract AsyncRequest", "[rest][public][async][contract]") {
   REQUIRE(response.instrument == "btcusdtx_usdt_200607F1000000");
   REQUIRE(response.statusCode_ == 200);
 }
-
-//TEST_CASE("Supported languages Request", "[rest][public][supportedlanguage]") {
-//  auto supportedLanguages = SupportedLanguages::get();
-//}
-
-//TEST_CASE("Supported languages AsyncRequest", "[rest][public][supportedlanguage]") {
-//  auto supportedLanguages = SupportedLanguages::getAsyncLanguage();
-//}
