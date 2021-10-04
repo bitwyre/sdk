@@ -24,7 +24,7 @@ namespace Bitwyre::Rest::Private {
     template<typename Dispatcher = Dispatcher>
     [[nodiscard]] static auto postAsync(const NewOrderRequest& request) noexcept
         -> AsyncNewOrderResponse {
-      return std::async(std::launch::async, [&request](){return get<Dispatcher>(request);});
+      return std::async(std::launch::async, [&request](){return post<Dispatcher>(request);});
     }
 
     template<typename Dispatcher = Dispatcher>
