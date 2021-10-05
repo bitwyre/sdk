@@ -58,23 +58,45 @@ Coming Soon
 #include "bitwyresdk/rest/public/Time.hpp"
 
 auto main() -> int {
-    // TimeResponse here can be replaced with auto
     TimeResponse tr = Bitwyre::Rest::Public::Time::get();
-    
     std::cout << tr.unixtime.count() << "\n";
+}
+```
+
+```c++
+#include "bitwyresdk/rest/public/Time.hpp"
+auto main() -> int {
+    AsyncTimeResponse atr = Bitwyre::Rest::Public::Time::getAsync();
+    std::cout << atr.get().unixtime.count() << "\n";
+}
+```
+
+```c++
+#include "bitwyresdk/rest/public/Time.hpp"
+auto main() -> int {
+    auto func = [](const TimeResponse& res){ std::cout << res.unixtime.count() << "\n" };
+    Bitwyre::Rest::Public::Time::getAsync(func);
 }
 ```
 
 - Getting the list of tickers https://docs.bitwyre.id/#ticker
 
+```cpp
+#include "rest/public/Ticker.hpp"
+auto main() -> int {
+    TickerRequest tickReq{InstrumentT{"btc_usd_spot"}};
+    AsyncTickerResponse atr = Ticker::getAsync(tickReq);
+    std::cout << atr.get().tickers.size()<< "\n";
+    }
+```
+
 ```c++
 #include "rest/public/Ticker.hpp"
 
 auto main() -> int {
-    TickerRequest tickReq{InstrumentT{"btc_usd_spot"}};
-    TickerResponse tr = Ticker::get(tickReq);
-    
-    std::cout << tr.tickers.size() << "\n";
+    // TickerRequest tickReq{InstrumentT{"btc_usd_spot"}};
+    auto func = [](const TickerResponse& res){ std::cout << res{InstrumentT{"btc_usd_spot"}}};
+    Ticker::getAsync(func);
 }
 ```
 
