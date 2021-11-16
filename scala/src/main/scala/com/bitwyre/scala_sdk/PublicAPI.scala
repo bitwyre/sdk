@@ -32,8 +32,9 @@ class PublicAPI {
 
         //print response message
         val status = response.statusCode
-        if (status == 200) then
+        if (status == 200) {
             println("OK")
+        }
 
         // print response body
         println(response.body)
@@ -66,8 +67,9 @@ class PublicAPI {
 
         //print response message
         val status = response.statusCode
-        if (status == 200) then
+        if (status == 200) {
             println("OK")
+        }
 
         // print response body
         println(response.body)
@@ -96,8 +98,9 @@ class PublicAPI {
 
         //print response message
         val status = response.statusCode
-        if (status == 200) then
+        if (status == 200) {
             println("OK")
+        }
 
         // print response body
         println(response.body)
@@ -128,8 +131,9 @@ class PublicAPI {
 
         //print response message
         val status = response.statusCode
-        if (status == 200) then
+        if (status == 200) {
             println("OK")
+        }
 
         // print response body
         println(response.body)
@@ -160,8 +164,9 @@ class PublicAPI {
 
         //print response message
         val status = response.statusCode
-        if (status == 200) then
+        if (status == 200) {
             println("OK")
+        }
 
         // print response body
         println(response.body)
@@ -185,8 +190,9 @@ class PublicAPI {
 
         //print response message
         val status = response.statusCode
-        if (status == 200) then
+        if (status == 200) {
             println("OK")
+        }
 
         // print response body
         println(response.body)
@@ -210,8 +216,9 @@ class PublicAPI {
 
         //print response message
         val status = response.statusCode
-        if (status == 200) then
+        if (status == 200) {
             println("OK")
+        }
 
         // print response body
         println(response.body)
@@ -235,8 +242,9 @@ class PublicAPI {
 
         //print response message
         val status = response.statusCode
-        if (status == 200) then
+        if (status == 200) {
             println("OK")
+        }
 
         // print response body
         println(response.body)
@@ -260,8 +268,9 @@ class PublicAPI {
 
         //print response message
         val status = response.statusCode
-        if (status == 200) then
+        if (status == 200) {
             println("OK")
+        }
 
         // print response body
         println(response.body)

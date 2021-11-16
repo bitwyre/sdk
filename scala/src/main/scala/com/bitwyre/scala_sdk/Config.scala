@@ -4,7 +4,7 @@ import scala.collection.mutable.HashMap
 
 class Config {
     object baseURL {
-        val URL_API_BITWYRE: String = "https://api.bitwyre.com/"
+        val URL_API_BITWYRE: String = "https://api.bitwyre.com"
         val TIMEOUT: Int = 5
         def getPublicAPIEndpoint(key: String): String = {
             val URI_PUBLIC_API_BITWYRE = HashMap(
