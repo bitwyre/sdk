@@ -48,6 +48,7 @@ def return_not_ok(response):
 def sign(secret_key: str, uri_path: str, payload: str) -> (int, str, str):
     nonce = time.time_ns()
     payload = json.dumps(payload)
+    payload = json.dumps(payload)
     checksum = sha256(str(payload).encode("utf-8")).hexdigest()
     nonce_checksum = sha256(str(nonce).encode("utf-8") + str(checksum).encode("utf-8")).hexdigest()
     signature = hmac.new(
