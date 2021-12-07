@@ -1,4 +1,4 @@
-
+import sys
 import json
 
 import requests
@@ -443,7 +443,7 @@ class PrivateAPI:
         status_code = 200
         return (status_code, results)
 
-    def cancelling_open_order(self, order_ids: list) -> (int, dict):
+    def cancelling_open_order_per_orderids(self, order_ids: list, qtys: list=[], cancel_all: bool=True) -> (int, dict):
         if not isinstance(order_ids, list):
             _module_logger.debug("Your order ids not a list")
             status_code = 422
@@ -452,7 +452,13 @@ class PrivateAPI:
             result["result"] = {}
             return (status_code, result)
         uri_path = URI_PRIVATE_API_BITWYRE.get("CANCEL_ORDER")
-        payload = {"order_ids": order_ids}
+        if cancel_all:
+            qtys = [-1] * len(order_ids)
+        if len(order_ids) != len(qtys):
+            _module_logger.debug("Specify the same number of orders with quantities to ammend/cancel")
+            sys.exit(1)
+        payload = {"order_ids": order_ids, "qtys": qtys}
+        payload = json.dumps(payload)
         (nonce, checksum, signature) = sign(self.secret_key, uri_path, payload)
         headers = {"API-Key": self.api_key, "API-Sign": signature}
         params = {"nonce": nonce, "checksum": checksum, "payload": payload}
