@@ -1,4 +1,4 @@
-pub fn timeout() -> u8 {
+pub fn timeout() -> u64 {
     return 5;
 }
 pub fn url_api_bitwyre<'a>() -> &'a str {
