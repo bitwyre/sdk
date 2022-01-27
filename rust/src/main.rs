@@ -1,4 +1,5 @@
 mod public;
+mod private;
 
 use std::error::Error;
 
@@ -36,6 +37,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         _ => ()
     }
     match public::get_announcements() {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::get_account_balance() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
