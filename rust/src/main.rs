@@ -41,7 +41,11 @@ async fn async_main() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_depth_async().await {
+    match public::get_depth_async("btc_usdt_spot", "5").await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_announcements_async().await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
