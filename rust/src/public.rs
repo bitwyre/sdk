@@ -298,3 +298,18 @@ pub fn get_trades_async(trade_num: &str, instrument: &str) -> Result<(), Box<dyn
     }
     Ok(())
 }
+
+pub fn get_depth_async(instrument: &str, depth_num: &str) -> Result<(), Box<dyn Error>> {
+    let param = ["?instrument=", &instrument, "&depth_num=", &depth_num].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_public_api_endpoint(&"DEPTH"),
+        &param
+    );
+    match execute_async(&temp).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
