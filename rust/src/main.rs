@@ -49,12 +49,17 @@ async fn async_main() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
+    match private::get_account_balance_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
     let instrument = config::bitwyre_instrument("1");
-    let rt = tokio::runtime::Runtime::new().unwrap();
-    rt.block_on(async_main());
+    tokio::runtime::Runtime::new()
+        .unwrap()
+        .block_on(async_main());
 
     match public::get_server_time() {
         Err(e) => println!("{:?}", e),

@@ -305,3 +305,35 @@ pub fn opening_new_order(
     }
     Ok(())
 }
+pub async fn get_account_balance_async() -> Result<(), Box<dyn Error>> {
+    let payload = "\"\\\"\\\"\"";
+    let nonce = get_nonce();
+    let checksum = get_checksum(&payload);
+    let nonce_checksum = get_nonce_checksum(&nonce.to_string(), &checksum);
+    let signature = get_signature(config::get_private_api_endpoint(&"ACCOUNT_BALANCE"), &nonce_checksum);
+    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", ""].concat();
+    let client = reqwest::Client::builder()
+        .timeout(Duration::from_secs(config::timeout()))
+        .build()?;
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_private_api_endpoint(&"ACCOUNT_BALANCE"),
+        &param
+    );
+    let res = client.get(&temp)
+        .header("API-Key", api_key)
+        .header("API-Sign", signature)
+        .send()
+        .await?;
+    match res.status() {
+        reqwest::StatusCode::OK => {
+            println!("Status: {} -> {}", res.status(), "Success");
+            println!("{}", res.text().await?);
+        },
+        _ => {
+            panic!("{} -> {}", res.status(), "Error, please check again your request");
+        },
+    };
+    Ok(())
+}
