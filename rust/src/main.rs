@@ -45,11 +45,11 @@ async fn async_main() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_announcements_async().await {
+    match public::get_contract_async("btcusdtx_usdt_200607F1000000").await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match private::get_account_balance_async().await {
+    match public::get_announcements_async().await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
