@@ -191,3 +191,16 @@ pub async fn get_server_time_async() -> Result<(), Box<dyn Error>> {
     }
     Ok(())
 }
+
+pub async fn get_markets_async() -> Result<(), Box<dyn Error>> {
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_public_api_endpoint(&"MARKETS"),
+        ""
+    );
+    match execute_async(&temp).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
