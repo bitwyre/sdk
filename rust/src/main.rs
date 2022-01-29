@@ -49,6 +49,10 @@ async fn async_main() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
+    match public::get_insider_profiles_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
     match public::get_announcements_async().await {
         Err(e) => println!("{:?}", e),
         _ => ()

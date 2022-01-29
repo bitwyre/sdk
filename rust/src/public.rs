@@ -337,6 +337,23 @@ pub async fn get_contract_async(instrument: &str) -> Result<(), Box<dyn Error>> 
     Ok(())
 }
 
+pub async fn get_insider_profiles_async(username: Option<&str>) -> Result<(), Box<dyn Error>> {
+    let param = match username {
+        None => "".to_string(),
+        _ => ["?username=", &username].concat()
+    };
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_public_api_endpoint(&"INSIDER_PROFILES"),
+        &param
+    );
+    match PublicAPI.execute_async(&temp).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
 pub async fn get_announcements_async() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
