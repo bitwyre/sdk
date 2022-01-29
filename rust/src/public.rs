@@ -285,3 +285,16 @@ pub fn get_ticker_async(instrument: &str) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+pub fn get_trades_async(trade_num: &str, instrument: &str) -> Result<(), Box<dyn Error>> {
+    let param = ["?trade_num=", &trade_num, "&instrument=", &instrument].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_public_api_endpoint(&"TRADES"),
+        &param
+    );
+    match execute_async(&temp).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
