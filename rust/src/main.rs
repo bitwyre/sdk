@@ -4,8 +4,18 @@ mod private;
 use std::error::Error;
 use crate::public::config;
 
+async fn async_main() {
+    match public::get_server_time_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
     let instrument = config::bitwyre_instrument("1");
+    let rt = tokio::runtime::Runtime::new().unwrap();
+    rt.block_on(async_main());
+
     match public::get_server_time() {
         Err(e) => println!("{:?}", e),
         _ => ()

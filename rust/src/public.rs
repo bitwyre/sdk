@@ -164,3 +164,30 @@ pub fn get_announcements() -> Result<(), Box<dyn Error>> {
     }
     Ok(())
 }
+
+async fn execute_async(temp: &str) -> Result<(), Box<dyn Error>> {
+    let res = reqwest::get(temp).await?;
+    match res.status() {
+        reqwest::StatusCode::OK => {
+            println!("Status: {} -> {}", res.status(), "Success");
+            println!("{}", res.text().await?);
+        },
+        _ => {
+            panic!("{} -> {}", res.status(), "Error, please check again your request");
+        },
+    };
+    Ok(())
+}
+
+pub async fn get_server_time_async() -> Result<(), Box<dyn Error>> {
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_public_api_endpoint(&"SERVERTIME"),
+        ""
+    );
+    match execute_async(&temp).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
