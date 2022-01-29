@@ -21,11 +21,11 @@ async fn async_main() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_assets_crypto_async().await {
+    match public::get_crypto_assets_async().await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_assets_fiat_async().await {
+    match public::get_fiat_assets_async().await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -58,6 +58,10 @@ async fn async_main() {
         _ => ()
     }
     match public::get_announcements_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_order_types_async().await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }

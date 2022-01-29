@@ -241,7 +241,7 @@ pub async fn get_assets_async() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-pub async fn get_assets_crypto_async() -> Result<(), Box<dyn Error>> {
+pub async fn get_crypto_assets_async() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"ASSETS_CRYPTO"),
@@ -254,7 +254,7 @@ pub async fn get_assets_crypto_async() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-pub async fn get_assets_fiat_async() -> Result<(), Box<dyn Error>> {
+pub async fn get_fiat_assets_async() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"ASSETS_FIAT"),
@@ -383,3 +383,17 @@ pub async fn get_announcements_async() -> Result<(), Box<dyn Error>> {
     }
     Ok(())
 }
+
+pub async fn get_order_types_async() -> Result<(), Box<dyn Error>> {
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_public_api_endpoint(&"ORDER_TYPES"),
+        ""
+    );
+    match PublicAPI.execute_async(&temp).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
