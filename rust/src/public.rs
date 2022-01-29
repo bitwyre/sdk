@@ -243,3 +243,16 @@ pub async fn get_assets_crypto_async() -> Result<(), Box<dyn Error>> {
     }
     Ok(())
 }
+
+pub async fn get_assets_fiat_async() -> Result<(), Box<dyn Error>> {
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_public_api_endpoint(&"ASSETS_FIAT"),
+        ""
+    );
+    match execute_async(&temp).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}

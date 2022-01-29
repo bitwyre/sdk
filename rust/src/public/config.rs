@@ -16,6 +16,7 @@ pub fn get_public_api_endpoint(key: &str) -> &str {
         "MARKETS" => "/public/markets",
         "ASSETS" => "/public/assets",
         "ASSETS_CRYPTO" => "/public/assets/crypto",
+        "ASSETS_FIAT" => "/public/assets/fiat",
         _ => ""
     }
 }
