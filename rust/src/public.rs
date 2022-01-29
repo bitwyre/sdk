@@ -410,3 +410,15 @@ pub async fn get_languages_async() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+pub async fn get_search_results_async() -> Result<(), Box<dyn Error>> {
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_public_api_endpoint(&"SEARCH"),
+        ""
+    );
+    match PublicAPI.execute_async(&temp).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}

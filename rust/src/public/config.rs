@@ -22,6 +22,7 @@ pub fn get_public_api_endpoint(key: &str) -> &str {
         "INSIDER_TRADES" => "/public/insider/trades",
         "ORDER_TYPES" => "/public/ordertypes",
         "LANGUAGES" => "/public/languages",
+        "SEARCH" => "/public/search",
         _ => ""
     }
 }
