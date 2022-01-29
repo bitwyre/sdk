@@ -271,7 +271,7 @@ pub async fn get_asset_pairs_async(market: &str, product: &str, country: &str) -
     Ok(())
 }
 
-pub fn get_ticker_async(instrument: &str) -> Result<(), Box<dyn Error>> {
+pub async fn get_ticker_async(instrument: &str) -> Result<(), Box<dyn Error>> {
     let param = ["?instrument=", &instrument].concat();
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
@@ -285,7 +285,7 @@ pub fn get_ticker_async(instrument: &str) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-pub fn get_trades_async(trade_num: &str, instrument: &str) -> Result<(), Box<dyn Error>> {
+pub async fn get_trades_async(trade_num: &str, instrument: &str) -> Result<(), Box<dyn Error>> {
     let param = ["?trade_num=", &trade_num, "&instrument=", &instrument].concat();
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
@@ -299,7 +299,7 @@ pub fn get_trades_async(trade_num: &str, instrument: &str) -> Result<(), Box<dyn
     Ok(())
 }
 
-pub fn get_depth_async(instrument: &str, depth_num: &str) -> Result<(), Box<dyn Error>> {
+pub async fn get_depth_async(instrument: &str, depth_num: &str) -> Result<(), Box<dyn Error>> {
     let param = ["?instrument=", &instrument, "&depth_num=", &depth_num].concat();
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),

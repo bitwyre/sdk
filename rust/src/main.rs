@@ -29,15 +29,15 @@ async fn async_main() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_asset_pairs_async().await {
+    match public::get_asset_pairs_async("crypto","spot","ID").await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_ticker_async().await {
+    match public::get_ticker_async("btc_usdt_spot").await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_trades_async().await {
+    match public::get_trades_async("2", "btc_usdt_spot").await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
