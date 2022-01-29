@@ -165,18 +165,28 @@ pub fn get_announcements() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-async fn execute_async(temp: &str) -> Result<(), Box<dyn Error>> {
-    let res = reqwest::get(temp).await?;
-    match res.status() {
-        reqwest::StatusCode::OK => {
-            println!("Status: {} -> {}", res.status(), "Success");
-            println!("{}", res.text().await?);
-        },
-        _ => {
-            panic!("{} -> {}", res.status(), "Error, please check again your request");
-        },
-    };
-    Ok(())
+use async_trait::async_trait;
+
+#[async_trait]
+trait RequestAsync {
+    async fn execute_async(&self, temp: &str) -> Result<(), Box<dyn Error>>;
+}
+
+#[async_trait]
+impl RequestAsync for PublicAPI {
+    async fn execute_async(&self, temp: &str) -> Result<(), Box<dyn Error>> {
+        let res = reqwest::get(temp).await?;
+        match res.status() {
+            reqwest::StatusCode::OK => {
+                println!("Status: {} -> {}", res.status(), "Success");
+                println!("{}", res.text().await?);
+            },
+            _ => {
+                panic!("{} -> {}", res.status(), "Error, please check again your request");
+            },
+        };
+        Ok(())
+    }
 }
 
 pub async fn get_server_time_async() -> Result<(), Box<dyn Error>> {
@@ -185,7 +195,7 @@ pub async fn get_server_time_async() -> Result<(), Box<dyn Error>> {
         config::get_public_api_endpoint(&"SERVERTIME"),
         ""
     );
-    match execute_async(&temp).await {
+    match PublicAPI.execute_async(&temp).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -198,7 +208,7 @@ pub async fn get_markets_async() -> Result<(), Box<dyn Error>> {
         config::get_public_api_endpoint(&"MARKETS"),
         ""
     );
-    match execute_async(&temp).await {
+    match PublicAPI.execute_async(&temp).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -211,7 +221,7 @@ pub async fn get_products_async() -> Result<(), Box<dyn Error>> {
         config::get_public_api_endpoint(&"PRODUCTS"),
         ""
     );
-    match execute_async(&temp).await {
+    match PublicAPI.execute_async(&temp).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -224,7 +234,7 @@ pub async fn get_assets_async() -> Result<(), Box<dyn Error>> {
         config::get_public_api_endpoint(&"ASSETS"),
         ""
     );
-    match execute_async(&temp).await {
+    match PublicAPI.execute_async(&temp).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -237,7 +247,7 @@ pub async fn get_assets_crypto_async() -> Result<(), Box<dyn Error>> {
         config::get_public_api_endpoint(&"ASSETS_CRYPTO"),
         ""
     );
-    match execute_async(&temp).await {
+    match PublicAPI.execute_async(&temp).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -250,7 +260,7 @@ pub async fn get_assets_fiat_async() -> Result<(), Box<dyn Error>> {
         config::get_public_api_endpoint(&"ASSETS_FIAT"),
         ""
     );
-    match execute_async(&temp).await {
+    match PublicAPI.execute_async(&temp).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -264,7 +274,7 @@ pub async fn get_asset_pairs_async(market: &str, product: &str, country: &str) -
         config::get_public_api_endpoint(&"INSTRUMENT"),
         &param
     );
-    match execute_async(&temp).await {
+    match PublicAPI.execute_async(&temp).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -278,7 +288,7 @@ pub async fn get_ticker_async(instrument: &str) -> Result<(), Box<dyn Error>> {
         config::get_public_api_endpoint(&"TICKER"),
         &param
     );
-    match execute_async(&temp).await {
+    match PublicAPI.execute_async(&temp).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -292,7 +302,7 @@ pub async fn get_trades_async(trade_num: &str, instrument: &str) -> Result<(), B
         config::get_public_api_endpoint(&"TRADES"),
         &param
     );
-    match execute_async(&temp).await {
+    match PublicAPI.execute_async(&temp).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -306,7 +316,7 @@ pub async fn get_depth_async(instrument: &str, depth_num: &str) -> Result<(), Bo
         config::get_public_api_endpoint(&"DEPTH"),
         &param
     );
-    match execute_async(&temp).await {
+    match PublicAPI.execute_async(&temp).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -319,7 +329,7 @@ pub async fn get_announcements_async() -> Result<(), Box<dyn Error>> {
         config::get_public_api_endpoint(&"ANNOUNCEMENTS"),
         ""
     );
-    match execute_async(&temp).await {
+    match PublicAPI.execute_async(&temp).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
