@@ -256,3 +256,18 @@ pub async fn get_assets_fiat_async() -> Result<(), Box<dyn Error>> {
     }
     Ok(())
 }
+
+pub async fn get_asset_pairs_async(market: &str, product: &str, country: &str) -> Result<(), Box<dyn Error>> {
+    let param = ["?market=", &market, "&product=", &product, "&country=", &country].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_public_api_endpoint(&"INSTRUMENT"),
+        &param
+    );
+    match execute_async(&temp).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
