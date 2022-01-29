@@ -422,3 +422,34 @@ pub async fn get_search_results_async() -> Result<(), Box<dyn Error>> {
     }
     Ok(())
 }
+
+pub async fn get_price_index_async(instrument: &str, amount: Option<&i8>, to_time: Option<&i8>, from_time: Option<&i8>, ascending: Option<&bool>) -> Result<(), Box<dyn Error>> {
+    let mut param = ["?instrument=", &instrument].concat();
+    param = match amount {
+        None => param,
+        Some(_amount) => [param, "?amount=".to_string(), _amount.to_string()].concat()
+    };
+    param = match to_time {
+        None => param,
+        Some(_to_time) => [param, "?to_time=".to_string(), _to_time.to_string()].concat()
+    };
+    param = match from_time {
+        None => param,
+        Some(_from_time) => [param, "?from_time=".to_string(), _from_time.to_string()].concat()
+    };
+    param = match ascending {
+        None => param,
+        Some(_ascending) => [param, "?ascending=".to_string(), _ascending.to_string()].concat()
+    };
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_public_api_endpoint(&"PRICE_INDEX"),
+        &param
+    );
+    match PublicAPI.execute_async(&temp).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+

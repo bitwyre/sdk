@@ -23,6 +23,7 @@ pub fn get_public_api_endpoint(key: &str) -> &str {
         "ORDER_TYPES" => "/public/ordertypes",
         "LANGUAGES" => "/public/languages",
         "SEARCH" => "/public/search",
+        "PRICE_INDEX" => "/public/index",
         _ => ""
     }
 }
