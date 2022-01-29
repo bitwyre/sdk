@@ -271,3 +271,17 @@ pub async fn get_asset_pairs_async(market: &str, product: &str, country: &str) -
     Ok(())
 }
 
+pub fn get_ticker_async(instrument: &str) -> Result<(), Box<dyn Error>> {
+    let param = ["?instrument=", &instrument].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_public_api_endpoint(&"TICKER"),
+        &param
+    );
+    match execute_async(&temp).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
