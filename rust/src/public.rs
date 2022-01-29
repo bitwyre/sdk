@@ -6,6 +6,10 @@ use string_builder::Builder;
 
 trait Formatter {
     fn format(&self, base: &str, endpoint: &str, param: &str) -> String;
+    fn optional_string_param(&self, param_name: &str, param: Option<&str>) -> String;
+    fn append_optional_string_param(&self, base: String, param_name: &str, param: Option<&str>) -> String;
+    fn append_optional_integer_param(&self, base: String, param_name: &str, param: Option<&i8>) -> String;
+    fn append_optional_boolean_param(&self, base: String, param_name: &str, param: Option<&bool>) -> String;
 }
 
 trait Request {
@@ -21,6 +25,30 @@ impl Formatter for URLBuilder {
         path.append(endpoint);
         path.append(param);
         path.string().unwrap()
+    }
+    fn optional_string_param(&self, param_name: &str, param: Option<&str>) -> String {
+        match param {
+            None => "".to_string(),
+            Some(_param) => ["?", &param_name, "=", &_param].concat()
+        }
+    }
+    fn append_optional_string_param(&self, base: String, param_name: &str, param: Option<&str>) -> String {
+        match param {
+            None => base,
+            Some(_param) => [base, "?".to_string(), param_name.to_string(), "=".to_string(), _param.to_string()].concat()
+        }
+    }
+    fn append_optional_integer_param(&self, base: String, param_name: &str, param: Option<&i8>) -> String {
+        match param {
+            None => base,
+            Some(_param) => [base, "?".to_string(), param_name.to_string(), "=".to_string(), _param.to_string()].concat()
+        }
+    }
+    fn append_optional_boolean_param(&self, base: String, param_name: &str, param: Option<&bool>) -> String {
+        match param {
+            None => base,
+            Some(_param) => [base, "?".to_string(), param_name.to_string(), "=".to_string(), _param.to_string()].concat()
+        }
     }
 }
 
@@ -71,8 +99,8 @@ pub fn get_asset_pairs(market: &str, product: &str, country: &str) -> Result<(),
     Ok(())
 }
 
-pub fn get_ticker(instrument: &str) -> Result<(), Box<dyn Error>> {
-    let param = ["?instrument=", &instrument].concat();
+pub fn get_ticker(instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
+    let param = URLBuilder.optional_string_param("instrument", instrument);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"TICKER"),
@@ -85,8 +113,9 @@ pub fn get_ticker(instrument: &str) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-pub fn get_trades(trade_num: &str, instrument: &str) -> Result<(), Box<dyn Error>> {
-    let param = ["?trade_num=", &trade_num, "&instrument=", &instrument].concat();
+pub fn get_trades(trade_num: &i8, instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
+    let mut param = ["?trade_num=".to_string(), trade_num.to_string()].concat();
+    param = URLBuilder.append_optional_string_param(param, "instrument", instrument);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"TRADES"),
@@ -99,8 +128,9 @@ pub fn get_trades(trade_num: &str, instrument: &str) -> Result<(), Box<dyn Error
     Ok(())
 }
 
-pub fn get_depth(instrument: &str, depth_num: &str) -> Result<(), Box<dyn Error>> {
-    let param = ["?instrument=", &instrument, "&depth_num=", &depth_num].concat();
+pub fn get_depth(depth_num: &i8, instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
+    let mut param = ["&depth_num=".to_string(), depth_num.to_string()].concat();
+    param = URLBuilder.append_optional_string_param(param, "instrument", instrument);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"DEPTH"),
@@ -338,10 +368,7 @@ pub async fn get_contract_async(instrument: &str) -> Result<(), Box<dyn Error>> 
 }
 
 pub async fn get_insider_profiles_async(username: Option<&str>) -> Result<(), Box<dyn Error>> {
-    let param = match username {
-        None => "".to_string(),
-        Some(_username) => ["?username=", &_username].concat()
-    };
+    let param = URLBuilder.optional_string_param("username", username);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"INSIDER_PROFILES"),
@@ -355,10 +382,7 @@ pub async fn get_insider_profiles_async(username: Option<&str>) -> Result<(), Bo
 }
 
 pub async fn get_insider_trades_async(username: Option<&str>) -> Result<(), Box<dyn Error>> {
-    let param = match username {
-        None => "".to_string(),
-        Some(_username) => ["?username=", &_username].concat()
-    };
+    let param = URLBuilder.optional_string_param("username", username);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"INSIDER_TRADES"),
@@ -425,22 +449,10 @@ pub async fn get_search_results_async() -> Result<(), Box<dyn Error>> {
 
 pub async fn get_price_index_async(instrument: &str, amount: Option<&i8>, to_time: Option<&i8>, from_time: Option<&i8>, ascending: Option<&bool>) -> Result<(), Box<dyn Error>> {
     let mut param = ["?instrument=", &instrument].concat();
-    param = match amount {
-        None => param,
-        Some(_amount) => [param, "?amount=".to_string(), _amount.to_string()].concat()
-    };
-    param = match to_time {
-        None => param,
-        Some(_to_time) => [param, "?to_time=".to_string(), _to_time.to_string()].concat()
-    };
-    param = match from_time {
-        None => param,
-        Some(_from_time) => [param, "?from_time=".to_string(), _from_time.to_string()].concat()
-    };
-    param = match ascending {
-        None => param,
-        Some(_ascending) => [param, "?ascending=".to_string(), _ascending.to_string()].concat()
-    };
+    param = URLBuilder.append_optional_integer_param(param, "amount", amount);
+    param = URLBuilder.append_optional_integer_param(param, "to_time", to_time);
+    param = URLBuilder.append_optional_integer_param(param, "from_time", from_time);
+    param = URLBuilder.append_optional_boolean_param(param, "ascending", ascending);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"PRICE_INDEX"),
@@ -455,10 +467,7 @@ pub async fn get_price_index_async(instrument: &str, amount: Option<&i8>, to_tim
 
 pub async fn get_search_async(country: &str, instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
     let mut param = ["?country=", &country].concat();
-    param = match instrument {
-        None => param,
-        Some(_instrument) => [param, "?instrument=".to_string(), _instrument.to_string()].concat()
-    };
+    param = URLBuilder.append_optional_string_param(param, "instrument", instrument);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"SEARCH"),
@@ -472,10 +481,7 @@ pub async fn get_search_async(country: &str, instrument: Option<&str>) -> Result
 }
 
 pub async fn get_matching_engine_order_lag(instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
-    let param = match instrument {
-        None => "".to_string(),
-        Some(_instrument) => ["?instrument=", _instrument].concat()
-    };
+    let param = URLBuilder.optional_string_param("instrument", instrument);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"ORDER_LAG"),
@@ -489,10 +495,7 @@ pub async fn get_matching_engine_order_lag(instrument: Option<&str>) -> Result<(
 }
 
 pub async fn get_matching_engine_throughput(instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
-    let param = match instrument {
-        None => "".to_string(),
-        Some(_instrument) => ["?instrument=", _instrument].concat()
-    };
+    let param = URLBuilder.optional_string_param("instrument", instrument);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"THROUGHPUT"),
