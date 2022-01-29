@@ -81,7 +81,11 @@ async fn async_main() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_matching_engine_order_lag("btc_usdt_spot").await {
+    match public::get_matching_engine_order_lag(None).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_matching_engine_throughput(None).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }

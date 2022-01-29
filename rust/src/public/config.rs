@@ -25,6 +25,7 @@ pub fn get_public_api_endpoint(key: &str) -> &str {
         "SEARCH" => "/public/search",
         "PRICE_INDEX" => "/public/index",
         "ORDER_LAG" => "/public/orderlag",
+        "THROUGHPUT" => "/public/throughput",
         _ => ""
     }
 }
