@@ -453,3 +453,21 @@ pub async fn get_price_index_async(instrument: &str, amount: Option<&i8>, to_tim
     Ok(())
 }
 
+pub async fn get_search_async(country: &str, instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
+    let mut param = ["?country=", &country].concat();
+    param = match instrument {
+        None => param,
+        Some(_instrument) => [param, "?instrument=".to_string(), _instrument.to_string()].concat()
+    };
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_public_api_endpoint(&"SEARCH"),
+        &param
+    );
+    match PublicAPI.execute_async(&temp).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
