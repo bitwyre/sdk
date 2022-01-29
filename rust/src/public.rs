@@ -471,3 +471,19 @@ pub async fn get_search_async(country: &str, instrument: Option<&str>) -> Result
     Ok(())
 }
 
+pub async fn get_matching_engine_order_lag(instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
+    let param = match instrument {
+        None => "".to_string(),
+        Some(_instrument) => ["?instrument=", _instrument].concat()
+    };
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_public_api_endpoint(&"ORDER_LAG"),
+        &param
+    );
+    match PublicAPI.execute_async(&temp).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
