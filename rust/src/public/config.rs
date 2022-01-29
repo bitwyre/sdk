@@ -19,6 +19,7 @@ pub fn get_public_api_endpoint(key: &str) -> &str {
         "ASSETS_FIAT" => "/public/assets/fiat",
         "CONTRACT" => "/public/contract",
         "INSIDER_PROFILES" => "/public/insider",
+        "INSIDER_TRADES" => "/public/insider/trades",
         _ => ""
     }
 }

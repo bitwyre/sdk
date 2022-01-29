@@ -49,7 +49,11 @@ async fn async_main() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_insider_profiles_async().await {
+    match public::get_insider_profiles_async(None).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_insider_trades_async(None).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }

@@ -340,11 +340,28 @@ pub async fn get_contract_async(instrument: &str) -> Result<(), Box<dyn Error>> 
 pub async fn get_insider_profiles_async(username: Option<&str>) -> Result<(), Box<dyn Error>> {
     let param = match username {
         None => "".to_string(),
-        _ => ["?username=", &username].concat()
+        Some(_username) => ["?username=", &_username].concat()
     };
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"INSIDER_PROFILES"),
+        &param
+    );
+    match PublicAPI.execute_async(&temp).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
+pub async fn get_insider_trades_async(username: Option<&str>) -> Result<(), Box<dyn Error>> {
+    let param = match username {
+        None => "".to_string(),
+        Some(_username) => ["?username=", &_username].concat()
+    };
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_public_api_endpoint(&"INSIDER_TRADES"),
         &param
     );
     match PublicAPI.execute_async(&temp).await {
