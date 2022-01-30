@@ -2,6 +2,7 @@ mod public;
 mod private;
 
 use std::error::Error;
+use crate::public::config;
 
 fn main() -> Result<(), Box<dyn Error>> {
     match public::get_server_time() {
@@ -12,15 +13,15 @@ fn main() -> Result<(), Box<dyn Error>> {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_ticker("btc_usdt_spot") {
+    match public::get_ticker(config::bitwyre_instrument("btc_usdt_spot")) {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_trades("2", "btc_usdt_spot") {
+    match public::get_trades("2", config::bitwyre_instrument("btc_usdt_spot")) {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_depth("btc_usdt_spot", "5") {
+    match public::get_depth(config::bitwyre_instrument("btc_usdt_spot"), "5") {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -41,6 +42,14 @@ fn main() -> Result<(), Box<dyn Error>> {
         _ => ()
     }
     match private::get_account_balance() {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::get_account_statement() {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::get_transaction_histories() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
