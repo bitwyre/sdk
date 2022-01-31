@@ -51,6 +51,13 @@ pub fn bitwyre_instrument(key: &str) -> &str {
         "4" => "usdc_idr_spot",
         "5" => "usdc_usd_spot",
         "6" => "usdt_usd_spot",
+        "btc_usdt_spot" => "btc_usdt_spot",
+        "eth_usdt_spot" => "eth_usdt_spot",
+        "usdt_idr_spot" => "usdt_idr_spot",
+        "usdc_idr_spot" => "usdc_idr_spot",
+        "usdc_usd_spot" => "usdc_usd_spot",
+        "usdt_usd_spot" => "usdt_usd_spot",
+        "btc_usdt_spot_contract" => "btcusdtx_usdt_200607F1000000",
         _ => ""
     }
 }

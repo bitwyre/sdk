@@ -33,19 +33,19 @@ async fn async_main() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_ticker_async("btc_usdt_spot").await {
+    match public::get_ticker_async(config::bitwyre_instrument("btc_usdt_spot")).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_trades_async("2", "btc_usdt_spot").await {
+    match public::get_trades_async("2", config::bitwyre_instrument("btc_usdt_spot")).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_depth_async("btc_usdt_spot", "5").await {
+    match public::get_depth_async(config::bitwyre_instrument("btc_usdt_spot"), "5").await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_contract_async("btcusdtx_usdt_200607F1000000").await {
+    match public::get_contract_async(config::bitwyre_instrument("btc_usdt_spot_contract")).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -73,7 +73,7 @@ async fn async_main() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_price_index_async("btc_usdt_spot", None, None, None, None).await {
+    match public::get_price_index_async(config::bitwyre_instrument("btc_usdt_spot"), None, None, None, None).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
