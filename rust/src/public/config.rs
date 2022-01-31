@@ -32,3 +32,14 @@ pub fn get_private_api_endpoint(key: &str) -> &str {
         _ => ""
     }
 }
+pub fn bitwyre_instrument(key: &str) -> &str {
+    match key {
+        "btc_usdt_spot" => "btc_usdt_spot",
+        "eth_usdt_spot" => "eth_usdt_spot",
+        "usdt_idr_spot" => "usdt_idr_spot",
+        "usdc_idr_spot" => "usdc_idr_spot",
+        "usdc_usd_spot" => "usdc_usd_spot",
+        "usdt_usd_spot" => "usdt_usd_spot",
+        _ => ""
+    }
+}
