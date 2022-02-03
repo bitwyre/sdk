@@ -5,6 +5,7 @@ use std::error::Error;
 use crate::public::config;
 
 fn main() -> Result<(), Box<dyn Error>> {
+    let instrument = config::bitwyre_instrument("1");
     match public::get_server_time() {
         Err(e) => println!("{:?}", e),
         _ => ()
@@ -13,15 +14,15 @@ fn main() -> Result<(), Box<dyn Error>> {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_ticker(config::bitwyre_instrument("btc_usdt_spot")) {
+    match public::get_ticker(instrument) {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_trades("2", config::bitwyre_instrument("btc_usdt_spot")) {
+    match public::get_trades("2", instrument) {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_depth(config::bitwyre_instrument("btc_usdt_spot"), "5") {
+    match public::get_depth(instrument, "5") {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -50,6 +51,22 @@ fn main() -> Result<(), Box<dyn Error>> {
         _ => ()
     }
     match private::get_transaction_histories() {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::get_open_orders(instrument, 0, 0) {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::get_closed_orders(instrument, 0, 0) {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::get_order_info("3f128876-a082-4b18-8fd4-abbcc4aa7915") {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::get_trade_history(instrument, 2, 0, 0) {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
