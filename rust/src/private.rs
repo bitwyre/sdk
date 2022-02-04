@@ -155,3 +155,75 @@ pub fn get_transaction_histories() -> Result<(), Box<dyn Error>> {
     }
     Ok(())
 }
+
+pub fn get_open_orders(instrument: &str, from_time: u128, to_time: u128) -> Result<(), Box<dyn Error>> {
+    let payload = ["{\"instrument\":", "\"", &instrument, "\"", ",\"from_time\":", &from_time.to_string(), ",\"to_time\":", &to_time.to_string(), "}"].concat();
+    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+    let uri_path = config::get_private_api_endpoint(&"OPEN_ORDERS");
+    let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
+    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_private_api_endpoint(&"OPEN_ORDERS"),
+        &param
+    );
+    match PrivateAPI.execute(&temp, &api_key, &signature) {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
+pub fn get_closed_orders(instrument: &str, from_time: u128, to_time: u128) -> Result<(), Box<dyn Error>> {
+    let payload = ["{\"instrument\":", "\"", &instrument, "\"", ",\"from_time\":", &from_time.to_string(), ",\"to_time\":", &to_time.to_string(), "}"].concat();
+    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+    let uri_path = config::get_private_api_endpoint(&"CLOSED_ORDERS");
+    let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
+    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_private_api_endpoint(&"CLOSED_ORDERS"),
+        &param
+    );
+    match PrivateAPI.execute(&temp, &api_key, &signature) {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
+pub fn get_order_info(order_id: &str) -> Result<(), Box<dyn Error>> {
+    let payload = "";
+    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+    let uri_path = [config::get_private_api_endpoint(&"ORDER_INFO"), "/", order_id].concat();
+    let (nonce, checksum, signature) = sign(&secret_key, &uri_path, payload);
+    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        &uri_path,
+        &param
+    );
+    match PrivateAPI.execute(&temp, &api_key, &signature) {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
+pub fn get_trade_history(instrument: &str, count: u8, from_time: u128, to_time: u128) -> Result<(), Box<dyn Error>> {
+    let payload = ["{\"instrument\":", "\"", &instrument, "\"", ",\"count\":", &count.to_string(), ",\"from_time\":", &from_time.to_string(), ",\"to_time\":", &to_time.to_string(), "}"].concat();
+    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+    let uri_path = config::get_private_api_endpoint(&"TRADE_HISTORY");
+    let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
+    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_private_api_endpoint(&"TRADE_HISTORY"),
+        &param
+    );
+    match PrivateAPI.execute(&temp, &api_key, &signature) {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
