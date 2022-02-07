@@ -20,7 +20,7 @@ trait Formatter {
 }
 
 trait Request {
-    fn execute(&self, temp: &str, api_key: &str, signature: &str) -> Result<(), Box<dyn Error>>;
+    fn execute(&self, temp: &str, api_key: &str, signature: &str, flag: &str) -> Result<(), Box<dyn Error>>;
 }
 
 struct URLBuilder;
@@ -38,7 +38,7 @@ impl Formatter for URLBuilder {
 struct PrivateAPI;
 
 impl Request for PrivateAPI {
-    fn execute(&self, temp: &str, api_key: &str, signature: &str) -> Result<(), Box<dyn Error>> {
+    fn execute(&self, temp: &str, api_key: &str, signature: &str, flag: &str) -> Result<(), Box<dyn Error>> {
         let mut headers = header::HeaderMap::new();
         headers.insert("API-Key", header::HeaderValue::from_str(&api_key).unwrap());
         headers.insert("API-Sign", header::HeaderValue::from_str(&signature).unwrap());
@@ -46,7 +46,14 @@ impl Request for PrivateAPI {
             .default_headers(headers)
             .timeout(Duration::from_secs(config::timeout()))
             .build()?;
-        let mut res = client.get(temp).send()?;
+        let mut res;
+        if flag == "NewOrder" {
+            res = client.post(temp).send()?;
+        } else if flag == "CancelOrder" {
+            res = client.delete(temp).send()?;
+        } else {
+            res = client.get(temp).send()?;
+        }
         let mut body = String::new();
         res.read_to_string(&mut body)?;
         match res.status() {
@@ -113,7 +120,7 @@ pub fn get_account_balance() -> Result<(), Box<dyn Error>> {
         config::get_private_api_endpoint(&"ACCOUNT_BALANCE"),
         &param
     );
-    match PrivateAPI.execute(&temp, &api_key, &signature) {
+    match PrivateAPI.execute(&temp, &api_key, &signature, "") {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -131,7 +138,7 @@ pub fn get_account_statement() -> Result<(), Box<dyn Error>> {
         config::get_private_api_endpoint(&"ACCOUNT_STATEMENT"),
         &param
     );
-    match PrivateAPI.execute(&temp, &api_key, &signature) {
+    match PrivateAPI.execute(&temp, &api_key, &signature, "") {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -149,7 +156,7 @@ pub fn get_transaction_histories() -> Result<(), Box<dyn Error>> {
         config::get_private_api_endpoint(&"TRANSACTION_HISTORIES"),
         &param
     );
-    match PrivateAPI.execute(&temp, &api_key, &signature) {
+    match PrivateAPI.execute(&temp, &api_key, &signature, "") {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -167,7 +174,7 @@ pub fn get_open_orders(instrument: &str, from_time: u128, to_time: u128) -> Resu
         config::get_private_api_endpoint(&"OPEN_ORDERS"),
         &param
     );
-    match PrivateAPI.execute(&temp, &api_key, &signature) {
+    match PrivateAPI.execute(&temp, &api_key, &signature, "") {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -185,7 +192,7 @@ pub fn get_closed_orders(instrument: &str, from_time: u128, to_time: u128) -> Re
         config::get_private_api_endpoint(&"CLOSED_ORDERS"),
         &param
     );
-    match PrivateAPI.execute(&temp, &api_key, &signature) {
+    match PrivateAPI.execute(&temp, &api_key, &signature, "") {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -203,7 +210,7 @@ pub fn get_order_info(order_id: &str) -> Result<(), Box<dyn Error>> {
         &uri_path,
         &param
     );
-    match PrivateAPI.execute(&temp, &api_key, &signature) {
+    match PrivateAPI.execute(&temp, &api_key, &signature, "") {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
@@ -221,7 +228,78 @@ pub fn get_trade_history(instrument: &str, count: u8, from_time: u128, to_time: 
         config::get_private_api_endpoint(&"TRADE_HISTORY"),
         &param
     );
-    match PrivateAPI.execute(&temp, &api_key, &signature) {
+    match PrivateAPI.execute(&temp, &api_key, &signature, "") {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
+pub fn cancelling_open_order_per_instrument(instrument: &str) -> Result<(), Box<dyn Error>> {
+    let payload = "";
+    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+    let uri_path = [config::get_private_api_endpoint(&"CANCEL_ORDER"), "/instrument/", instrument].concat();
+    let (nonce, checksum, signature) = sign(&secret_key, &uri_path, payload);
+    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        &uri_path,
+        &param
+    );
+    match PrivateAPI.execute(&temp, &api_key, &signature, "CancelOrder") {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
+pub fn cancelling_open_order_per_orderids(order_ids: Vec<&str>, qtys: Vec<i32>) -> Result<(), Box<dyn Error>> {
+    let temp = format!("{:?}", order_ids);
+    let temp2 = format!("{:?}", qtys);
+    if order_ids.len() != qtys.len() {
+        println!("Specify the same number of orders with quantities to ammend/cancel");
+    }
+    let payload = ["{\"order_ids\":", &temp, ",\"qtys\":", &temp2, "}"].concat();
+    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+    let uri_path = config::get_private_api_endpoint(&"CANCEL_ORDER");
+    let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
+    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_private_api_endpoint(&"CANCEL_ORDER"),
+        &param
+    );
+    match PrivateAPI.execute(&temp, &api_key, &signature, "CancelOrder") {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
+pub fn opening_new_order(
+    instrument: &str,
+    side: u8,
+    mut price: Option<String>,
+    ordtype: u8,
+    orderqty: &str) -> Result<(), Box<dyn Error>> {
+    if ordtype == 1 {
+        price = Some("0".to_string());
+    }
+    if ordtype == 2 && price.is_none() {
+        println!("Limit order price cannot be null");
+    }
+    let payload = ["{\"instrument\":", "\"", &instrument, "\"", ",\"side\":", &side.to_string(),
+        ",\"price\":", "\"", &price.unwrap(), "\"", ",\"ordtype\":", &ordtype.to_string(), ",\"orderqty\":", "\"", &orderqty, "\"", "}"].concat();
+    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+    let uri_path = config::get_private_api_endpoint(&"ORDER");
+    let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
+    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_private_api_endpoint(&"ORDER"),
+        &param
+    );
+    match PrivateAPI.execute(&temp, &api_key, &signature, "NewOrder") {
         Err(e) => println!("{:?}", e),
         _ => ()
     }

@@ -70,5 +70,21 @@ fn main() -> Result<(), Box<dyn Error>> {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
+    match private::cancelling_open_order_per_instrument(instrument) {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::cancelling_open_order_per_orderids(vec!["5033216a-dad5-4cb6-87d6-0084603be699", "3d19d8d1-c576-4109-8671-5e4115cf6e5e"], vec![-1, -1]) {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::opening_new_order(instrument, 1, Some(35000.to_string()), 2, "0.0001") {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::opening_new_order(instrument, 1, Some("".to_string()), 1, "0.0001") {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
     Ok(())
 }
