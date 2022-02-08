@@ -6,7 +6,7 @@ use std::error::Error;
 use std::io::Read;
 use std::time::{SystemTime, UNIX_EPOCH, Duration};
 use std::env;
-use reqwest::{header, blocking};
+use reqwest::{header, blocking, Client};
 use crypto::digest::Digest;
 use crypto::sha2::Sha256;
 use ring::hmac;
@@ -305,33 +305,62 @@ pub fn opening_new_order(
     }
     Ok(())
 }
+
+use async_trait::async_trait;
+
+#[async_trait]
+trait RequestAsync {
+    async fn execute_async(&self, temp: &str, api_key: &str, signature: &str, flag: &str) -> Result<(), Box<dyn Error>>;
+}
+
+#[async_trait]
+impl RequestAsync for PrivateAPI {
+    async fn execute_async(&self, temp: &str, api_key: &str, signature: &str, flag: &str) -> Result<(), Box<dyn Error>> {
+        let mut headers = header::HeaderMap::new();
+        headers.insert("API-Key", header::HeaderValue::from_str(&api_key).unwrap());
+        headers.insert("API-Sign", header::HeaderValue::from_str(&signature).unwrap());
+        
+        let client = Client::builder()
+            .default_headers(headers)
+            .timeout(Duration::from_secs(config::timeout()))
+            .build()?;
+
+        let res;
+        if flag == "NewOrder" {
+            res = client.post(temp).send().await?;
+        } else if flag == "CancelOrder" {
+            res = client.delete(temp).send().await?;
+        } else {
+            res = client.get(temp).send().await?;
+        }
+
+        match res.status() {
+            reqwest::StatusCode::OK => {
+                println!("Status: {} -> {}", res.status(), "Success");
+                println!("{}", res.text().await?);
+            },
+            _ => {
+                panic!("{} -> {}", res.status(), "Error, please check again your request");
+            },
+        };
+        Ok(())
+    }
+}
+
 pub async fn get_account_balance_async() -> Result<(), Box<dyn Error>> {
     let payload = "";
     let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
     let uri_path = config::get_private_api_endpoint(&"ACCOUNT_BALANCE");
     let (nonce, checksum, signature) = sign(&secret_key, uri_path, payload);
     let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(config::timeout()))
-        .build()?;
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"ACCOUNT_BALANCE"),
         &param
     );
-    let res = client.get(&temp)
-        .header("API-Key", api_key)
-        .header("API-Sign", signature)
-        .send()
-        .await?;
-    match res.status() {
-        reqwest::StatusCode::OK => {
-            println!("Status: {} -> {}", res.status(), "Success");
-            println!("{}", res.text().await?);
-        },
-        _ => {
-            panic!("{} -> {}", res.status(), "Error, please check again your request");
-        },
-    };
+    match PrivateAPI.execute_async(&temp, &api_key, &signature, "").await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
     Ok(())
 }
