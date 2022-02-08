@@ -514,3 +514,32 @@ pub async fn cancelling_open_order_per_orderids_async(order_ids: Vec<&str>, qtys
     Ok(())
 }
 
+pub async fn opening_new_order_async(
+    instrument: &str,
+    side: u8,
+    mut price: Option<String>,
+    ordtype: u8,
+    orderqty: &str) -> Result<(), Box<dyn Error>> {
+    if ordtype == 1 {
+        price = Some("0".to_string());
+    }
+    if ordtype == 2 && price.is_none() {
+        println!("Limit order price cannot be null");
+    }
+    let payload = ["{\"instrument\":", "\"", &instrument, "\"", ",\"side\":", &side.to_string(),
+        ",\"price\":", "\"", &price.unwrap(), "\"", ",\"ordtype\":", &ordtype.to_string(), ",\"orderqty\":", "\"", &orderqty, "\"", "}"].concat();
+    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+    let uri_path = config::get_private_api_endpoint(&"ORDER");
+    let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
+    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_private_api_endpoint(&"ORDER"),
+        &param
+    );
+    match PrivateAPI.execute_async(&temp, &api_key, &signature, "NewOrder").await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}

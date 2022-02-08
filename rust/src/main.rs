@@ -128,6 +128,14 @@ async fn async_main() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
+    match private::opening_new_order_async(instrument, 1, Some(35000.to_string()), 2, "0.0001").await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::opening_new_order_async(instrument, 1, Some("".to_string()), 1, "0.0001").await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
