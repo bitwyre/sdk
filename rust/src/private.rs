@@ -364,3 +364,22 @@ pub async fn get_account_balance_async() -> Result<(), Box<dyn Error>> {
     }
     Ok(())
 }
+
+pub async fn get_account_statement_async() -> Result<(), Box<dyn Error>> {
+    let payload = "";
+    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+    let uri_path = config::get_private_api_endpoint(&"ACCOUNT_STATEMENT");
+    let (nonce, checksum, signature) = sign(&secret_key, uri_path, payload);
+    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_private_api_endpoint(&"ACCOUNT_STATEMENT"),
+        &param
+    );
+    match PrivateAPI.execute_async(&temp, &api_key, &signature, "").await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
