@@ -306,13 +306,11 @@ pub fn opening_new_order(
     Ok(())
 }
 pub async fn get_account_balance_async() -> Result<(), Box<dyn Error>> {
-    let payload = "\"\\\"\\\"\"";
-    let nonce = get_nonce();
-    let checksum = get_checksum(&payload);
-    let nonce_checksum = get_nonce_checksum(&nonce.to_string(), &checksum);
-    let signature = get_signature(config::get_private_api_endpoint(&"ACCOUNT_BALANCE"), &nonce_checksum);
+    let payload = "";
     let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
-    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", ""].concat();
+    let uri_path = config::get_private_api_endpoint(&"ACCOUNT_BALANCE");
+    let (nonce, checksum, signature) = sign(&secret_key, uri_path, payload);
+    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
     let client = reqwest::Client::builder()
         .timeout(Duration::from_secs(config::timeout()))
         .build()?;

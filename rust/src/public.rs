@@ -99,8 +99,8 @@ pub fn get_asset_pairs(market: &str, product: &str, country: &str) -> Result<(),
     Ok(())
 }
 
-pub fn get_ticker(instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
-    let param = URLBuilder.optional_string_param("instrument", instrument);
+pub fn get_ticker(instrument: &str) -> Result<(), Box<dyn Error>> {
+    let param = ["?instrument=", &instrument].concat();
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"TICKER"),
@@ -113,9 +113,8 @@ pub fn get_ticker(instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-pub fn get_trades(trade_num: &i8, instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
-    let mut param = ["?trade_num=".to_string(), trade_num.to_string()].concat();
-    param = URLBuilder.append_optional_string_param(param, "instrument", instrument);
+pub fn get_trades(trade_num: &str, instrument: &str) -> Result<(), Box<dyn Error>> {
+    let param = ["?trade_num=", &trade_num, "&instrument=", &instrument].concat();
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"TRADES"),
@@ -128,9 +127,8 @@ pub fn get_trades(trade_num: &i8, instrument: Option<&str>) -> Result<(), Box<dy
     Ok(())
 }
 
-pub fn get_depth(depth_num: &i8, instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
-    let mut param = ["&depth_num=".to_string(), depth_num.to_string()].concat();
-    param = URLBuilder.append_optional_string_param(param, "instrument", instrument);
+pub fn get_depth(instrument: &str, depth_num: &str) -> Result<(), Box<dyn Error>> {
+    let param = ["?instrument=", &instrument, "&depth_num=", &depth_num].concat();
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"DEPTH"),
