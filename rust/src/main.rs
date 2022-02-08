@@ -100,6 +100,10 @@ async fn async_main() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
+    match private::get_transaction_histories_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
