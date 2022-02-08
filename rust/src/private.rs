@@ -17,6 +17,7 @@ use crate::public::config;
 
 trait Formatter {
     fn format(&self, base: &str, endpoint: &str, param: &str) -> String;
+    fn build_nonce_checksum_payload(&self, uri_path: &str, payload: &str) -> (String, String, String);
 }
 
 trait Request {
@@ -32,6 +33,15 @@ impl Formatter for URLBuilder {
         path.append(endpoint);
         path.append(param);
         path.string().unwrap()
+    }
+    fn build_nonce_checksum_payload(&self, uri_path: &str, payload: &str) -> (String, String, String) {
+        let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+        let (nonce, checksum, signature) = sign(&secret_key, uri_path, payload);
+        (
+            ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat(),
+            api_key,
+            signature
+        )
     }
 }
 
@@ -349,10 +359,8 @@ impl RequestAsync for PrivateAPI {
 
 pub async fn get_account_balance_async() -> Result<(), Box<dyn Error>> {
     let payload = "";
-    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
     let uri_path = config::get_private_api_endpoint(&"ACCOUNT_BALANCE");
-    let (nonce, checksum, signature) = sign(&secret_key, uri_path, payload);
-    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"ACCOUNT_BALANCE"),
@@ -367,10 +375,8 @@ pub async fn get_account_balance_async() -> Result<(), Box<dyn Error>> {
 
 pub async fn get_account_statement_async() -> Result<(), Box<dyn Error>> {
     let payload = "";
-    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
     let uri_path = config::get_private_api_endpoint(&"ACCOUNT_STATEMENT");
-    let (nonce, checksum, signature) = sign(&secret_key, uri_path, payload);
-    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"ACCOUNT_STATEMENT"),
@@ -385,10 +391,8 @@ pub async fn get_account_statement_async() -> Result<(), Box<dyn Error>> {
 
 pub async fn get_transaction_histories_async() -> Result<(), Box<dyn Error>> {
     let payload = "";
-    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
     let uri_path = config::get_private_api_endpoint(&"TRANSACTION_HISTORIES");
-    let (nonce, checksum, signature) = sign(&secret_key, uri_path, payload);
-    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"TRANSACTION_HISTORIES"),
@@ -403,10 +407,8 @@ pub async fn get_transaction_histories_async() -> Result<(), Box<dyn Error>> {
 
 pub async fn get_open_orders_async(instrument: &str, from_time: u128, to_time: u128) -> Result<(), Box<dyn Error>> {
     let payload = ["{\"instrument\":", "\"", &instrument, "\"", ",\"from_time\":", &from_time.to_string(), ",\"to_time\":", &to_time.to_string(), "}"].concat();
-    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
     let uri_path = config::get_private_api_endpoint(&"OPEN_ORDERS");
-    let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
-    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"OPEN_ORDERS"),
@@ -421,10 +423,8 @@ pub async fn get_open_orders_async(instrument: &str, from_time: u128, to_time: u
 
 pub async fn get_closed_orders_async(instrument: &str, from_time: u128, to_time: u128) -> Result<(), Box<dyn Error>> {
     let payload = ["{\"instrument\":", "\"", &instrument, "\"", ",\"from_time\":", &from_time.to_string(), ",\"to_time\":", &to_time.to_string(), "}"].concat();
-    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
     let uri_path = config::get_private_api_endpoint(&"CLOSED_ORDERS");
-    let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
-    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"CLOSED_ORDERS"),
@@ -439,10 +439,8 @@ pub async fn get_closed_orders_async(instrument: &str, from_time: u128, to_time:
 
 pub async fn get_order_info_async(order_id: &str) -> Result<(), Box<dyn Error>> {
     let payload = "";
-    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
     let uri_path = [config::get_private_api_endpoint(&"ORDER_INFO"), "/", order_id].concat();
-    let (nonce, checksum, signature) = sign(&secret_key, &uri_path, payload);
-    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         &uri_path,
@@ -457,10 +455,8 @@ pub async fn get_order_info_async(order_id: &str) -> Result<(), Box<dyn Error>> 
 
 pub async fn get_trade_history_async(instrument: &str, count: u8, from_time: u128, to_time: u128) -> Result<(), Box<dyn Error>> {
     let payload = ["{\"instrument\":", "\"", &instrument, "\"", ",\"count\":", &count.to_string(), ",\"from_time\":", &from_time.to_string(), ",\"to_time\":", &to_time.to_string(), "}"].concat();
-    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
     let uri_path = config::get_private_api_endpoint(&"TRADE_HISTORY");
-    let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
-    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"TRADE_HISTORY"),
@@ -475,10 +471,8 @@ pub async fn get_trade_history_async(instrument: &str, count: u8, from_time: u12
 
 pub async fn cancelling_open_order_per_instrument_async(instrument: &str) -> Result<(), Box<dyn Error>> {
     let payload = "";
-    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
     let uri_path = [config::get_private_api_endpoint(&"CANCEL_ORDER"), "/instrument/", instrument].concat();
-    let (nonce, checksum, signature) = sign(&secret_key, &uri_path, payload);
-    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         &uri_path,
@@ -498,10 +492,8 @@ pub async fn cancelling_open_order_per_orderids_async(order_ids: Vec<&str>, qtys
         println!("Specify the same number of orders with quantities to ammend/cancel");
     }
     let payload = ["{\"order_ids\":", &temp, ",\"qtys\":", &temp2, "}"].concat();
-    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
     let uri_path = config::get_private_api_endpoint(&"CANCEL_ORDER");
-    let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
-    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"CANCEL_ORDER"),
@@ -519,7 +511,8 @@ pub async fn opening_new_order_async(
     side: u8,
     mut price: Option<String>,
     ordtype: u8,
-    orderqty: &str) -> Result<(), Box<dyn Error>> {
+    orderqty: &str
+) -> Result<(), Box<dyn Error>> {
     if ordtype == 1 {
         price = Some("0".to_string());
     }
@@ -528,10 +521,8 @@ pub async fn opening_new_order_async(
     }
     let payload = ["{\"instrument\":", "\"", &instrument, "\"", ",\"side\":", &side.to_string(),
         ",\"price\":", "\"", &price.unwrap(), "\"", ",\"ordtype\":", &ordtype.to_string(), ",\"orderqty\":", "\"", &orderqty, "\"", "}"].concat();
-    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
     let uri_path = config::get_private_api_endpoint(&"ORDER");
-    let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
-    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
         config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"ORDER"),
