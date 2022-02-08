@@ -104,6 +104,10 @@ async fn async_main() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
+    match private::get_open_orders_async(instrument, 0, 0).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
 }
 
 fn main() -> Result<(), Box<dyn Error>> {

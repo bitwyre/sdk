@@ -401,3 +401,21 @@ pub async fn get_transaction_histories_async() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+pub async fn get_open_orders_async(instrument: &str, from_time: u128, to_time: u128) -> Result<(), Box<dyn Error>> {
+    let payload = ["{\"instrument\":", "\"", &instrument, "\"", ",\"from_time\":", &from_time.to_string(), ",\"to_time\":", &to_time.to_string(), "}"].concat();
+    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+    let uri_path = config::get_private_api_endpoint(&"OPEN_ORDERS");
+    let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
+    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_private_api_endpoint(&"OPEN_ORDERS"),
+        &param
+    );
+    match PrivateAPI.execute_async(&temp, &api_key, &signature, "").await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
