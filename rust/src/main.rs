@@ -112,6 +112,10 @@ async fn async_main() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
+    match private::get_order_info_async("3f128876-a082-4b18-8fd4-abbcc4aa7915").await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
 }
 
 fn main() -> Result<(), Box<dyn Error>> {

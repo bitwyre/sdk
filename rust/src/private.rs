@@ -437,3 +437,21 @@ pub async fn get_closed_orders_async(instrument: &str, from_time: u128, to_time:
     Ok(())
 }
 
+pub async fn get_order_info_async(order_id: &str) -> Result<(), Box<dyn Error>> {
+    let payload = "";
+    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+    let uri_path = [config::get_private_api_endpoint(&"ORDER_INFO"), "/", order_id].concat();
+    let (nonce, checksum, signature) = sign(&secret_key, &uri_path, payload);
+    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        &uri_path,
+        &param
+    );
+    match PrivateAPI.execute_async(&temp, &api_key, &signature, "").await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
