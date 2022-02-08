@@ -473,3 +473,21 @@ pub async fn get_trade_history_async(instrument: &str, count: u8, from_time: u12
     Ok(())
 }
 
+pub async fn cancelling_open_order_per_instrument_async(instrument: &str) -> Result<(), Box<dyn Error>> {
+    let payload = "";
+    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+    let uri_path = [config::get_private_api_endpoint(&"CANCEL_ORDER"), "/instrument/", instrument].concat();
+    let (nonce, checksum, signature) = sign(&secret_key, &uri_path, payload);
+    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        &uri_path,
+        &param
+    );
+    match PrivateAPI.execute_async(&temp, &api_key, &signature, "CancelOrder").await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
