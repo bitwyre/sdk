@@ -491,3 +491,26 @@ pub async fn cancelling_open_order_per_instrument_async(instrument: &str) -> Res
     Ok(())
 }
 
+pub async fn cancelling_open_order_per_orderids_async(order_ids: Vec<&str>, qtys: Vec<i32>) -> Result<(), Box<dyn Error>> {
+    let temp = format!("{:?}", order_ids);
+    let temp2 = format!("{:?}", qtys);
+    if order_ids.len() != qtys.len() {
+        println!("Specify the same number of orders with quantities to ammend/cancel");
+    }
+    let payload = ["{\"order_ids\":", &temp, ",\"qtys\":", &temp2, "}"].concat();
+    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+    let uri_path = config::get_private_api_endpoint(&"CANCEL_ORDER");
+    let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
+    let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
+    let temp = URLBuilder.format (
+        config::url_api_bitwyre(),
+        config::get_private_api_endpoint(&"CANCEL_ORDER"),
+        &param
+    );
+    match PrivateAPI.execute_async(&temp, &api_key, &signature, "CancelOrder").await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    Ok(())
+}
+
