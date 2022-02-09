@@ -74,7 +74,7 @@ impl Request for PublicAPI {
 
 pub fn get_server_time() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"SERVERTIME"),
         ""
     );
@@ -88,7 +88,7 @@ pub fn get_server_time() -> Result<(), Box<dyn Error>> {
 pub fn get_asset_pairs(market: &str, product: &str, country: &str) -> Result<(), Box<dyn Error>> {
     let param = ["?market=", &market, "&product=", &product, "&country=", &country].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"INSTRUMENT"),
         &param
     );
@@ -102,7 +102,7 @@ pub fn get_asset_pairs(market: &str, product: &str, country: &str) -> Result<(),
 pub fn get_ticker(instrument: &str) -> Result<(), Box<dyn Error>> {
     let param = ["?instrument=", &instrument].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"TICKER"),
         &param
     );
@@ -116,7 +116,7 @@ pub fn get_ticker(instrument: &str) -> Result<(), Box<dyn Error>> {
 pub fn get_trades(trade_num: &str, instrument: &str) -> Result<(), Box<dyn Error>> {
     let param = ["?trade_num=", &trade_num, "&instrument=", &instrument].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"TRADES"),
         &param
     );
@@ -130,7 +130,7 @@ pub fn get_trades(trade_num: &str, instrument: &str) -> Result<(), Box<dyn Error
 pub fn get_depth(instrument: &str, depth_num: &str) -> Result<(), Box<dyn Error>> {
     let param = ["?instrument=", &instrument, "&depth_num=", &depth_num].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"DEPTH"),
         &param
     );
@@ -143,7 +143,7 @@ pub fn get_depth(instrument: &str, depth_num: &str) -> Result<(), Box<dyn Error>
 
 pub fn get_assets() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"ASSETS"),
         ""
     );
@@ -156,7 +156,7 @@ pub fn get_assets() -> Result<(), Box<dyn Error>> {
 
 pub fn get_markets() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"MARKETS"),
         ""
     );
@@ -169,7 +169,7 @@ pub fn get_markets() -> Result<(), Box<dyn Error>> {
 
 pub fn get_products() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"PRODUCTS"),
         ""
     );
@@ -182,7 +182,7 @@ pub fn get_products() -> Result<(), Box<dyn Error>> {
 
 pub fn get_announcements() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"ANNOUNCEMENTS"),
         ""
     );
@@ -219,7 +219,7 @@ impl RequestAsync for PublicAPI {
 
 pub async fn get_server_time_async() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"SERVERTIME"),
         ""
     );
@@ -232,7 +232,7 @@ pub async fn get_server_time_async() -> Result<(), Box<dyn Error>> {
 
 pub async fn get_markets_async() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"MARKETS"),
         ""
     );
@@ -245,7 +245,7 @@ pub async fn get_markets_async() -> Result<(), Box<dyn Error>> {
 
 pub async fn get_products_async() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"PRODUCTS"),
         ""
     );
@@ -258,7 +258,7 @@ pub async fn get_products_async() -> Result<(), Box<dyn Error>> {
 
 pub async fn get_assets_async() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"ASSETS"),
         ""
     );
@@ -271,7 +271,7 @@ pub async fn get_assets_async() -> Result<(), Box<dyn Error>> {
 
 pub async fn get_crypto_assets_async() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"ASSETS_CRYPTO"),
         ""
     );
@@ -284,7 +284,7 @@ pub async fn get_crypto_assets_async() -> Result<(), Box<dyn Error>> {
 
 pub async fn get_fiat_assets_async() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"ASSETS_FIAT"),
         ""
     );
@@ -298,7 +298,7 @@ pub async fn get_fiat_assets_async() -> Result<(), Box<dyn Error>> {
 pub async fn get_asset_pairs_async(market: &str, product: &str, country: &str) -> Result<(), Box<dyn Error>> {
     let param = ["?market=", &market, "&product=", &product, "&country=", &country].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"INSTRUMENT"),
         &param
     );
@@ -312,7 +312,7 @@ pub async fn get_asset_pairs_async(market: &str, product: &str, country: &str) -
 pub async fn get_trades_async(trade_num: &str, instrument: &str) -> Result<(), Box<dyn Error>> {
     let param = ["?trade_num=", &trade_num, "&instrument=", &instrument].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"TRADES"),
         &param
     );
@@ -326,7 +326,7 @@ pub async fn get_trades_async(trade_num: &str, instrument: &str) -> Result<(), B
 pub async fn get_depth_async(instrument: &str, depth_num: &str) -> Result<(), Box<dyn Error>> {
     let param = ["?instrument=", &instrument, "&depth_num=", &depth_num].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"DEPTH"),
         &param
     );
@@ -340,7 +340,7 @@ pub async fn get_depth_async(instrument: &str, depth_num: &str) -> Result<(), Bo
 pub async fn get_ticker_async(instrument: &str) -> Result<(), Box<dyn Error>> {
     let param = ["?instrument=", &instrument].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"TICKER"),
         &param
     );
@@ -354,7 +354,7 @@ pub async fn get_ticker_async(instrument: &str) -> Result<(), Box<dyn Error>> {
 pub async fn get_contract_async(instrument: &str) -> Result<(), Box<dyn Error>> {
     let param = ["?instrument=", &instrument].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"CONTRACT"),
         &param
     );
@@ -368,7 +368,7 @@ pub async fn get_contract_async(instrument: &str) -> Result<(), Box<dyn Error>> 
 pub async fn get_insider_profiles_async(username: Option<&str>) -> Result<(), Box<dyn Error>> {
     let param = URLBuilder.optional_string_param("username", username);
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"INSIDER_PROFILES"),
         &param
     );
@@ -382,7 +382,7 @@ pub async fn get_insider_profiles_async(username: Option<&str>) -> Result<(), Bo
 pub async fn get_insider_trades_async(username: Option<&str>) -> Result<(), Box<dyn Error>> {
     let param = URLBuilder.optional_string_param("username", username);
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"INSIDER_TRADES"),
         &param
     );
@@ -395,7 +395,7 @@ pub async fn get_insider_trades_async(username: Option<&str>) -> Result<(), Box<
 
 pub async fn get_announcements_async() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"ANNOUNCEMENTS"),
         ""
     );
@@ -408,7 +408,7 @@ pub async fn get_announcements_async() -> Result<(), Box<dyn Error>> {
 
 pub async fn get_order_types_async() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"ORDER_TYPES"),
         ""
     );
@@ -421,7 +421,7 @@ pub async fn get_order_types_async() -> Result<(), Box<dyn Error>> {
 
 pub async fn get_languages_async() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"LANGUAGES"),
         ""
     );
@@ -434,7 +434,7 @@ pub async fn get_languages_async() -> Result<(), Box<dyn Error>> {
 
 pub async fn get_search_results_async() -> Result<(), Box<dyn Error>> {
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"SEARCH"),
         ""
     );
@@ -452,7 +452,7 @@ pub async fn get_price_index_async(instrument: &str, amount: Option<&i8>, to_tim
     param = URLBuilder.append_optional_integer_param(param, "from_time", from_time);
     param = URLBuilder.append_optional_boolean_param(param, "ascending", ascending);
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"PRICE_INDEX"),
         &param
     );
@@ -467,7 +467,7 @@ pub async fn get_search_async(country: &str, instrument: Option<&str>) -> Result
     let mut param = ["?country=", &country].concat();
     param = URLBuilder.append_optional_string_param(param, "instrument", instrument);
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"SEARCH"),
         &param
     );
@@ -481,7 +481,7 @@ pub async fn get_search_async(country: &str, instrument: Option<&str>) -> Result
 pub async fn get_matching_engine_order_lag(instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
     let param = URLBuilder.optional_string_param("instrument", instrument);
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"ORDER_LAG"),
         &param
     );
@@ -495,7 +495,7 @@ pub async fn get_matching_engine_order_lag(instrument: Option<&str>) -> Result<(
 pub async fn get_matching_engine_throughput(instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
     let param = URLBuilder.optional_string_param("instrument", instrument);
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"THROUGHPUT"),
         &param
     );
