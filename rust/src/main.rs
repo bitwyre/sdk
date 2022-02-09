@@ -1,5 +1,6 @@
 mod public;
 mod private;
+mod tests;
 
 use std::error::Error;
 use crate::public::config;
