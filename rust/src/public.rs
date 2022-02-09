@@ -478,7 +478,7 @@ pub async fn get_search_async(country: &str, instrument: Option<&str>) -> Result
     Ok(())
 }
 
-pub async fn get_matching_engine_order_lag(instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
+pub async fn get_matching_engine_order_lag_async(instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
     let param = URLBuilder.optional_string_param("instrument", instrument);
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
@@ -492,7 +492,7 @@ pub async fn get_matching_engine_order_lag(instrument: Option<&str>) -> Result<(
     Ok(())
 }
 
-pub async fn get_matching_engine_throughput(instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
+pub async fn get_matching_engine_throughput_async(instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
     let param = URLBuilder.optional_string_param("instrument", instrument);
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),

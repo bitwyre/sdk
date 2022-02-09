@@ -85,11 +85,11 @@ async fn async_main() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_matching_engine_order_lag(None).await {
+    match public::get_matching_engine_order_lag_async(None).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
-    match public::get_matching_engine_throughput(None).await {
+    match public::get_matching_engine_throughput_async(None).await {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
