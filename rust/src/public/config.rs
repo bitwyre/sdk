@@ -6,7 +6,7 @@ pub fn url_api_bitwyre() -> String {
     let url = mockito::server_url();
 
     #[cfg(not(test))]
-    let url = "https://api.bitwyre.com".to_string();
+    let url = env!("API_URL").to_string();
 
     return url;
 }
