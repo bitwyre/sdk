@@ -974,6 +974,8 @@ dependencies = [
  "ring",
  "rust-crypto",
  "rustc-serialize",
+ "serde",
+ "serde_json",
  "sha2",
  "string-builder",
  "tokio",

@@ -1,4 +1,4 @@
 [env]
 SECRET_KEY = "SECRET_KEY"
 API_KEY = "API_KEY"
-API_URL = "https:// api.bitwyre.net"
+API_URL = "https://api.bitwyre.net"
