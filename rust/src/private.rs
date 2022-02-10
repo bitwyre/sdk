@@ -83,13 +83,13 @@ pub fn credential(secret_key: &str, api_key: &str) -> (String, String) {
     (secret_key.to_string(), api_key.to_string())
 }
 
+#[allow(unused)]
 pub fn get_nonce() -> u128 {
     let start = SystemTime::now();
     let since_the_epoch = start
         .duration_since(UNIX_EPOCH)
         .expect("Time went backwards");
-    let in_nanos = since_the_epoch.as_nanos();
-    in_nanos
+    since_the_epoch.as_nanos()
 }
 
 pub fn get_checksum(payload: &str) -> String {
@@ -106,7 +106,12 @@ pub fn get_nonce_checksum(nonce: &str, checksum: &str) -> String {
 }
 
 pub fn sign(secret_key: &str, uri_path: &str, payload: &str) -> (u128, String, String) {
+    #[cfg(not(test))]
     let nonce = get_nonce();
+
+    #[cfg(test)]
+    let nonce = 0;
+
     let temp = format!("{:?}", payload);
     let temp2 = format!("{:?}",temp);
     let checksum = get_checksum(&temp2);

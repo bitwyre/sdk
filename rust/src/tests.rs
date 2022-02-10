@@ -1,7 +1,9 @@
 #[cfg(test)]
 use crate::{
     public,
-    public::config
+    public::config,
+    private,
+    private::{credential, sign}
 };
 
 #[cfg(test)]
@@ -866,4 +868,231 @@ async fn get_matching_engine_throughput_async_with_optional_parameters_should_pa
     let _ = public::get_matching_engine_throughput_async(
         Some(instrument)
     ).await;
+}
+
+#[cfg(test)]
+use std::env;
+
+#[cfg(test)]
+fn env_is_set() -> bool {
+    let secret_env = match env::var("SECRET_KEY") {
+        Ok(_) => true,
+        _ => false
+    };
+    let api_env = match env::var("API_KEY") {
+        Ok(_) => true,
+        _ => false
+    };
+    secret_env && api_env
+}
+
+#[test]
+fn setup_env() {
+    env::set_var("SECRET_KEY", "SECRET_KEY");
+    env::set_var("API_KEY", "API_KEY");
+    assert!(env_is_set());
+}
+
+#[cfg(test)]
+fn build_nonce_checksum_payload(uri_path: &str, payload: &str) -> (String, String, String) {
+    setup_env();
+    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+    let (nonce, checksum, signature) = sign(&secret_key, uri_path, payload);
+    (
+        ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat(),
+        api_key,
+        signature
+    )
+}
+
+#[tokio::test]
+async fn get_account_balance_async_should_work() {
+    let payload = "";
+    let uri_path = config::get_private_api_endpoint(&"ACCOUNT_BALANCE");
+    let (param, _, _) = build_nonce_checksum_payload(&uri_path, &payload);
+
+    let url_string = [
+        &uri_path,
+        param.as_str()
+    ].concat();
+    println!("{}", url_string);
+    
+    let mock = mock("GET", url_string.as_str())
+        .create();
+    let _ = private::get_account_balance_async().await;
+    assert!(mock.matched());
+}
+  
+#[tokio::test]
+#[should_panic]
+async fn get_account_balance_async_should_panic() {
+    let payload = "";
+    let uri_path = config::get_private_api_endpoint(&"ACCOUNT_BALANCE");
+    let (param, _, _) = build_nonce_checksum_payload(&uri_path, &payload);
+
+    let url_string = [
+        &uri_path,
+        param.as_str()
+    ].concat();
+    
+    let _ = mock("GET", url_string.as_str())
+        .with_status(500)
+        .create();
+    let _ = private::get_account_balance_async().await;
+}
+
+#[tokio::test]
+async fn get_account_statement_async_should_work() {
+    let payload = "";
+    let uri_path = config::get_private_api_endpoint(&"ACCOUNT_STATEMENT");
+    let (param, _, _) = build_nonce_checksum_payload(&uri_path, &payload);
+
+    let url_string = [
+        &uri_path,
+        param.as_str()
+    ].concat();
+    
+    let mock = mock("GET", url_string.as_str())
+        .create();
+    let _ = private::get_account_statement_async().await;
+    assert!(mock.matched());
+}
+  
+#[tokio::test]
+#[should_panic]
+async fn get_account_statement_async_should_panic() {
+    let payload = "";
+    let uri_path = config::get_private_api_endpoint(&"ACCOUNT_STATEMENT");
+    let (param, _, _) = build_nonce_checksum_payload(&uri_path, &payload);
+
+    let url_string = [
+        &uri_path,
+        param.as_str()
+    ].concat();
+    
+    let _ = mock("GET", url_string.as_str())
+        .with_status(500)
+        .create();
+    let _ = private::get_account_statement_async().await;
+}
+
+#[tokio::test]
+async fn get_transaction_histories_async_should_work() {
+    let payload = "";
+    let uri_path = config::get_private_api_endpoint(&"TRANSACTION_HISTORIES");
+    let (param, _, _) = build_nonce_checksum_payload(&uri_path, &payload);
+
+    let url_string = [
+        &uri_path,
+        param.as_str()
+    ].concat();
+    
+    let mock = mock("GET", url_string.as_str())
+        .create();
+    let _ = private::get_transaction_histories_async().await;
+    assert!(mock.matched());
+}
+  
+#[tokio::test]
+#[should_panic]
+async fn get_transaction_histories_async_should_panic() {
+    let payload = "";
+    let uri_path = config::get_private_api_endpoint(&"TRANSACTION_HISTORIES");
+    let (param, _, _) = build_nonce_checksum_payload(&uri_path, &payload);
+
+    let url_string = [
+        &uri_path,
+        param.as_str()
+    ].concat();
+    
+    let _ = mock("GET", url_string.as_str())
+        .with_status(500)
+        .create();
+    let _ = private::get_transaction_histories_async().await;
+}
+
+#[tokio::test]
+async fn get_order_info_async_should_work() {
+    let order_id = "order_id";
+    let order_id_path = ["/", &order_id].concat();
+
+    let payload = "";
+    let uri_path = config::get_private_api_endpoint(&"ORDER_INFO");
+    let (param, _, _) = build_nonce_checksum_payload(&uri_path, &payload);
+
+    let url_string = [
+        &uri_path,
+        order_id_path.as_str(),
+        param.as_str()
+    ].concat();
+    
+    let mock = mock("GET", url_string.as_str())
+        .create();
+    let _ = private::get_order_info_async(order_id).await;
+    assert!(mock.matched());
+}
+  
+#[tokio::test]
+#[should_panic]
+async fn get_order_info_async_should_panic() {
+    let order_id = "order_id";
+    let order_id_path = ["/", &order_id].concat();
+
+    let payload = "";
+    let uri_path = config::get_private_api_endpoint(&"ORDER_INFO");
+    let (param, _, _) = build_nonce_checksum_payload(&uri_path, &payload);
+
+    let url_string = [
+        &uri_path,
+        order_id_path.as_str(),
+        param.as_str()
+    ].concat();
+    
+    let _ = mock("GET", url_string.as_str())
+        .with_status(500)
+        .create();
+    let _ = private::get_order_info_async(order_id).await;
+}
+
+#[tokio::test]
+async fn cancelling_open_order_per_instrument_async_should_work() {
+    let instrument = "instrument";
+    let instrument_path = ["/instrument/", &instrument].concat();
+
+    let payload = "";
+    let uri_path = config::get_private_api_endpoint(&"CANCEL_ORDER");
+    let (param, _, _) = build_nonce_checksum_payload(&uri_path, &payload);
+
+    let url_string = [
+        &uri_path,
+        instrument_path.as_str(),
+        param.as_str()
+    ].concat();
+    
+    let mock = mock("DELETE", url_string.as_str())
+        .create();
+    let _ = private::cancelling_open_order_per_instrument_async(instrument).await;
+    assert!(mock.matched());
+}
+  
+#[tokio::test]
+#[should_panic]
+async fn cancelling_open_order_per_instrument_async_should_panic() {
+    let instrument = "instrument";
+    let instrument_path = ["/instrument/", &instrument].concat();
+
+    let payload = "";
+    let uri_path = config::get_private_api_endpoint(&"CANCEL_ORDER");
+    let (param, _, _) = build_nonce_checksum_payload(&uri_path, &payload);
+
+    let url_string = [
+        &uri_path,
+        instrument_path.as_str(),
+        param.as_str()
+    ].concat();
+    
+    let _ = mock("DELETE", url_string.as_str())
+        .with_status(500)
+        .create();
+    let _ = private::cancelling_open_order_per_instrument_async(instrument).await;
 }
