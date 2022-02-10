@@ -873,8 +873,8 @@ async fn get_matching_engine_throughput_async_with_optional_parameters_should_pa
 #[cfg(test)]
 use std::env;
 
-#[cfg(test)]
-fn env_is_set() -> bool {
+#[test]
+fn is_env_set() {
     let secret_env = match env::var("SECRET_KEY") {
         Ok(_) => true,
         _ => false
@@ -883,20 +883,13 @@ fn env_is_set() -> bool {
         Ok(_) => true,
         _ => false
     };
-    secret_env && api_env
-}
-
-#[test]
-fn setup_env() {
-    env::set_var("SECRET_KEY", "SECRET_KEY");
-    env::set_var("API_KEY", "API_KEY");
-    assert!(env_is_set());
+    assert!(secret_env);
+    assert!(api_env);
 }
 
 #[cfg(test)]
 fn build_nonce_checksum_payload(uri_path: &str, payload: &str) -> (String, String, String) {
-    setup_env();
-    let (secret_key, api_key) = credential(&env!("SECRET_KEY"), &env!("API_KEY"));
+    let (secret_key, api_key) = credential(&option_env!("SECRET_KEY").unwrap(), &option_env!("API_KEY").unwrap());
     let (nonce, checksum, signature) = sign(&secret_key, uri_path, payload);
     (
         ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat(),
