@@ -4,8 +4,106 @@ mod private;
 use std::error::Error;
 use crate::public::config;
 
+async fn async_main() {
+    let instrument = config::bitwyre_instrument("1");
+    let instrument_contract = config::bitwyre_instrument("7");
+
+    match public::get_server_time_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_markets_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_products_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_assets_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_crypto_assets_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_fiat_assets_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_asset_pairs_async("crypto","spot","ID").await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_ticker_async(instrument).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_trades_async("2", instrument).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_depth_async(instrument, "5").await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_contract_async(instrument_contract).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_insider_profiles_async(None).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_insider_trades_async(None).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_announcements_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_order_types_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_languages_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_search_results_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_price_index_async(instrument, None, None, None, None).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_search_async("ID", None).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_matching_engine_order_lag(None).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match public::get_matching_engine_throughput(None).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::get_account_balance_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
     let instrument = config::bitwyre_instrument("1");
+    tokio::runtime::Runtime::new()
+        .unwrap()
+        .block_on(async_main());
+
     match public::get_server_time() {
         Err(e) => println!("{:?}", e),
         _ => ()

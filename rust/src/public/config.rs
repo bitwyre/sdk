@@ -15,6 +15,17 @@ pub fn get_public_api_endpoint(key: &str) -> &str {
         "PRODUCTS" => "/public/products",
         "MARKETS" => "/public/markets",
         "ASSETS" => "/public/assets",
+        "ASSETS_CRYPTO" => "/public/assets/crypto",
+        "ASSETS_FIAT" => "/public/assets/fiat",
+        "CONTRACT" => "/public/contract",
+        "INSIDER_PROFILES" => "/public/insider",
+        "INSIDER_TRADES" => "/public/insider/trades",
+        "ORDER_TYPES" => "/public/ordertypes",
+        "LANGUAGES" => "/public/languages",
+        "SEARCH" => "/public/search",
+        "PRICE_INDEX" => "/public/index",
+        "ORDER_LAG" => "/public/orderlag",
+        "THROUGHPUT" => "/public/throughput",
         _ => ""
     }
 }
@@ -40,6 +51,7 @@ pub fn bitwyre_instrument(key: &str) -> &str {
         "4" => "usdc_idr_spot",
         "5" => "usdc_usd_spot",
         "6" => "usdt_usd_spot",
+        "7" => "btcusdtx_usdt_200607F1000000",
         _ => ""
     }
 }
