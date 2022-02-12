@@ -96,6 +96,46 @@ async fn async_main() {
         Err(e) => println!("{:?}", e),
         _ => ()
     }
+    match private::get_account_statement_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::get_transaction_histories_async().await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::get_open_orders_async(instrument, 0, 0).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::get_closed_orders_async(instrument, 0, 0).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::get_order_info_async("3f128876-a082-4b18-8fd4-abbcc4aa7915").await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::get_trade_history_async(instrument, 2, 0, 0).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::cancelling_open_order_per_instrument_async(instrument).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::cancelling_open_order_per_orderids_async(vec!["5033216a-dad5-4cb6-87d6-0084603be699", "3d19d8d1-c576-4109-8671-5e4115cf6e5e"], vec![-1, -1]).await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::opening_new_order_async(instrument, 1, Some(35000.to_string()), 2, "0.0001").await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
+    match private::opening_new_order_async(instrument, 1, Some("".to_string()), 1, "0.0001").await {
+        Err(e) => println!("{:?}", e),
+        _ => ()
+    }
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
