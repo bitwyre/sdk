@@ -1,8 +1,18 @@
+#[cfg(test)]
+use mockito;
+
+pub fn url_api_bitwyre() -> String {
+    #[cfg(test)]
+    let url = mockito::server_url();
+
+    #[cfg(not(test))]
+    let url = "https://api.bitwyre.com".to_string();
+
+    return url;
+}
+
 pub fn timeout() -> u64 {
     return 5;
-}
-pub fn url_api_bitwyre<'a>() -> &'a str {
-    return "https://api.bitwyre.com";
 }
 pub fn get_public_api_endpoint(key: &str) -> &str {
     match key {

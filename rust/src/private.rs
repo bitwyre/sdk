@@ -83,13 +83,13 @@ pub fn credential(secret_key: &str, api_key: &str) -> (String, String) {
     (secret_key.to_string(), api_key.to_string())
 }
 
+#[allow(unused)]
 pub fn get_nonce() -> u128 {
     let start = SystemTime::now();
     let since_the_epoch = start
         .duration_since(UNIX_EPOCH)
         .expect("Time went backwards");
-    let in_nanos = since_the_epoch.as_nanos();
-    in_nanos
+    since_the_epoch.as_nanos()
 }
 
 pub fn get_checksum(payload: &str) -> String {
@@ -106,7 +106,12 @@ pub fn get_nonce_checksum(nonce: &str, checksum: &str) -> String {
 }
 
 pub fn sign(secret_key: &str, uri_path: &str, payload: &str) -> (u128, String, String) {
+    #[cfg(not(test))]
     let nonce = get_nonce();
+
+    #[cfg(test)]
+    let nonce = 0;
+
     let temp = format!("{:?}", payload);
     let temp2 = format!("{:?}",temp);
     let checksum = get_checksum(&temp2);
@@ -126,7 +131,7 @@ pub fn get_account_balance() -> Result<(), Box<dyn Error>> {
     let (nonce, checksum, signature) = sign(&secret_key, uri_path, payload);
     let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"ACCOUNT_BALANCE"),
         &param
     );
@@ -144,7 +149,7 @@ pub fn get_account_statement() -> Result<(), Box<dyn Error>> {
     let (nonce, checksum, signature) = sign(&secret_key, uri_path, payload);
     let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"ACCOUNT_STATEMENT"),
         &param
     );
@@ -162,7 +167,7 @@ pub fn get_transaction_histories() -> Result<(), Box<dyn Error>> {
     let (nonce, checksum, signature) = sign(&secret_key, uri_path, payload);
     let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"TRANSACTION_HISTORIES"),
         &param
     );
@@ -180,7 +185,7 @@ pub fn get_open_orders(instrument: &str, from_time: u128, to_time: u128) -> Resu
     let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
     let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"OPEN_ORDERS"),
         &param
     );
@@ -198,7 +203,7 @@ pub fn get_closed_orders(instrument: &str, from_time: u128, to_time: u128) -> Re
     let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
     let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"CLOSED_ORDERS"),
         &param
     );
@@ -216,7 +221,7 @@ pub fn get_order_info(order_id: &str) -> Result<(), Box<dyn Error>> {
     let (nonce, checksum, signature) = sign(&secret_key, &uri_path, payload);
     let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         &uri_path,
         &param
     );
@@ -234,7 +239,7 @@ pub fn get_trade_history(instrument: &str, count: u8, from_time: u128, to_time: 
     let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
     let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"TRADE_HISTORY"),
         &param
     );
@@ -252,7 +257,7 @@ pub fn cancelling_open_order_per_instrument(instrument: &str) -> Result<(), Box<
     let (nonce, checksum, signature) = sign(&secret_key, &uri_path, payload);
     let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         &uri_path,
         &param
     );
@@ -275,7 +280,7 @@ pub fn cancelling_open_order_per_orderids(order_ids: Vec<&str>, qtys: Vec<i32>) 
     let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
     let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"CANCEL_ORDER"),
         &param
     );
@@ -305,7 +310,7 @@ pub fn opening_new_order(
     let (nonce, checksum, signature) = sign(&secret_key, uri_path, &payload);
     let param = ["?nonce=", &nonce.to_string(), "&checksum=", &checksum, "&payload=", &payload].concat();
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"ORDER"),
         &param
     );
@@ -362,7 +367,7 @@ pub async fn get_account_balance_async() -> Result<(), Box<dyn Error>> {
     let uri_path = config::get_private_api_endpoint(&"ACCOUNT_BALANCE");
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"ACCOUNT_BALANCE"),
         &param
     );
@@ -378,7 +383,7 @@ pub async fn get_account_statement_async() -> Result<(), Box<dyn Error>> {
     let uri_path = config::get_private_api_endpoint(&"ACCOUNT_STATEMENT");
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"ACCOUNT_STATEMENT"),
         &param
     );
@@ -394,7 +399,7 @@ pub async fn get_transaction_histories_async() -> Result<(), Box<dyn Error>> {
     let uri_path = config::get_private_api_endpoint(&"TRANSACTION_HISTORIES");
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"TRANSACTION_HISTORIES"),
         &param
     );
@@ -410,7 +415,7 @@ pub async fn get_open_orders_async(instrument: &str, from_time: u128, to_time: u
     let uri_path = config::get_private_api_endpoint(&"OPEN_ORDERS");
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"OPEN_ORDERS"),
         &param
     );
@@ -426,7 +431,7 @@ pub async fn get_closed_orders_async(instrument: &str, from_time: u128, to_time:
     let uri_path = config::get_private_api_endpoint(&"CLOSED_ORDERS");
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"CLOSED_ORDERS"),
         &param
     );
@@ -442,7 +447,7 @@ pub async fn get_order_info_async(order_id: &str) -> Result<(), Box<dyn Error>> 
     let uri_path = [config::get_private_api_endpoint(&"ORDER_INFO"), "/", order_id].concat();
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         &uri_path,
         &param
     );
@@ -458,7 +463,7 @@ pub async fn get_trade_history_async(instrument: &str, count: u8, from_time: u12
     let uri_path = config::get_private_api_endpoint(&"TRADE_HISTORY");
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"TRADE_HISTORY"),
         &param
     );
@@ -474,7 +479,7 @@ pub async fn cancelling_open_order_per_instrument_async(instrument: &str) -> Res
     let uri_path = [config::get_private_api_endpoint(&"CANCEL_ORDER"), "/instrument/", instrument].concat();
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         &uri_path,
         &param
     );
@@ -495,7 +500,7 @@ pub async fn cancelling_open_order_per_orderids_async(order_ids: Vec<&str>, qtys
     let uri_path = config::get_private_api_endpoint(&"CANCEL_ORDER");
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"CANCEL_ORDER"),
         &param
     );
@@ -524,7 +529,7 @@ pub async fn opening_new_order_async(
     let uri_path = config::get_private_api_endpoint(&"ORDER");
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
     let temp = URLBuilder.format (
-        config::url_api_bitwyre(),
+        &config::url_api_bitwyre(),
         config::get_private_api_endpoint(&"ORDER"),
         &param
     );
