@@ -202,13 +202,13 @@ class PrivateAPI:
         self.secret_key = secret_key
         self.api_key = api_key
 
-    def get_account_balance(self) -> (int, dict):
+    def get_account_balance(self, page: int = 1, per_page: int = 50) -> (int, dict):
         payload = ""
 
         uri_path = URI_PRIVATE_API_BITWYRE.get("ACCOUNT_BALANCE")
         (nonce, checksum, signature) = sign(self.secret_key, uri_path, payload)
         headers = {"API-Key": self.api_key, "API-Sign": signature}
-        params = {"nonce": nonce, "checksum": checksum, "payload": payload}
+        params = {"nonce": nonce, "checksum": checksum, "payload": payload, "page": page, "per_page": per_page}
         try:
             response = requests.get(URL_API_BITWYRE + uri_path, headers=headers, params=params, timeout=TIMEOUT)
         except requests.exceptions.Timeout as e:
@@ -226,12 +226,16 @@ class PrivateAPI:
         status_code = 200
         return (status_code, results)
 
-    def get_account_statement(self) -> (int, dict):
-        payload = ""
+    def get_account_statement(self, asset: str = None, page: int = 1, per_page: int = 50) -> (int, dict):
+        if asset is None:
+            payload = ""
+        else:
+            payload = json.dumps({"assets": asset})
+
         uri_path = URI_PRIVATE_API_BITWYRE.get("ACCOUNT_STATEMENT")
         (nonce, checksum, signature) = sign(self.secret_key, uri_path, payload)
         headers = {"API-Key": self.api_key, "API-Sign": signature}
-        params = {"nonce": nonce, "checksum": checksum, "payload": payload}
+        params = {"nonce": nonce, "checksum": checksum, "payload": payload, "page": page, "per_page": per_page}
         try:
             response = requests.get(URL_API_BITWYRE + uri_path, headers=headers, params=params, timeout=TIMEOUT)
         except requests.exceptions.Timeout as e:
@@ -249,12 +253,12 @@ class PrivateAPI:
         status_code = 200
         return (status_code, results)
 
-    def get_transaction_histories(self) -> (int, dict):
+    def get_transaction_histories(self, page: int = 1, per_page: int = 50) -> (int, dict):
         uri_path = URI_PRIVATE_API_BITWYRE.get("TRANSACTION_HISTORIES")
         payload = ""
         (nonce, checksum, signature) = sign(self.secret_key, uri_path, payload)
         headers = {"API-Key": self.api_key, "API-Sign": signature}
-        params = {"nonce": nonce, "checksum": checksum, "payload": payload}
+        params = {"nonce": nonce, "checksum": checksum, "payload": payload, "page": page, "per_page": per_page}
         try:
             response = requests.get(URL_API_BITWYRE + uri_path, headers=headers, params=params, timeout=TIMEOUT)
         except requests.exceptions.Timeout as e:
@@ -272,7 +276,7 @@ class PrivateAPI:
         status_code = 200
         return (status_code, results)
 
-    def get_open_orders(self, instrument: str, from_time: int = None, to_time: int = None) -> (int, dict):
+    def get_open_orders(self, instrument: str, from_time: int = None, to_time: int = None, page: int = 1, per_page: int = 50) -> (int, dict):
         uri_path = URI_PRIVATE_API_BITWYRE.get("OPEN_ORDERS")
         payload = {
             "instrument": instrument,
@@ -282,7 +286,7 @@ class PrivateAPI:
         payload = json.dumps(payload)
         (nonce, checksum, signature) = sign(self.secret_key, uri_path, payload)
         headers = {"API-Key": self.api_key, "API-Sign": signature}
-        params = {"nonce": nonce, "checksum": checksum, "payload": payload}
+        params = {"nonce": nonce, "checksum": checksum, "payload": payload, "page": page, "per_page": per_page}
         try:
             response = requests.get(URL_API_BITWYRE + uri_path, headers=headers, params=params, timeout=TIMEOUT)
         except requests.exceptions.Timeout as e:
@@ -300,7 +304,7 @@ class PrivateAPI:
         status_code = 200
         return (status_code, results)
 
-    def get_closed_orders(self, instrument: str, from_time: int = None, to_time: int = None) -> (int, dict):
+    def get_closed_orders(self, instrument: str, from_time: int = None, to_time: int = None, page: int = 1, per_page: int = 50) -> (int, dict):
         uri_path = URI_PRIVATE_API_BITWYRE.get("CLOSED_ORDERS")
         payload = {
             "instrument": instrument,
@@ -310,7 +314,7 @@ class PrivateAPI:
         payload = json.dumps(payload)
         (nonce, checksum, signature) = sign(self.secret_key, uri_path, payload)
         headers = {"API-Key": self.api_key, "API-Sign": signature}
-        params = {"nonce": nonce, "checksum": checksum, "payload": payload}
+        params = {"nonce": nonce, "checksum": checksum, "payload": payload, "page": page, "per_page": per_page}
         try:
             response = requests.get(URL_API_BITWYRE + uri_path, headers=headers, params=params, timeout=TIMEOUT)
         except requests.exceptions.Timeout as e:
@@ -328,12 +332,12 @@ class PrivateAPI:
         status_code = 200
         return (status_code, results)
 
-    def get_order_info(self, order_id: str) -> (int, dict):
+    def get_order_info(self, order_id: str, page: int = 1, per_page: int = 50) -> (int, dict):
         payload = ""
         uri_path = URI_PRIVATE_API_BITWYRE.get("ORDER_INFO") + "/" + order_id
         (nonce, checksum, signature) = sign(self.secret_key, uri_path, payload)
         headers = {"API-Key": self.api_key, "API-Sign": signature}
-        params = {"nonce": nonce, "checksum": checksum, "payload": payload}
+        params = {"nonce": nonce, "checksum": checksum, "payload": payload, "page": page, "per_page": per_page}
         try:
             response = requests.get(URL_API_BITWYRE + uri_path, headers=headers, params=params, timeout=TIMEOUT)
         except requests.exceptions.Timeout as e:
@@ -352,7 +356,7 @@ class PrivateAPI:
         return (status_code, results)
 
     def get_trade_history(
-        self, instrument: str, count: int = None, from_time: int = None, to_time: int = None
+        self, instrument: str, count: int = None, from_time: int = None, to_time: int = None, page: int = 1, per_page: int = 50
     ) -> (int, dict):
         uri_path = URI_PRIVATE_API_BITWYRE.get("TRADE_HISTORY")
         payload = {
@@ -364,7 +368,7 @@ class PrivateAPI:
         payload = json.dumps(payload)
         (nonce, checksum, signature) = sign(self.secret_key, uri_path, payload)
         headers = {"API-Key": self.api_key, "API-Sign": signature}
-        params = {"nonce": nonce, "checksum": checksum, "payload": payload}
+        params = {"nonce": nonce, "checksum": checksum, "payload": payload, "page": page, "per_page": per_page}
         try:
             response = requests.get(URL_API_BITWYRE + uri_path, headers=headers, params=params, timeout=TIMEOUT)
         except requests.exceptions.Timeout as e:
