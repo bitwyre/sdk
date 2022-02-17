@@ -296,7 +296,8 @@ pub fn opening_new_order(
     side: u8,
     mut price: Option<String>,
     ordtype: u8,
-    orderqty: &str) -> Result<(), Box<dyn Error>> {
+    orderqty: &str
+) -> Result<(), Box<dyn Error>> {
     if ordtype == 1 {
         price = Some("0".to_string());
     }
