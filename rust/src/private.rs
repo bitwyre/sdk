@@ -296,7 +296,8 @@ pub fn opening_new_order(
     side: u8,
     mut price: Option<String>,
     ordtype: u8,
-    orderqty: &str) -> Result<(), Box<dyn Error>> {
+    orderqty: &str
+) -> Result<(), Box<dyn Error>> {
     if ordtype == 1 {
         price = Some("0".to_string());
     }
@@ -322,15 +323,17 @@ pub fn opening_new_order(
 }
 
 use async_trait::async_trait;
+use reqwest::{Response, Error as ReqError};
 
 #[async_trait]
 trait RequestAsync {
-    async fn execute_async(&self, temp: &str, api_key: &str, signature: &str, flag: &str) -> Result<(), Box<dyn Error>>;
+    async fn execute_async(&self, temp: &str, api_key: &str, signature: &str, flag: &str) -> Result<Response, ReqError>;
+    async fn return_text_or_panic(&self, res: Response) -> String;
 }
 
 #[async_trait]
 impl RequestAsync for PrivateAPI {
-    async fn execute_async(&self, temp: &str, api_key: &str, signature: &str, flag: &str) -> Result<(), Box<dyn Error>> {
+    async fn execute_async(&self, temp: &str, api_key: &str, signature: &str, flag: &str) -> Result<Response, ReqError> {
         let mut headers = header::HeaderMap::new();
         headers.insert("API-Key", header::HeaderValue::from_str(&api_key).unwrap());
         headers.insert("API-Sign", header::HeaderValue::from_str(&signature).unwrap());
@@ -340,29 +343,25 @@ impl RequestAsync for PrivateAPI {
             .timeout(Duration::from_secs(config::timeout()))
             .build()?;
 
-        let res;
         if flag == "NewOrder" {
-            res = client.post(temp).send().await?;
+            return Ok(client.post(temp).send().await?);
         } else if flag == "CancelOrder" {
-            res = client.delete(temp).send().await?;
-        } else {
-            res = client.get(temp).send().await?;
+            return Ok(client.delete(temp).send().await?);
         }
 
+        Ok(client.get(temp).send().await?)
+    }
+    async fn return_text_or_panic(&self, res: Response) -> String {
         match res.status() {
-            reqwest::StatusCode::OK => {
-                println!("Status: {} -> {}", res.status(), "Success");
-                println!("{}", res.text().await?);
-            },
+            reqwest::StatusCode::OK => res.text().await.unwrap(),
             _ => {
-                panic!("{} -> {}", res.status(), "Error, please check again your request");
+                panic!("{} -> {}", res.status(), res.text().await.unwrap());
             },
-        };
-        Ok(())
+        }
     }
 }
 
-pub async fn get_account_balance_async() -> Result<(), Box<dyn Error>> {
+pub async fn get_account_balance_async() -> Result<String, Box<dyn Error>> {
     let payload = "";
     let uri_path = config::get_private_api_endpoint(&"ACCOUNT_BALANCE");
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
@@ -371,14 +370,16 @@ pub async fn get_account_balance_async() -> Result<(), Box<dyn Error>> {
         config::get_private_api_endpoint(&"ACCOUNT_BALANCE"),
         &param
     );
+
     match PrivateAPI.execute_async(&temp, &api_key, &signature, "").await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PrivateAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_account_statement_async() -> Result<(), Box<dyn Error>> {
+pub async fn get_account_statement_async() -> Result<String, Box<dyn Error>> {
     let payload = "";
     let uri_path = config::get_private_api_endpoint(&"ACCOUNT_STATEMENT");
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
@@ -387,14 +388,17 @@ pub async fn get_account_statement_async() -> Result<(), Box<dyn Error>> {
         config::get_private_api_endpoint(&"ACCOUNT_STATEMENT"),
         &param
     );
+    
+
     match PrivateAPI.execute_async(&temp, &api_key, &signature, "").await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PrivateAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_transaction_histories_async() -> Result<(), Box<dyn Error>> {
+pub async fn get_transaction_histories_async() -> Result<String, Box<dyn Error>> {
     let payload = "";
     let uri_path = config::get_private_api_endpoint(&"TRANSACTION_HISTORIES");
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
@@ -403,14 +407,16 @@ pub async fn get_transaction_histories_async() -> Result<(), Box<dyn Error>> {
         config::get_private_api_endpoint(&"TRANSACTION_HISTORIES"),
         &param
     );
+
     match PrivateAPI.execute_async(&temp, &api_key, &signature, "").await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PrivateAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_open_orders_async(instrument: &str, from_time: u128, to_time: u128) -> Result<(), Box<dyn Error>> {
+pub async fn get_open_orders_async(instrument: &str, from_time: u128, to_time: u128) -> Result<String, Box<dyn Error>> {
     let payload = ["{\"instrument\":", "\"", &instrument, "\"", ",\"from_time\":", &from_time.to_string(), ",\"to_time\":", &to_time.to_string(), "}"].concat();
     let uri_path = config::get_private_api_endpoint(&"OPEN_ORDERS");
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
@@ -419,14 +425,16 @@ pub async fn get_open_orders_async(instrument: &str, from_time: u128, to_time: u
         config::get_private_api_endpoint(&"OPEN_ORDERS"),
         &param
     );
+
     match PrivateAPI.execute_async(&temp, &api_key, &signature, "").await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PrivateAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_closed_orders_async(instrument: &str, from_time: u128, to_time: u128) -> Result<(), Box<dyn Error>> {
+pub async fn get_closed_orders_async(instrument: &str, from_time: u128, to_time: u128) -> Result<String, Box<dyn Error>> {
     let payload = ["{\"instrument\":", "\"", &instrument, "\"", ",\"from_time\":", &from_time.to_string(), ",\"to_time\":", &to_time.to_string(), "}"].concat();
     let uri_path = config::get_private_api_endpoint(&"CLOSED_ORDERS");
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
@@ -435,14 +443,16 @@ pub async fn get_closed_orders_async(instrument: &str, from_time: u128, to_time:
         config::get_private_api_endpoint(&"CLOSED_ORDERS"),
         &param
     );
+
     match PrivateAPI.execute_async(&temp, &api_key, &signature, "").await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PrivateAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_order_info_async(order_id: &str) -> Result<(), Box<dyn Error>> {
+pub async fn get_order_info_async(order_id: &str) -> Result<String, Box<dyn Error>> {
     let payload = "";
     let uri_path = [config::get_private_api_endpoint(&"ORDER_INFO"), "/", order_id].concat();
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
@@ -451,14 +461,16 @@ pub async fn get_order_info_async(order_id: &str) -> Result<(), Box<dyn Error>> 
         &uri_path,
         &param
     );
+
     match PrivateAPI.execute_async(&temp, &api_key, &signature, "").await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PrivateAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_trade_history_async(instrument: &str, count: u8, from_time: u128, to_time: u128) -> Result<(), Box<dyn Error>> {
+pub async fn get_trade_history_async(instrument: &str, count: u8, from_time: u128, to_time: u128) -> Result<String, Box<dyn Error>> {
     let payload = ["{\"instrument\":", "\"", &instrument, "\"", ",\"count\":", &count.to_string(), ",\"from_time\":", &from_time.to_string(), ",\"to_time\":", &to_time.to_string(), "}"].concat();
     let uri_path = config::get_private_api_endpoint(&"TRADE_HISTORY");
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
@@ -467,14 +479,16 @@ pub async fn get_trade_history_async(instrument: &str, count: u8, from_time: u12
         config::get_private_api_endpoint(&"TRADE_HISTORY"),
         &param
     );
+
     match PrivateAPI.execute_async(&temp, &api_key, &signature, "").await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PrivateAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn cancelling_open_order_per_instrument_async(instrument: &str) -> Result<(), Box<dyn Error>> {
+pub async fn cancelling_open_order_per_instrument_async(instrument: &str) -> Result<String, Box<dyn Error>> {
     let payload = "";
     let uri_path = [config::get_private_api_endpoint(&"CANCEL_ORDER"), "/instrument/", instrument].concat();
     let (param, api_key, signature) = URLBuilder.build_nonce_checksum_payload(&uri_path, &payload);
@@ -483,14 +497,16 @@ pub async fn cancelling_open_order_per_instrument_async(instrument: &str) -> Res
         &uri_path,
         &param
     );
+    
     match PrivateAPI.execute_async(&temp, &api_key, &signature, "CancelOrder").await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PrivateAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn cancelling_open_order_per_orderids_async(order_ids: Vec<&str>, qtys: Vec<i32>) -> Result<(), Box<dyn Error>> {
+pub async fn cancelling_open_order_per_orderids_async(order_ids: Vec<&str>, qtys: Vec<i32>) -> Result<String, Box<dyn Error>> {
     let temp = format!("{:?}", order_ids);
     let temp2 = format!("{:?}", qtys);
     if order_ids.len() != qtys.len() {
@@ -504,11 +520,13 @@ pub async fn cancelling_open_order_per_orderids_async(order_ids: Vec<&str>, qtys
         config::get_private_api_endpoint(&"CANCEL_ORDER"),
         &param
     );
+    
     match PrivateAPI.execute_async(&temp, &api_key, &signature, "CancelOrder").await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PrivateAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
 pub async fn opening_new_order_async(
@@ -517,7 +535,7 @@ pub async fn opening_new_order_async(
     mut price: Option<String>,
     ordtype: u8,
     orderqty: &str
-) -> Result<(), Box<dyn Error>> {
+) -> Result<String, Box<dyn Error>> {
     if ordtype == 1 {
         price = Some("0".to_string());
     }
@@ -533,9 +551,11 @@ pub async fn opening_new_order_async(
         config::get_private_api_endpoint(&"ORDER"),
         &param
     );
+    
     match PrivateAPI.execute_async(&temp, &api_key, &signature, "NewOrder").await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PrivateAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
