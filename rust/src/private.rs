@@ -354,7 +354,7 @@ impl RequestAsync for PrivateAPI {
         match res.status() {
             reqwest::StatusCode::OK => res.text().await.unwrap(),
             _ => {
-                panic!("{} -> {}", res.status(), "Error, please check again your request");
+                panic!("{} -> {}", res.status(), res.text().await.unwrap());
             },
         }
     }
