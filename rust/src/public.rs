@@ -194,108 +194,114 @@ pub fn get_announcements() -> Result<(), Box<dyn Error>> {
 }
 
 use async_trait::async_trait;
+use reqwest::{Response, Error as ReqError};
 
 #[async_trait]
 trait RequestAsync {
-    async fn execute_async(&self, temp: &str) -> Result<(), Box<dyn Error>>;
+    async fn execute_async(&self, temp: &str) -> Result<Response, ReqError>;
+    async fn return_text_or_panic(&self, res: Response) -> String;
 }
 
 #[async_trait]
 impl RequestAsync for PublicAPI {
-    async fn execute_async(&self, temp: &str) -> Result<(), Box<dyn Error>> {
-        let res = reqwest::get(temp).await?;
+    async fn execute_async(&self, temp: &str) -> Result<Response, ReqError> {
+        Ok(reqwest::get(temp).await?)
+    }
+    async fn return_text_or_panic(&self, res: Response) -> String {
         match res.status() {
-            reqwest::StatusCode::OK => {
-                println!("Status: {} -> {}", res.status(), "Success");
-                println!("{}", res.text().await?);
-            },
+            reqwest::StatusCode::OK => res.text().await.unwrap(),
             _ => {
-                panic!("{} -> {}", res.status(), "Error, please check again your request");
+                panic!("{} -> {}", res.status(), "Error, please check your request again");
             },
-        };
-        Ok(())
+        }
     }
 }
 
-pub async fn get_server_time_async() -> Result<(), Box<dyn Error>> {
+pub async fn get_server_time_async() -> Result<String, Box<dyn Error>> {
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"SERVERTIME"),
         ""
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_markets_async() -> Result<(), Box<dyn Error>> {
+pub async fn get_markets_async() -> Result<String, Box<dyn Error>> {
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"MARKETS"),
         ""
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_products_async() -> Result<(), Box<dyn Error>> {
+pub async fn get_products_async() -> Result<String, Box<dyn Error>> {
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"PRODUCTS"),
         ""
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_assets_async() -> Result<(), Box<dyn Error>> {
+pub async fn get_assets_async() -> Result<String, Box<dyn Error>> {
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"ASSETS"),
         ""
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_crypto_assets_async() -> Result<(), Box<dyn Error>> {
+pub async fn get_crypto_assets_async() -> Result<String, Box<dyn Error>> {
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"ASSETS_CRYPTO"),
         ""
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_fiat_assets_async() -> Result<(), Box<dyn Error>> {
+pub async fn get_fiat_assets_async() -> Result<String, Box<dyn Error>> {
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"ASSETS_FIAT"),
         ""
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_asset_pairs_async(market: &str, product: &str, country: &str) -> Result<(), Box<dyn Error>> {
+pub async fn get_asset_pairs_async(market: &str, product: &str, country: &str) -> Result<String, Box<dyn Error>> {
     let param = ["?market=", &market, "&product=", &product, "&country=", &country].concat();
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
@@ -303,13 +309,14 @@ pub async fn get_asset_pairs_async(market: &str, product: &str, country: &str) -
         &param
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_trades_async(trade_num: &str, instrument: &str) -> Result<(), Box<dyn Error>> {
+pub async fn get_trades_async(trade_num: &str, instrument: &str) -> Result<String, Box<dyn Error>> {
     let param = ["?trade_num=", &trade_num, "&instrument=", &instrument].concat();
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
@@ -317,13 +324,14 @@ pub async fn get_trades_async(trade_num: &str, instrument: &str) -> Result<(), B
         &param
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_depth_async(instrument: &str, depth_num: &str) -> Result<(), Box<dyn Error>> {
+pub async fn get_depth_async(instrument: &str, depth_num: &str) -> Result<String, Box<dyn Error>> {
     let param = ["?instrument=", &instrument, "&depth_num=", &depth_num].concat();
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
@@ -331,13 +339,14 @@ pub async fn get_depth_async(instrument: &str, depth_num: &str) -> Result<(), Bo
         &param
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_ticker_async(instrument: &str) -> Result<(), Box<dyn Error>> {
+pub async fn get_ticker_async(instrument: &str) -> Result<String, Box<dyn Error>> {
     let param = ["?instrument=", &instrument].concat();
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
@@ -345,13 +354,14 @@ pub async fn get_ticker_async(instrument: &str) -> Result<(), Box<dyn Error>> {
         &param
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_contract_async(instrument: &str) -> Result<(), Box<dyn Error>> {
+pub async fn get_contract_async(instrument: &str) -> Result<String, Box<dyn Error>> {
     let param = ["?instrument=", &instrument].concat();
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
@@ -359,13 +369,14 @@ pub async fn get_contract_async(instrument: &str) -> Result<(), Box<dyn Error>> 
         &param
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_insider_profiles_async(username: Option<&str>) -> Result<(), Box<dyn Error>> {
+pub async fn get_insider_profiles_async(username: Option<&str>) -> Result<String, Box<dyn Error>> {
     let param = URLBuilder.optional_string_param("username", username);
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
@@ -373,13 +384,14 @@ pub async fn get_insider_profiles_async(username: Option<&str>) -> Result<(), Bo
         &param
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_insider_trades_async(username: Option<&str>) -> Result<(), Box<dyn Error>> {
+pub async fn get_insider_trades_async(username: Option<&str>) -> Result<String, Box<dyn Error>> {
     let param = URLBuilder.optional_string_param("username", username);
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
@@ -387,65 +399,70 @@ pub async fn get_insider_trades_async(username: Option<&str>) -> Result<(), Box<
         &param
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_announcements_async() -> Result<(), Box<dyn Error>> {
+pub async fn get_announcements_async() -> Result<String, Box<dyn Error>> {
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"ANNOUNCEMENTS"),
         ""
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_order_types_async() -> Result<(), Box<dyn Error>> {
+pub async fn get_order_types_async() -> Result<String, Box<dyn Error>> {
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"ORDER_TYPES"),
         ""
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_languages_async() -> Result<(), Box<dyn Error>> {
+pub async fn get_languages_async() -> Result<String, Box<dyn Error>> {
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"LANGUAGES"),
         ""
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_search_results_async() -> Result<(), Box<dyn Error>> {
+pub async fn get_search_results_async() -> Result<String, Box<dyn Error>> {
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
         config::get_public_api_endpoint(&"SEARCH"),
         ""
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_price_index_async(instrument: &str, amount: Option<&i8>, to_time: Option<&i8>, from_time: Option<&i8>, ascending: Option<&bool>) -> Result<(), Box<dyn Error>> {
+pub async fn get_price_index_async(instrument: &str, amount: Option<&i8>, to_time: Option<&i8>, from_time: Option<&i8>, ascending: Option<&bool>) -> Result<String, Box<dyn Error>> {
     let mut param = ["?instrument=", &instrument].concat();
     param = URLBuilder.append_optional_integer_param(param, "amount", amount);
     param = URLBuilder.append_optional_integer_param(param, "to_time", to_time);
@@ -457,13 +474,14 @@ pub async fn get_price_index_async(instrument: &str, amount: Option<&i8>, to_tim
         &param
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_search_async(country: &str, instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
+pub async fn get_search_async(country: &str, instrument: Option<&str>) -> Result<String, Box<dyn Error>> {
     let mut param = ["?country=", &country].concat();
     param = URLBuilder.append_optional_string_param(param, "instrument", instrument);
     let temp = URLBuilder.format (
@@ -472,13 +490,14 @@ pub async fn get_search_async(country: &str, instrument: Option<&str>) -> Result
         &param
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_matching_engine_order_lag_async(instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
+pub async fn get_matching_engine_order_lag_async(instrument: Option<&str>) -> Result<String, Box<dyn Error>> {
     let param = URLBuilder.optional_string_param("instrument", instrument);
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
@@ -486,13 +505,14 @@ pub async fn get_matching_engine_order_lag_async(instrument: Option<&str>) -> Re
         &param
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
 
-pub async fn get_matching_engine_throughput_async(instrument: Option<&str>) -> Result<(), Box<dyn Error>> {
+pub async fn get_matching_engine_throughput_async(instrument: Option<&str>) -> Result<String, Box<dyn Error>> {
     let param = URLBuilder.optional_string_param("instrument", instrument);
     let temp = URLBuilder.format (
         &config::url_api_bitwyre(),
@@ -500,8 +520,9 @@ pub async fn get_matching_engine_throughput_async(instrument: Option<&str>) -> R
         &param
     );
     match PublicAPI.execute_async(&temp).await {
-        Err(e) => println!("{:?}", e),
-        _ => ()
+        Ok(res) => Ok(
+            PublicAPI.return_text_or_panic(res).await
+        ),
+        Err(e) => Err(Box::new(e)),
     }
-    Ok(())
 }
