@@ -1,0 +1,31 @@
+{
+  "name": "root",
+  "version": "1.0.0",
+  "description": "Bitwyre's Software Development Kit - Algorithmic Trading",
+  "private": true,
+  "scripts": {
+    "lerna": "lerna"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bitwyre/sdk.git"
+  },
+  "keywords": [
+    "sdk",
+    "algorithmic",
+    "trading",
+    "cryptocurrency"
+  ],
+  "author": "Agustinus Theodorus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bitwyre/sdk/issues"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "homepage": "https://github.com/bitwyre/sdk#readme",
+  "dependencies": {
+    "lerna": "^5.5.4"
+  }
+}
