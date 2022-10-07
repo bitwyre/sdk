@@ -1,4 +1,4 @@
-import { getServerTime } from '..';
+import { getServerTime } from '../src';
 
 async function main() {
   const res = await getServerTime(`https://api.bitwyre.com`);

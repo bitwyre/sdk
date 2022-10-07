@@ -9,6 +9,6 @@
     "resolveJsonModule": true,
     "strict": false
   },
-  "include": ["src"],
+  "include": ["src", "authentication.ts"],
   "exclude": ["node_modules", "**/__tests__/*"]
 }

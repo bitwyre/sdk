@@ -5,6 +5,8 @@
   "private": true,
   "scripts": {
     "lerna": "lerna",
+    "bootstrap": "yarn --ignore-scripts --silent && lerna bootstrap -- --ignore-scripts && yarn build && lerna bootstrap -- --ignore-scripts",
+    "build": "lerna run build",
     "lint": "lerna run lint",
     "format": "lerna run format"
   },

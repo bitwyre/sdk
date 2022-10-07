@@ -221,4 +221,3 @@ export async function openingNewOrder(
 
 export * from './types';
 export * from './authentication';
-export * from '@bitwyre-sdk/public';

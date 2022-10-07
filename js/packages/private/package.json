@@ -2,6 +2,11 @@
   "name": "@bitwyre-sdk/private",
   "version": "1.0.0",
   "description": "Bitwyre's Software Development Kit - Algorithmic Trading",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/**/*"
+  ],
   "scripts": {
     "build": "tsc",
     "format": "prettier --write \"**/*.ts\"",
