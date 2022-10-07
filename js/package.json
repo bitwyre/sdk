@@ -4,7 +4,9 @@
   "description": "Bitwyre's Software Development Kit - Algorithmic Trading",
   "private": true,
   "scripts": {
-    "lerna": "lerna"
+    "lerna": "lerna",
+    "lint": "lerna run lint",
+    "format": "lerna run format"
   },
   "repository": {
     "type": "git",
