@@ -1,14 +1,9 @@
 import crypto from 'crypto';
-import axios from 'axios';
+import { SignData } from './types';
+import { getServerTime } from '@bitwyre-sdk/public';
 
-export interface SignData {
-    nonce: number;
-    checksum: string;
-    signature: string;
-}
-
-export async function getNonce(): Promise<number> {
-    const res = await axios.get('https://api.bitwyre.com/public/time');
+export async function getNonce(baseUrl: string): Promise<number> {
+    const res = await getServerTime(baseUrl);
     return res.data.result.unixtime;
 }
 
@@ -22,8 +17,8 @@ export function getNonceChecksum(nonce: string, checksum: string): string {
     return crypto.createHash('sha256').update(nonce.concat(checksum)).digest('hex');
 }
 
-export async function sign(secretKey: string, uriPath: string, payload: string): Promise<SignData> {
-    const nonce: number = await getNonce();
+export async function sign(baseUrl: string, secretKey: string, uriPath: string, payload: string): Promise<SignData> {
+    const nonce: number = await getNonce(baseUrl);
     
     const checksum: string = getChecksum(payload);
     const nonceChecksum = getNonceChecksum(nonce.toString(), checksum);

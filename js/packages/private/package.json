@@ -2,7 +2,6 @@
   "name": "@bitwyre-sdk/private",
   "version": "1.0.0",
   "description": "Bitwyre's Software Development Kit - Algorithmic Trading",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,12 +22,14 @@
   },
   "homepage": "https://github.com/bitwyre/sdk#readme",
   "dependencies": {
+    "@bitwyre-sdk/public": "1.0.0",
     "@types/sha256": "^0.2.0",
     "axios": "^1.0.0",
     "crypto": "^1.0.1"
   },
   "devDependencies": {
     "@types/node": "^18.8.2",
+    "dotenv": "^16.0.3",
     "typescript": "^4.8.4"
   }
 }
