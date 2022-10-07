@@ -5,7 +5,7 @@ dotenv.config({ path: `${__dirname}/../.env` });
 
 async function main() {
   const res = await getAccountBalance(
-    `https://api.bitwyre.com`,
+    process.env.BASE_URL ?? '',
     process.env.API_KEY ?? '',
     process.env.SECRET_KEY ?? '',
   );

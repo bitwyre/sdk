@@ -197,7 +197,7 @@ export async function openingNewOrder(
   instrument: Instruments,
   side: number,
   orderType: number,
-  orderQuantity: string,
+  orderQuantity: number,
   price?: number,
 ) {
   if (orderType == 1) {
@@ -221,3 +221,4 @@ export async function openingNewOrder(
 
 export * from './types';
 export * from './authentication';
+export * from '@bitwyre-sdk/public';
