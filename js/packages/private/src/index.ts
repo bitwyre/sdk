@@ -17,7 +17,7 @@ async function _get(
     params: {
       nonce: signData.nonce,
       checksum: signData.checksum,
-      payload: payload,
+      payload,
       ...params,
     },
     headers: {
@@ -27,21 +27,25 @@ async function _get(
   });
 }
 
-async function _post(baseUrl: string, apiKey: string, secretKey: string, uriPath: string, payload: string) {
-  const signData: SignData = await sign(baseUrl, secretKey, uriPath, payload);
+async function _post(baseUrl: string, apiKey: string, secretKey: string, uriPath: string, payload: any) {
+  const payloadString = JSON.stringify(payload);
+  const signData: SignData = await sign(baseUrl, secretKey, uriPath, payloadString);
 
-  return await axios.post(uriPath, {
-    baseURL: baseUrl,
-    params: {
+  return await axios.post(
+    uriPath,
+    {
       nonce: signData.nonce,
       checksum: signData.checksum,
-      payload: payload,
+      payload,
     },
-    headers: {
-      'API-Key': apiKey,
-      'API-Sign': signData.signature,
+    {
+      baseURL: baseUrl,
+      headers: {
+        'API-Key': apiKey,
+        'API-Sign': signData.signature,
+      },
     },
-  });
+  );
 }
 
 async function _delete(baseUrl: string, apiKey: string, secretKey: string, uriPath: string, payload: string) {
@@ -52,7 +56,7 @@ async function _delete(baseUrl: string, apiKey: string, secretKey: string, uriPa
     params: {
       nonce: signData.nonce,
       checksum: signData.checksum,
-      payload: payload,
+      payload,
     },
     headers: {
       'API-Key': apiKey,
@@ -74,10 +78,10 @@ export async function getAccountBalance(
   const uriPath: string = '/private/account/spotbalance';
 
   return await _get(baseUrl, apiKey, secretKey, uriPath, payload, {
-    page: page,
+    page,
     per_page: perPage,
     use_pagination: usePagination,
-    asset: asset,
+    asset,
   });
 }
 
@@ -200,25 +204,23 @@ export async function openingNewOrder(
   orderQuantity: number,
   price?: number,
 ) {
-  if (orderType == 1) {
+  if (orderType === 1) {
     price = 0;
   }
-  if (orderType == 2 && price == null) {
+  if (orderType === 2 && price == null) {
     throw new Error('Limit order price cannot be null');
   }
 
-  const payload = JSON.stringify({
-    instrument,
-    side,
-    price,
-    ordtype: orderType,
-    orderqty: orderQuantity,
-  });
   const uriPath: string = '/private/orders';
 
-  return await _post(baseUrl, apiKey, secretKey, uriPath, payload);
+  return await _post(baseUrl, apiKey, secretKey, uriPath, {
+    instrument,
+    side,
+    ordtype: orderType,
+    orderqty: `${orderQuantity}`,
+  });
 }
 
 export * from './types';
 export * from './authentication';
-export * from '@bitwyre-sdk/public';
+export * from '@bitwyre/internal-public';

@@ -1,5 +1,5 @@
 {
-  "name": "@bitwyre-sdk/public",
+  "name": "@bitwyre/internal-public",
   "version": "1.0.0",
   "description": "Bitwyre's Software Development Kit - Algorithmic Trading",
   "main": "lib/index.js",

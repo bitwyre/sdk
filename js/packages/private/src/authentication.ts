@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { SignData } from './types';
-import { getServerTime } from '@bitwyre-sdk/public';
+import { getServerTime } from '@bitwyre/internal-public';
 
 export async function getNonce(baseUrl: string): Promise<number> {
   const res = await getServerTime(baseUrl);
@@ -26,8 +26,8 @@ export async function sign(baseUrl: string, secretKey: string, uriPath: string, 
   const signature = crypto.createHmac('sha512', secretKey).update(data).digest('hex');
 
   return {
-    nonce: nonce,
-    checksum: checksum,
-    signature: signature,
+    nonce,
+    checksum,
+    signature,
   };
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@bitwyre-sdk/private",
+  "name": "@bitwyre/sdk",
   "version": "1.0.0",
   "description": "Bitwyre's Software Development Kit - Algorithmic Trading",
   "main": "lib/index.js",
@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/bitwyre/sdk#readme",
   "dependencies": {
-    "@bitwyre-sdk/public": "1.0.0",
+    "@bitwyre/internal-public": "1.0.0",
     "@types/sha256": "^0.2.0",
     "axios": "^1.0.0",
     "crypto": "^1.0.1"

@@ -80,28 +80,4 @@ describe('Private API Tests', () => {
     expect(res.status).toEqual(200);
     expect(res.data.error.length).toEqual(0);
   }, 6000);
-
-  it('cancel open order per instrument should return', async () => {
-    // Act
-    const res = await openingNewOrder(BASE_URL, API_KEY, SECRET_KEY, 'btc_usdt_spot', 1, 35000, 2, 0.0001);
-
-    // Assert
-    expect(res.status).toEqual(200);
-    expect(res.data.error.length).toEqual(0);
-    console.log(res.data);
-
-    // Act
-    const res2 = await getOrderInfo(BASE_URL, API_KEY, SECRET_KEY, 'orderId');
-
-    // Assert
-    expect(res2.status).toEqual(200);
-    expect(res2.data.error.length).toEqual(0);
-
-    // Act
-    const res3 = await cancellingOpenOrderPerInstrument(BASE_URL, API_KEY, SECRET_KEY);
-
-    // Assert
-    expect(res3.status).toEqual(200);
-    expect(res3.data.error.length).toEqual(0);
-  }, 60000);
 });

@@ -8,7 +8,9 @@
     "bootstrap": "yarn --ignore-scripts --silent && lerna bootstrap -- --ignore-scripts && yarn build && lerna bootstrap -- --ignore-scripts",
     "build": "lerna run build",
     "lint": "lerna run lint",
-    "format": "lerna run format"
+    "test": "lerna run test",
+    "format": "lerna run format",
+    "check:all": "yarn test && yarn format && yarn lint && yarn bootstrap"
   },
   "repository": {
     "type": "git",
