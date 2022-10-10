@@ -27,4 +27,6 @@ packages/e2e-*/**
 **/playwright-report/
 
 packages/**/dist/
-packages/**/src/
+packages/**/lib/
+
+.env

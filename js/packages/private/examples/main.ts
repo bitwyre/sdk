@@ -1,18 +1,17 @@
-import { spotBalance } from "../spot";
+import { getAccountBalance } from '../src';
+import * as dotenv from 'dotenv';
 
-async function main () {
-    try{
-        const res = await spotBalance(
-            `https://api.bitwyre.com`,
-            '',
-            '',
-        );
-        return res.data;
-    }
-    catch(e: any) {
-        console.log(e.response.data);
-    }
+dotenv.config({ path: `${__dirname}/../.env` });
+
+async function main() {
+  const res = await getAccountBalance(
+    process.env.BASE_URL ?? '',
+    process.env.API_KEY ?? '',
+    process.env.SECRET_KEY ?? '',
+  );
+  return res.data;
 }
 
 main()
-    .then();
+  .then(console.log)
+  .catch((e) => console.log(e.response.data));
