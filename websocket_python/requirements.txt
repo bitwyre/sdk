@@ -1,0 +1,6 @@
+requests
+json
+hmac
+hashlib
+logging
+websocket-client
