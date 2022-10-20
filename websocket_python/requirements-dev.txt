@@ -1,0 +1,8 @@
+coverage
+mypy
+pre-commit
+pycodestyle
+pytest
+pytest-mock
+websocket-client
+json
