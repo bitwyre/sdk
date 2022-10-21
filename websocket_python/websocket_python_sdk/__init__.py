@@ -4,22 +4,27 @@ from time import sleep
 from public import PublicBitwyreWSClient
 from private import PrivateBitwyreWSClient
 
-API_KEY = "tpcCwt4l9-Ye46QpgdYd_utBXVxr7umnElrpCBh0"
-API_SECRET = "PXtxGBKyEumSNbGaWyht_NVyiR8"
+from utils import exit_message
 
-#API_KEY = ""
-#API_SECRET = ""
+API_KEY = ""
+API_SECRET = ""
+
 
 def get_server_time():
     """
     get server time 
     """
     client = PublicBitwyreWSClient()
-    ws = client.server_time()
+    client.server_time()
     while True:
         print("")
         print("receiving message")
-        response = ws.recv()
+        success, response, error_code, error_msg = client.receive_conn()
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+        
         response = json.loads(response)
         print("new message")
         print(response)
@@ -35,11 +40,16 @@ def get_instruments(instrument:str):
     
     """
     client = PublicBitwyreWSClient()
-    ws = client.instruments(instrument)
+    client.instruments(instrument)
     while True:
         print("")
         print("receiving message")
-        response = ws.recv()
+        success, response, error_code, error_msg = client.receive_conn()
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
@@ -55,11 +65,16 @@ def get_ticker(instrument:str):
     
     """
     client = PublicBitwyreWSClient()
-    ws = client.ticker(instrument)
+    client.ticker(instrument)
     while True:
         print("")
         print("receiving message")
-        response = ws.recv()
+        success, response, error_code, error_msg = client.receive_conn()
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
@@ -75,11 +90,16 @@ def get_trades(instrument:str):
     
     """
     client = PublicBitwyreWSClient()
-    ws = client.trades(instrument)
+    client.trades(instrument)
     while True:
         print("")
         print("receiving message")
-        response = ws.recv()
+        success, response, error_code, error_msg = client.receive_conn()
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+      
         response = json.loads(response)
         print("new message")
         print(response)
@@ -95,11 +115,16 @@ def get_depth_l2(instrument:str):
     
     """
     client = PublicBitwyreWSClient()
-    ws = client.depth_l2(instrument)
+    client.depth_l2(instrument)
     while True:
         print("")
         print("receiving message")
-        response = ws.recv()
+        success, response, error_code, error_msg = client.receive_conn()
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
@@ -115,11 +140,15 @@ def get_depth_l2_snapshot25(instrument:str):
     
     """
     client = PublicBitwyreWSClient()
-    ws = client.depth_l2_snapshot25(instrument)
+    client.depth_l2_snapshot25(instrument)
     while True:
         print("")
         print("receiving message")
-        response = ws.recv()
+        success, response, error_code, error_msg = client.receive_conn()
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
         response = json.loads(response)
         print("new message")
         print(response)
@@ -141,11 +170,17 @@ def get_account_balance(
         api_secret=api_secret
     )
     client.account_balance()
+    payload = ""  # payload always empty for balances & statements
 
     while True:
         print("")
         print(f"receiving message")
-        response = client.receive_conn(payload="")
+        success, response, error_code, error_msg = client.receive_conn(payload=payload)
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
@@ -165,11 +200,17 @@ def get_account_statement(
         api_secret=api_secret
     )
     client.account_statement()
+    payload = ""  # payload always empty for statements & balance
 
     while True:
         print("")
         print(f"receiving message")
-        response = client.receive_conn(payload="")
+        success, response, error_code, error_msg = client.receive_conn(payload=payload)
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
@@ -208,14 +249,21 @@ def create_order(
             "side": 1,
             "ordtype": 2,
             "orderqty": "0.0025",
-            "price": "16500"
+            #"price": "16500"
         }
+
         print("")
         print(f"receiving message")
-        response = client.receive_conn(payload=payload)
+        success, response, error_code, error_msg = client.receive_conn(payload=payload)
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
+        exit()
         
 def cancel_order(
     api_key:str = API_KEY,
@@ -247,9 +295,15 @@ def cancel_order(
             "order_ids": ["01789b06-4668-42f6-8690-bd0e366321c3"],
             "qtys": [1.5]
         }
+
         print("")
         print(f"receiving message")
-        response = client.receive_conn(payload=payload)
+        success, response, error_code, error_msg = client.receive_conn(payload=payload)
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
@@ -282,9 +336,15 @@ def order_status(
         payload = {
             "orderid": "01789b06-4668-42f6-8690-bd0e366321c3",
         }
+
         print("")
         print(f"receiving message")
-        response = client.receive_conn(payload=payload)
+        success, response, error_code, error_msg = client.receive_conn(payload=payload)
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
@@ -316,9 +376,15 @@ def order_events(
         payload = {
             "instrument": "btc_usdt_spot",
         }
+
         print("")
         print(f"receiving message")
-        response = client.receive_conn(payload=payload)
+        success, response, error_code, error_msg = client.receive_conn(payload=payload)
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
@@ -356,12 +422,19 @@ def trade_histories(
             "to_time": 2537913405774945493,
             "count": 10
         }
+
         print("")
         print(f"receiving message")
-        response = client.receive_conn(payload=payload)
+        success, response, error_code, error_msg = client.receive_conn(payload=payload)
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
 
 if __name__ == "__main__":
-    trade_histories()
+    #get_depth_l2("btc_usdt_spot")
+    get_depth_l2_snapshot25("eth_usdt_spot")

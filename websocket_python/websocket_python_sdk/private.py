@@ -1,5 +1,6 @@
 import json
 import hmac
+from urllib import response
 import websocket
 
 from websocket import WebSocket
@@ -10,7 +11,8 @@ from public import PublicBitwyreWSClient
 
 from utils import (
     BASE_URL,
-    PRINT_DEBUGS
+    PRINT_DEBUGS,
+    parse_codes
 )
 
 
@@ -70,6 +72,9 @@ class PrivateBitwyreWSClient:
 
         return (nonce, checksum, signature, payload)
 
+    def close(self):
+        self.ws.close()
+
     def connect(self) -> WebSocket:
         url = self.url + self.uri
         print(f"opening ws connection to {url}")
@@ -97,7 +102,11 @@ class PrivateBitwyreWSClient:
         self.params["payload"] = payload
 
         self.send_message(self.params)
-        return self.ws.recv()
+
+        status_code, response, error_code, error_msg = self.ws.recv()
+        success, response, error_code, error_msg = parse_codes(status_code, response, error_code, error_msg)
+    
+        return success, response, error_code, error_msg
 
     def account_balance(self) -> WebSocket:
         self.uri = "/ws/private/account/balance"
