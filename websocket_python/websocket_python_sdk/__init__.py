@@ -249,7 +249,7 @@ def create_order(
             "side": 1,
             "ordtype": 2,
             "orderqty": "0.0025",
-            #"price": "16500"
+            "price": "16500"
         }
 
         print("")
@@ -436,5 +436,6 @@ def trade_histories(
         print(response)
 
 if __name__ == "__main__":
-    #get_depth_l2("btc_usdt_spot")
     get_depth_l2_snapshot25("eth_usdt_spot")
+    #create_order()
+    #get_server_time()
