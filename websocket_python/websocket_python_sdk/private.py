@@ -17,7 +17,7 @@ from utils import (
 
 
 
-def sign(secret_key: str, uri_path: str, payload: str):
+def sign_deprecated(secret_key: str, uri_path: str, payload: str):
     nonce = int(time_ns())
     payload = json.dumps(payload, separators=(',', ':'))
 
@@ -31,6 +31,7 @@ def sign(secret_key: str, uri_path: str, payload: str):
     ).hexdigest()
 
     return (nonce, checksum, signature, payload)
+
 
 class PrivateBitwyreWSClient:
     def __init__(
@@ -49,56 +50,54 @@ class PrivateBitwyreWSClient:
         self.command = ""
         self.params = {
             "command": None,
-            "nonce": None,
-            "checksum": None,
-            "api_key": self.api_key,
-            "api_sign": None,
-            "payload": None
+            "payload": ""
         }
 
+
     @staticmethod
-    def sign(secret_key: str, uri_path: str, payload: str):
-        nonce = int(time_ns())
-        payload = json.dumps(payload, separators=(',', ':'))
-
-        json_payload = json.dumps(payload)
-        json_payload = json.dumps(json_payload)
-    
-        checksum = sha256(str(json_payload).encode("utf-8")).hexdigest()
-        nonce_checksum = sha256(str(nonce).encode("utf-8") + str(checksum).encode("utf-8")).hexdigest()
+    def sign(secret_key: str):
         signature = hmac.new(
-            secret_key.encode("utf-8"), uri_path.encode("utf-8") + nonce_checksum.encode("utf-8"), sha512
+            secret_key.encode("utf-8"), "".encode("utf-8"), sha512
         ).hexdigest()
-
-        return (nonce, checksum, signature, payload)
+        return signature
 
     def close(self):
         self.ws.close()
 
     def connect(self) -> WebSocket:
         url = self.url + self.uri
+        
+        signature = self.sign(self.api_secret)
+        
+        header = {
+            "api_key": self.api_key,
+            "api_sign": signature
+        }
+
+        header = json.dumps(header)
+        
+        header = [f"API-Data: {header}"]
+
         print(f"opening ws connection to {url}")
-        self.ws.connect(url)
+        print(f"Header is {header}")
+        self.ws.connect(url, header=header)
         print("ws connection success")
         return self.ws
 
     def send_message(self, message: dict):
-        print(f"sending message {message}")
         message = json.dumps(message)
 
+        print(f"sending payload {message}")
         self.ws.send(message)
-        print("sending message success")
+        print("sending payload success")
 
     def receive_conn(self, payload:str = None):
         if payload is None:
             payload = ""
-
-        nonce, checksum, signature, payload = self.sign(self.api_secret, self.uri, payload)
+        else:
+            payload = json.dumps(payload)
 
         self.params["command"] = self.command
-        self.params["nonce"] = nonce
-        self.params["checksum"] = checksum
-        self.params["api_sign"] = signature
         self.params["payload"] = payload
 
         self.send_message(self.params)

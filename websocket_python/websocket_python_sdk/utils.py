@@ -1,5 +1,5 @@
 
-BASE_URL = "wss://api.bitwyre.com"
+BASE_URL = "wss://api.bitwyre.id"
 PRINT_DEBUGS = False
 
 def exit_message(response, error_code, error_msg):

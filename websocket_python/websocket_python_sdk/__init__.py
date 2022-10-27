@@ -1,6 +1,5 @@
 import json
 
-from time import sleep
 from public import PublicBitwyreWSClient
 from private import PrivateBitwyreWSClient
 
@@ -8,7 +7,6 @@ from utils import exit_message
 
 API_KEY = ""
 API_SECRET = ""
-
 
 def get_server_time():
     """
@@ -263,8 +261,8 @@ def create_order(
         response = json.loads(response)
         print("new message")
         print(response)
-        exit()
-        
+
+
 def cancel_order(
     api_key:str = API_KEY,
     api_secret:str = API_SECRET,
@@ -292,8 +290,8 @@ def cancel_order(
         # eg read db, api calls, kafka consume etc
         
         payload = {
-            "order_ids": ["01789b06-4668-42f6-8690-bd0e366321c3"],
-            "qtys": [1.5]
+            "order_ids": ["698dff27-4280-42da-9349-097a412f3bc3"],
+            "qtys": [-1]
         }
 
         print("")
@@ -334,7 +332,7 @@ def order_status(
         # eg read db, api calls, kafka consume etc
         
         payload = {
-            "orderid": "01789b06-4668-42f6-8690-bd0e366321c3",
+            "orderid": "698dff27-4280-42da-9349-097a412f3bc3",
         }
 
         print("")
@@ -417,7 +415,7 @@ def trade_histories(
         # eg read db, api calls, kafka consume etc
         
         payload = {
-            "instrument": "btc_usdt_spot",
+            "instrument": "btc_idr_spot",
             "from_time": 1537913405774945493,
             "to_time": 2537913405774945493,
             "count": 10
@@ -436,6 +434,6 @@ def trade_histories(
         print(response)
 
 if __name__ == "__main__":
-    get_depth_l2_snapshot25("eth_usdt_spot")
-    #create_order()
-    #get_server_time()
+    create_order()
+
+    
