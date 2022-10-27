@@ -2,6 +2,7 @@ import json
 import hmac
 from urllib import response
 import websocket
+import logging
 
 from websocket import WebSocket
 from time import time_ns
@@ -14,7 +15,12 @@ from utils import (
     PRINT_DEBUGS,
     parse_codes
 )
-
+logging.basicConfig(
+    format='%(asctime)s     %(message)s',
+    filemode='w'
+)
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 
 def sign_deprecated(secret_key: str, uri_path: str, payload: str):
@@ -78,18 +84,18 @@ class PrivateBitwyreWSClient:
         
         header = [f"API-Data: {header}"]
 
-        print(f"opening ws connection to {url}")
-        print(f"Header is {header}")
+        logging.debug(f"opening ws connection to {url}")
+        logging.debug(f"Header is {header}")
         self.ws.connect(url, header=header)
-        print("ws connection success")
+        logging.debug("ws connection success")
         return self.ws
 
     def send_message(self, message: dict):
         message = json.dumps(message)
 
-        print(f"sending payload {message}")
+        logging.debug(f"sending payload {message}")
         self.ws.send(message)
-        print("sending payload success")
+        logging.debug("sending payload success")
 
     def receive_conn(self, payload:str = None):
         if payload is None:

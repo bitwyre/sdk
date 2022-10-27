@@ -1,12 +1,21 @@
 import json
+import logging
 
 from public import PublicBitwyreWSClient
 from private import PrivateBitwyreWSClient
 
 from utils import exit_message
 
+logging.basicConfig(
+    format='%(asctime)s     %(message)s',
+    filemode='w'
+)
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+
 API_KEY = ""
 API_SECRET = ""
+
 
 def get_server_time():
     """

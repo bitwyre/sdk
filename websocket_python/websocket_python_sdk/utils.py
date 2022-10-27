@@ -1,15 +1,22 @@
+import logging
+logging.basicConfig(
+    format='%(asctime)s     %(message)s',
+    filemode='w'
+)
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
-BASE_URL = "wss://api.bitwyre.id"
+BASE_URL = "wss://api.bitwyre.com"
 PRINT_DEBUGS = False
 
 def exit_message(response, error_code, error_msg):
-    print("")
-    print(" ================ ")
-    print(" ================ CONNECT FAILED ================ ")
-    print(f"Host response {response}")
-    print(f"Host error codes {error_code}")
-    print(f"Host error message {error_msg}")
-    print(f"Exiting")
+    logging.debug("")
+    logging.debug(" ================ ")
+    logging.debug(" ================ CONNECT FAILED ================ ")
+    logging.debug(f"Host response {response}")
+    logging.debug(f"Host error codes {error_code}")
+    logging.debug(f"Host error message {error_msg}")
+    logging.debug(f"Exiting")
 
 def parse_codes(status_code, response, error_code, error_msg):
     """
