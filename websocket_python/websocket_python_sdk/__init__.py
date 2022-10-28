@@ -1,25 +1,37 @@
 import json
+import logging
 
-from time import sleep
 from public import PublicBitwyreWSClient
 from private import PrivateBitwyreWSClient
 
-API_KEY = "tpcCwt4l9-Ye46QpgdYd_utBXVxr7umnElrpCBh0"
-API_SECRET = "PXtxGBKyEumSNbGaWyht_NVyiR8"
+from utils import exit_message
 
-#API_KEY = ""
-#API_SECRET = ""
+logging.basicConfig(
+    format='%(asctime)s     %(message)s',
+    filemode='w'
+)
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+
+API_KEY = ""
+API_SECRET = ""
+
 
 def get_server_time():
     """
     get server time 
     """
     client = PublicBitwyreWSClient()
-    ws = client.server_time()
+    client.server_time()
     while True:
         print("")
         print("receiving message")
-        response = ws.recv()
+        success, response, error_code, error_msg = client.receive_conn()
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+        
         response = json.loads(response)
         print("new message")
         print(response)
@@ -35,11 +47,16 @@ def get_instruments(instrument:str):
     
     """
     client = PublicBitwyreWSClient()
-    ws = client.instruments(instrument)
+    client.instruments(instrument)
     while True:
         print("")
         print("receiving message")
-        response = ws.recv()
+        success, response, error_code, error_msg = client.receive_conn()
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
@@ -55,11 +72,16 @@ def get_ticker(instrument:str):
     
     """
     client = PublicBitwyreWSClient()
-    ws = client.ticker(instrument)
+    client.ticker(instrument)
     while True:
         print("")
         print("receiving message")
-        response = ws.recv()
+        success, response, error_code, error_msg = client.receive_conn()
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
@@ -75,11 +97,16 @@ def get_trades(instrument:str):
     
     """
     client = PublicBitwyreWSClient()
-    ws = client.trades(instrument)
+    client.trades(instrument)
     while True:
         print("")
         print("receiving message")
-        response = ws.recv()
+        success, response, error_code, error_msg = client.receive_conn()
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+      
         response = json.loads(response)
         print("new message")
         print(response)
@@ -95,11 +122,16 @@ def get_depth_l2(instrument:str):
     
     """
     client = PublicBitwyreWSClient()
-    ws = client.depth_l2(instrument)
+    client.depth_l2(instrument)
     while True:
         print("")
         print("receiving message")
-        response = ws.recv()
+        success, response, error_code, error_msg = client.receive_conn()
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
@@ -115,11 +147,15 @@ def get_depth_l2_snapshot25(instrument:str):
     
     """
     client = PublicBitwyreWSClient()
-    ws = client.depth_l2_snapshot25(instrument)
+    client.depth_l2_snapshot25(instrument)
     while True:
         print("")
         print("receiving message")
-        response = ws.recv()
+        success, response, error_code, error_msg = client.receive_conn()
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
         response = json.loads(response)
         print("new message")
         print(response)
@@ -141,11 +177,17 @@ def get_account_balance(
         api_secret=api_secret
     )
     client.account_balance()
+    payload = ""  # payload always empty for balances & statements
 
     while True:
         print("")
         print(f"receiving message")
-        response = client.receive_conn(payload="")
+        success, response, error_code, error_msg = client.receive_conn(payload=payload)
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
@@ -165,11 +207,17 @@ def get_account_statement(
         api_secret=api_secret
     )
     client.account_statement()
+    payload = ""  # payload always empty for statements & balance
 
     while True:
         print("")
         print(f"receiving message")
-        response = client.receive_conn(payload="")
+        success, response, error_code, error_msg = client.receive_conn(payload=payload)
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
@@ -210,13 +258,20 @@ def create_order(
             "orderqty": "0.0025",
             "price": "16500"
         }
+
         print("")
         print(f"receiving message")
-        response = client.receive_conn(payload=payload)
+        success, response, error_code, error_msg = client.receive_conn(payload=payload)
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
-        
+
+
 def cancel_order(
     api_key:str = API_KEY,
     api_secret:str = API_SECRET,
@@ -244,12 +299,18 @@ def cancel_order(
         # eg read db, api calls, kafka consume etc
         
         payload = {
-            "order_ids": ["01789b06-4668-42f6-8690-bd0e366321c3"],
-            "qtys": [1.5]
+            "order_ids": ["698dff27-4280-42da-9349-097a412f3bc3"],
+            "qtys": [-1]
         }
+
         print("")
         print(f"receiving message")
-        response = client.receive_conn(payload=payload)
+        success, response, error_code, error_msg = client.receive_conn(payload=payload)
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
@@ -280,11 +341,17 @@ def order_status(
         # eg read db, api calls, kafka consume etc
         
         payload = {
-            "orderid": "01789b06-4668-42f6-8690-bd0e366321c3",
+            "orderid": "698dff27-4280-42da-9349-097a412f3bc3",
         }
+
         print("")
         print(f"receiving message")
-        response = client.receive_conn(payload=payload)
+        success, response, error_code, error_msg = client.receive_conn(payload=payload)
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
@@ -316,9 +383,15 @@ def order_events(
         payload = {
             "instrument": "btc_usdt_spot",
         }
+
         print("")
         print(f"receiving message")
-        response = client.receive_conn(payload=payload)
+        success, response, error_code, error_msg = client.receive_conn(payload=payload)
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
@@ -351,17 +424,25 @@ def trade_histories(
         # eg read db, api calls, kafka consume etc
         
         payload = {
-            "instrument": "btc_usdt_spot",
+            "instrument": "btc_idr_spot",
             "from_time": 1537913405774945493,
             "to_time": 2537913405774945493,
             "count": 10
         }
+
         print("")
         print(f"receiving message")
-        response = client.receive_conn(payload=payload)
+        success, response, error_code, error_msg = client.receive_conn(payload=payload)
+        if not success:
+            exit_message(response, error_code, error_msg)
+            client.close()
+            exit()
+
         response = json.loads(response)
         print("new message")
         print(response)
 
 if __name__ == "__main__":
-    trade_histories()
+    create_order()
+
+    

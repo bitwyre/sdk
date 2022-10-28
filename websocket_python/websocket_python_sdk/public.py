@@ -5,7 +5,8 @@ from websocket import WebSocket
 
 from utils import (
     BASE_URL,
-    PRINT_DEBUGS
+    PRINT_DEBUGS,
+    parse_codes
 )
 
 subscription_message = {
@@ -23,6 +24,9 @@ class PublicBitwyreWSClient:
         self.url = url
         self.ws = websocket.WebSocket()
 
+    def close(self):
+        self.ws.close()
+
     def connect(self, url) -> WebSocket:
         print(f"opening ws connection to {url}")
         self.ws.connect(url)
@@ -35,6 +39,12 @@ class PublicBitwyreWSClient:
 
         self.ws.send(message)
         print("sending message success")
+
+    def receive_conn(self):
+        status_code, response, error_code, error_msg = self.ws.recv()
+        success, response, error_code, error_msg = parse_codes(status_code, response, error_code, error_msg)
+    
+        return success, response, error_code, error_msg
 
     def server_time(self) -> WebSocket:
         uri = "/ws/public/time"

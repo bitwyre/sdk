@@ -4,3 +4,4 @@ hmac
 hashlib
 logging
 websocket-client
+logging
