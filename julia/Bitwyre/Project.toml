@@ -1,0 +1,4 @@
+name = "Bitwyre"
+uuid = "b899f29a-51cb-47de-bd4a-0a13f814388d"
+authors = ["Bitwyre <support@bitwyre.com>"]
+version = "0.1.0"
